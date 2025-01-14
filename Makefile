@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 18:27:35 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/14 13:31:16 by mrouves          ###   ########.fr        #
+#    Updated: 2025/01/14 17:19:39 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ DIR_DUP			= mkdir -p $(@D)
 all: $(NAME) $(OBJS)
 
 $(NAME): $(OBJS) $(LIBFT)
-	@$(call run_and_test, $(CC) $(CFLAGS) $(IFLAGS) $^ -o $@ -lm -lSDL2)
+	@$(call run_and_test, $(CC) $(CFLAGS) $(IFLAGS) $^ -o $@ -lreadline)
 	@printf "$(BOLD)$@$(NO_COLOR) compiled $(OK_COLOR)successfully$(NO_COLOR)\n"
 
 $(LIBFT):
