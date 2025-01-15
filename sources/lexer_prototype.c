@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:56:40 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/15 13:10:24 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:45:23 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_lexer	*lexer_init(const char *input)
 		return (NULL);
 	lexer->input = input;
 	lexer->pos = 0;
+	lexer->qstate = NONE;
 	return (lexer);
 }
 
@@ -124,6 +125,30 @@ t_token	*get_double_token(t_lexer *lexer)
 		return (NULL);
 }
 
+t_token	*quote_state(t_lexer *lexer)
+{
+	size_t	start;
+	char	current;
+	size_t	len;
+	char	*value;
+
+	start = lexer->pos;
+	while (get_lexer(lexer) != '\0')
+	{
+		current = get_next_lexer(lexer);
+		if ((lexer->qstate == SINGLE && current == '\'')
+			|| (lexer->qstate == DOUBLE && current == '"'))
+		{
+			lexer->qstate = NONE;
+			len = lexer->pos - start - 1;
+			value = ft_strndup(&lexer->input[start], len);
+			return (create_token(WORD, value));
+		}
+	}
+	printf("ERROR Quote note close\n");
+	return (create_token(ERROR, "ERROR"));
+}
+
 t_token	*get_single_token(t_lexer *lexer)
 {
 	char	current;
@@ -133,14 +158,20 @@ t_token	*get_single_token(t_lexer *lexer)
 		return (create_token(PIPE, "|"));
 	if (current == '&' && get_next_lexer(lexer))
 		return (create_token(BACKGROUND, "&"));
-	if (current == '\'' && get_next_lexer(lexer))
-		return (create_token(SINGLE_QUOTE, "'"));
-	if (current == '"' && get_next_lexer(lexer))
-		return (create_token(BACKGROUND, "\""));
 	if (current == '<' && get_next_lexer(lexer))
 		return (create_token(REDIRECT_IN, "<"));
 	if (current == '>' && get_next_lexer(lexer))
 		return (create_token(REDIRECT_OUT, ">"));
+	if (current == '\'' && get_next_lexer(lexer))
+	{
+		lexer->qstate = SINGLE;
+		return (quote_state(lexer));
+	}
+	if (current == '"' && get_next_lexer(lexer))
+	{
+		lexer->qstate = DOUBLE;
+		return (quote_state(lexer));
+	}
 	else
 		return (NULL);
 }
