@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:56:40 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/15 11:57:50 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:10:24 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ char	get_next_lexer(t_lexer *lexer)
 	return ('\0');
 }
 
+char	double_lexer(t_lexer *lexer)
+{
+	get_next_lexer(lexer);
+	return (get_next_lexer(lexer));
+}
+
 char	get_lexer(t_lexer *lexer)
 {
 	return (lexer->input[lexer->pos]);
@@ -106,30 +112,14 @@ t_token	*get_double_token(t_lexer *lexer)
 
 	current = get_lexer(lexer);
 	next = lexer->input[lexer->pos + 1];
-	if (current == '|' && next == '|')
-	{
-		get_next_lexer(lexer);
-		get_next_lexer(lexer);
+	if (current == '|' && next == '|' && double_lexer(lexer))
 		return (create_token(OR, "||"));
-	}
-	if (current == '<' && next == '<')
-	{
-		get_next_lexer(lexer);
-		get_next_lexer(lexer);
+	if (current == '<' && next == '<' && double_lexer(lexer))
 		return (create_token(HEREDOC, "<<"));
-	}
-	if (current == '>' && next == '>')
-	{
-		get_next_lexer(lexer);
-		get_next_lexer(lexer);
+	if (current == '>' && next == '>' && double_lexer(lexer))
 		return (create_token(APPEND, ">>"));
-	}
-	if (current == '&' && next == '&')
-	{
-		get_next_lexer(lexer);
-		get_next_lexer(lexer);
+	if (current == '&' && next == '&' && double_lexer(lexer))
 		return (create_token(AND, "&&"));
-	}
 	else
 		return (NULL);
 }
@@ -143,8 +133,6 @@ t_token	*get_single_token(t_lexer *lexer)
 		return (create_token(PIPE, "|"));
 	if (current == '&' && get_next_lexer(lexer))
 		return (create_token(BACKGROUND, "&"));
-	if (current == ';' && get_next_lexer(lexer))
-		return (create_token(SEMICOLON, ";"));
 	if (current == '\'' && get_next_lexer(lexer))
 		return (create_token(SINGLE_QUOTE, "'"));
 	if (current == '"' && get_next_lexer(lexer))
@@ -164,8 +152,7 @@ t_token	*get_word_token(t_lexer *lexer)
 	char	*value;
 
 	start = lexer->pos;
-	while ((!ft_isspace(get_lexer(lexer)) && ft_isalpha(get_lexer(lexer))
-			&& get_lexer(lexer) != '\0') || get_lexer(lexer) == '.')
+	while ((!ft_isspace(get_lexer(lexer)) && get_lexer(lexer) != '\0'))
 		get_next_lexer(lexer);
 	len = lexer->pos - start;
 	value = ft_strndup(&lexer->input[start], len);
