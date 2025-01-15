@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/14 19:34:38 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/15 18:22:03 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(void)
 	char	*buf;
 
 	if (!sigs_add_handler((t_sig_handler)__handler,
-			SIG_SIMPLE, 2, SIGINT, SIGTERM))
+			SIG_SIMPLE, 3, SIGINT, SIGTERM, SIGQUIT))
 		exit(EXIT_FAILURE);
 	buf = readline(">> ");
 	while (buf)
