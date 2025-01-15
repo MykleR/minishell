@@ -6,61 +6,14 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:56:40 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/14 17:07:27 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:57:50 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/libft/headers/libft_string.h"
+#include "lexer.h"
 #include <stdio.h>
 #include <unistd.h>
-
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}					t_list;
-
-typedef enum e_type
-{
-	WORD,         // un mot (nom de cmd, arg ect)
-	PIPE,         // |
-	REDIRECT_IN,  // <
-	REDIRECT_OUT, // >
-	BACKGROUND,   // &
-	SEMICOLON,    // ;
-	AND,          // &&
-	OR,           // ||
-	DOUBLE_QUOTE, // ""
-	SINGLE_QUOTE, // ''
-	WHITE_SPACE,  // Classico ascii: \t \n \v \f \r
-	EOF_,         // Fin input (Different de \0 ??)
-}					t_type;
-
-typedef struct s_token
-{
-	t_type			type;
-	char			*value;
-	int				len;
-}					t_token;
-
-typedef struct s_lexer
-{
-	const char		*input;
-	size_t			pos;
-}					t_lexer;
-
-char	*ft_sanitize(char **av)
-{
-	char	**start;
-
-	start = ++av;
-	while (*(av + 1))
-	{
-		(*av)[ft_strlen(*av)] = ' ';
-		av++;
-	}
-	return (*start);
-}
 
 int	ft_isspace(int c)
 {
@@ -146,43 +99,96 @@ char	get_lexer(t_lexer *lexer)
 	return (lexer->input[lexer->pos]);
 }
 
-t_token	*get_next_token(t_lexer *lexer)
+t_token	*get_double_token(t_lexer *lexer)
 {
 	char	current;
+	char	next;
+
+	current = get_lexer(lexer);
+	next = lexer->input[lexer->pos + 1];
+	if (current == '|' && next == '|')
+	{
+		get_next_lexer(lexer);
+		get_next_lexer(lexer);
+		return (create_token(OR, "||"));
+	}
+	if (current == '<' && next == '<')
+	{
+		get_next_lexer(lexer);
+		get_next_lexer(lexer);
+		return (create_token(HEREDOC, "<<"));
+	}
+	if (current == '>' && next == '>')
+	{
+		get_next_lexer(lexer);
+		get_next_lexer(lexer);
+		return (create_token(APPEND, ">>"));
+	}
+	if (current == '&' && next == '&')
+	{
+		get_next_lexer(lexer);
+		get_next_lexer(lexer);
+		return (create_token(AND, "&&"));
+	}
+	else
+		return (NULL);
+}
+
+t_token	*get_single_token(t_lexer *lexer)
+{
+	char	current;
+
+	current = get_lexer(lexer);
+	if (current == '|' && get_next_lexer(lexer))
+		return (create_token(PIPE, "|"));
+	if (current == '&' && get_next_lexer(lexer))
+		return (create_token(BACKGROUND, "&"));
+	if (current == ';' && get_next_lexer(lexer))
+		return (create_token(SEMICOLON, ";"));
+	if (current == '\'' && get_next_lexer(lexer))
+		return (create_token(SINGLE_QUOTE, "'"));
+	if (current == '"' && get_next_lexer(lexer))
+		return (create_token(BACKGROUND, "\""));
+	if (current == '<' && get_next_lexer(lexer))
+		return (create_token(REDIRECT_IN, "<"));
+	if (current == '>' && get_next_lexer(lexer))
+		return (create_token(REDIRECT_OUT, ">"));
+	else
+		return (NULL);
+}
+
+t_token	*get_word_token(t_lexer *lexer)
+{
 	size_t	start;
 	size_t	len;
 	char	*value;
+
+	start = lexer->pos;
+	while ((!ft_isspace(get_lexer(lexer)) && ft_isalpha(get_lexer(lexer))
+			&& get_lexer(lexer) != '\0') || get_lexer(lexer) == '.')
+		get_next_lexer(lexer);
+	len = lexer->pos - start;
+	value = ft_strndup(&lexer->input[start], len);
+	return (create_token(WORD, value));
+}
+
+t_token	*get_next_token(t_lexer *lexer)
+{
+	char	current;
+	t_token	*token;
 
 	while (ft_isspace(get_lexer(lexer)))
 		get_next_lexer(lexer);
 	current = get_lexer(lexer);
 	if (current == '\0')
 		return (create_token(EOF_, NULL));
-	if (current == '|')
-	{
-		get_next_lexer(lexer);
-		return (create_token(PIPE, "|"));
-	}
-	if (current == '<')
-	{
-		get_next_lexer(lexer);
-		return (create_token(REDIRECT_IN, "<"));
-	}
-	if (current == '>')
-	{
-		get_next_lexer(lexer);
-		return (create_token(REDIRECT_OUT, ">"));
-	}
-	else
-	{
-		start = lexer->pos;
-		while (!ft_isspace(get_lexer(lexer)) && ft_isalpha(get_lexer(lexer))
-			&& get_lexer(lexer) != '\0')
-			get_next_lexer(lexer);
-		len = lexer->pos - start;
-		value = ft_strndup(&lexer->input[start], len);
-		return (create_token(WORD, value));
-	}
+	token = get_double_token(lexer);
+	if (token != NULL)
+		return (token);
+	token = get_single_token(lexer);
+	if (token != NULL)
+		return (token);
+	return (get_word_token(lexer));
 }
 
 void	run_lexer(const char *input)
@@ -191,16 +197,15 @@ void	run_lexer(const char *input)
 	t_token	*token;
 
 	lexer = lexer_init(input);
-	printf("Input: %s\n", input);
 	printf("Tokens:\n");
-	while ((token = get_next_token(lexer))->type != EOF_)
+	token = get_next_token(lexer);
+	while (token->type != EOF_)
 	{
 		printf(" Type: %d ", token->type);
 		if (token->value)
 			printf("Value: %s \n", token->value);
-		else
-			printf("Value: NULL\n");
 		free_token(token);
+		token = get_next_token(lexer);
 	}
 	free_token(token);
 	free_lexer(lexer);
