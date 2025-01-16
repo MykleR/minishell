@@ -6,9 +6,10 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/14 18:12:23 by mrouves          ###   ########.fr        #
+#    Updated: 2025/01/16 14:35:10 by thomarna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
 				signals.c\
 				lexer_prototype.c \
+				proto/builtins.c \
