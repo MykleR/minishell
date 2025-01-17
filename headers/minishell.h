@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/17 02:30:38 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/17 15:47:42 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <libft.h>
 # include <signal.h>
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
