@@ -6,20 +6,19 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/15 18:22:03 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/17 02:43:51 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-static void	__handler(int num)
+static void	__sigint_callb(int num)
 {
 	(void) num;
-	exit(EXIT_SUCCESS);
+	write(1, &((char){'\n'}), 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 __attribute__((destructor))
@@ -28,21 +27,26 @@ static void	__cleanup(void)
 	rl_clear_history();
 }
 
-int	main(void)
+static void	prompt_line(const char *prompt)
 {
 	char	*buf;
 
-	if (!sigs_add_handler((t_sig_handler)__handler,
-			SIG_SIMPLE, 3, SIGINT, SIGTERM, SIGQUIT))
-		exit(EXIT_FAILURE);
-	buf = readline(">> ");
+	buf = readline(prompt);
 	while (buf)
 	{
-		if (strlen(buf) > 0)
+		if (ft_strlen(buf) > 0)
 			add_history(buf);
-		printf("[%s]\n", buf);
+		ft_printf("[%s]\n", buf);
 		free(buf);
-		buf = readline(">> ");
+		buf = readline(prompt);
 	}
+}
+
+int	main(void)
+{
+	if (!sig_handle(SIGINT, (t_sig_callb)__sigint_callb, SIG_SIMPLE)
+		|| !sig_handle(SIGQUIT, (t_sig_callb){0}, SIG_IGNORE))
+		exit(EXIT_FAILURE);
+	prompt_line(">> ");
 	return (EXIT_SUCCESS);
 }

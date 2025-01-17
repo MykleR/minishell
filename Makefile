@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 18:27:35 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/14 17:19:39 by mrouves          ###   ########.fr        #
+#    Updated: 2025/01/17 01:41:40 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ OBJS			:= $(addprefix $(DIR_OBJS)/, $(SOURCES:%.c=%.o))
 CC				:= clang
 CFLAGS			:= -Wall -Wextra -Werror
 IFLAGS			:= -I $(DIR_HEADERS) -I $(LIBFT_INCLUDES)
+CACHE_MODE		:= 2
 DIR_DUP			= mkdir -p $(@D)
 
 all: $(NAME) $(OBJS)
@@ -38,7 +39,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	@printf "$(BOLD)$@$(NO_COLOR) compiled $(OK_COLOR)successfully$(NO_COLOR)\n"
 
 $(LIBFT):
-	@$(MAKE) -C $(DIR_LIBFT) --no-print-directory -j
+	@$(MAKE) -C $(DIR_LIBFT) -D CACHE_MODE=$(CACHE_MODE) --no-print-directory -j
 
 $(DIR_OBJS)/%.o: $(DIR_SOURCES)/%.c
 	@$(DIR_DUP)
