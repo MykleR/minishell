@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 16:24:02 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/17 16:25:09 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:48:52 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void    str_print(void *ptr, void *arg)
 int    main(void)
 {
     t_collection    c;
-
-    collection_create(&c, sizeof(char **), 2, alloc_f);
+	static t_clear_info	clr = {alloc_f, T_HEAP};
+    collection_create(&c, sizeof(char **), 2, clr);
     collection_append(&c, &((char *){ft_strdup("Bonjour ")}));
     collection_append(&c, &((char *){ft_strdup("monde ! ")}));
     collection_append(&c, &((char *){ft_strdup("ca va ?")}));
