@@ -6,35 +6,23 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/29 04:23:04 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/29 20:44:37 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <libft.h>
-# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# include <libft.h>
 # include <lexer.h>
+# include <errors.h>
+# include <signals.h>
 
-typedef struct sigaction	t_sigaction;
-
-typedef enum e_sig_type
-{
-	SIG_IGNORE,
-	SIG_RESTORE,
-	SIG_SIMPLE,
-	SIG_COMPLEX
-}	t_sig_type;
-
-typedef union u_sig_callb
-{
-	void		(*h_simple)(int);
-	void		(*h_complex)(int, siginfo_t *, void *);
-}	t_sig_callb;
+# define SHELL_PROMPT "shell >> "
+# define HERED_PROMPT "heredoc >> "
 
 typedef struct s_shell
 {
@@ -42,9 +30,12 @@ typedef struct s_shell
 	t_collection	tokens;
 }	t_shell;
 
-bool	shell_init(t_shell *shell);
+int		shell_init(t_shell *shell);
 void	shell_destroy(t_shell *shell);
+int		__shell_prompt(t_shell *shell);
 
-bool	sig_handle(int num, t_sig_callb handler, t_sig_type type);
+void	rl_shell_nl(int);
+void	rl_shell_prompt(t_shell *shell, const char *prompt,
+			int (*callback)(t_shell *shell));
 
 #endif

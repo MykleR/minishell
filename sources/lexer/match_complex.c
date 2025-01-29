@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 01:26:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/29 04:32:37 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/29 16:54:17 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	match_word(const char *s)
 	int	pos;
 
 	pos = 0;
-	while (is_chr_word(s[pos]))
+	while (is_chr_word(s[pos], LEX_BAN))
 		pos++;
 	return (pos);
 }

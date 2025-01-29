@@ -1,18 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 17:59:59 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/17 02:30:47 by mrouves          ###   ########.fr       */
+/*   Created: 2025/01/29 19:46:48 by mrouves           #+#    #+#             */
+/*   Updated: 2025/01/29 20:53:49 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-bool	sig_handle(int num, t_sig_callb handler, t_sig_type type)
+void	error_print(t_error_type e)
+{
+	const char	*msg;
+	const char	*end;
+
+	msg = (char *)ERROR_MSGS + e;
+	end = msg;
+	while (*end)
+	   end++;
+	write(2, msg, end - msg);
+}
+
+void	rl_shell_nl(int num)
+{
+	(void) num;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	rl_shell_prompt(t_shell *shell, const char *prompt,
+			int (*callback)(t_shell *shell))
+{
+	char	*buf;
+
+	buf = readline(prompt);
+	while (buf)
+	{
+		shell->cmd = ft_strdup(buf);
+		free(buf);
+		if (ft_strlen(buf) > 0)
+			add_history(buf);
+		error_print(callback(shell));
+		alloc_f((void *)shell->cmd);
+		buf = readline(prompt);
+	}
+}
+
+int	sig_handle(int num, t_sig_callb handler, t_sig_type type)
 {
 	t_sigaction	sig;
 
@@ -26,5 +65,9 @@ bool	sig_handle(int num, t_sig_callb handler, t_sig_type type)
 		sig.sa_flags = SA_RESETHAND;
 	else if (type == SIG_COMPLEX)
 		sig.sa_flags |= SA_SIGINFO;
-	return (sigaction(num, &sig, 0) != -1);
+	if (sigaction(num, &sig, 0) == -1)
+		return (E_SYS_SIG);
+	return (E_OK);
 }
+
+

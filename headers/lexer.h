@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/29 04:09:13 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/29 19:31:54 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include <libft.h>
 
 # define LEX_NB 15
+# define LEX_STR_NB 4
+
+# define LEX_BAN "|&*<>;\\\"'$ "
+# define LEX_STR_BAN "*$\\"
 
 typedef enum e_token_type
 {
@@ -67,7 +71,7 @@ int		match_redir_out(const char *s);
 int		match_lbracket(const char *s);
 int		match_rbracket(const char *s);
 
-bool	is_chr_word(char c);
-bool	tokenize(const char *str, t_collection *tokens);
+bool	is_chr_word(char c, const char *banned);
+int		tokenize(const char *str, t_collection *tokens);
 
 #endif
