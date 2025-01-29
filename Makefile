@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 18:27:35 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/17 14:10:26 by mrouves          ###   ########.fr        #
+#    Updated: 2025/01/29 05:46:39 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,6 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
-	@rm -f $(NAME_BONUS)
 	@printf "Cleaned $(BOLD)$(NAME)$(NO_COLOR)\n"
 	@$(MAKE) -C $(DIR_LIBFT) --no-print-directory -j fclean
 

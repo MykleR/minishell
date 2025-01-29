@@ -6,69 +6,68 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/15 14:58:27 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/01/29 04:09:13 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "minishell.h"
+# include <libft.h>
 
-// WORD: (Cmd or Args, ect...)
-// PIPE: |
-// REDIRECT_IN: <
-// REDIRECT_OUT: >
-// HEREDOC: <<
-// APPEND: >>
-// BACKGROUND: &
-// SEMICOLON: ;
-// AND: &&
-// OR: ||
-// DOUBLE_QUOTE: "
-// SINGLE_QUOTE: '
-// WHITE_SPACE: \t \n \v \f \r
-// EOF_: \0
-// ERROR: Error Token
+# define LEX_NB 15
 
-typedef enum e_type
+typedef enum e_token_type
 {
-	WORD,
-	PIPE,
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	HEREDOC,
-	APPEND,
-	BACKGROUND,
-	SEMICOLON,
-	AND,
-	OR,
-	DOUBLE_QUOTE,
-	SINGLE_QUOTE,
-	WHITE_SPACE,
-	EOF_,
-	ERROR
-}				t_type;
+	T_WORD,
+	T_IDENT,
+	T_NUMBER,
+	T_SPACE,
+	T_PIPE,
+	T_OR,
+	T_REDIR_IN,
+	T_REDIR_OUT,
+	T_HERE_DOC,
+	T_APPEND,
+	T_WILDCARD,
+	T_AND,
+	T_LBRACKET,
+	T_RBRACKET,
+	T_SQUOTE,
+	T_DQUOTE,
+	T_ERROR
+}	t_token_type;
 
-typedef enum e_quote
+typedef struct s_token_pattern
 {
-	NONE,
-	SINGLE,
-	DOUBLE,
-}				t_quote;
+	t_token_type	type;
+	int				(*match)(const char *);
+}	t_token_pattern;
 
 typedef struct s_token
 {
-	t_type		type;
-	char		*value;
-	int			len;
-}				t_token;
+	t_token_type	type;
+	size_t			start;
+	size_t			len;
+}	t_token;
 
-typedef struct s_lexer
-{
-	const char	*input;
-	size_t		pos;
-	t_quote		qstate;
-}				t_lexer;
+int		match_squote(const char *s);
+int		match_dquote(const char *s);
+int		match_ident(const char *s);
+int		match_word(const char *s);
+int		match_number(const char *s);
+int		match_here_doc(const char *s);
+int		match_append(const char *s);
+int		match_and(const char *s);
+int		match_or(const char *s);
+int		match_space(const char *s);
+int		match_pipe(const char *s);
+int		match_redir_in(const char *s);
+int		match_redir_out(const char *s);
+int		match_lbracket(const char *s);
+int		match_rbracket(const char *s);
+
+bool	is_chr_word(char c);
+bool	tokenize(const char *str, t_collection *tokens);
 
 #endif
