@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 19:46:48 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/29 20:53:49 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/29 21:07:34 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,10 @@
 void	error_print(t_error_type e)
 {
 	const char	*msg;
-	const char	*end;
 
-	msg = (char *)ERROR_MSGS + e;
-	end = msg;
-	while (*end)
-	   end++;
-	write(2, msg, end - msg);
+	msg = ERROR_MSGS;
+	msg += (int)e;
+	write(2, msg, ft_strlen(msg));
 }
 
 void	rl_shell_nl(int num)
@@ -43,8 +40,8 @@ void	rl_shell_prompt(t_shell *shell, const char *prompt,
 	{
 		shell->cmd = ft_strdup(buf);
 		free(buf);
-		if (ft_strlen(buf) > 0)
-			add_history(buf);
+		if (ft_strlen(shell->cmd) > 0)
+			add_history(shell->cmd);
 		error_print(callback(shell));
 		alloc_f((void *)shell->cmd);
 		buf = readline(prompt);
