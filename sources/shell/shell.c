@@ -6,34 +6,21 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 10:38:54 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 11:54:52 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-// TEMP FUNCTION, JUST TO PRINT TOKENS LIST
-static void __tokens_iter(void *ptr, void *arg)
+int	shell_init(t_shell *shell, const char *prompt)
 {
-	t_token	*token;
-	char	*str;
-
-	str = arg;
-	token = ptr;
-	if (!token)
-		return ;
-	ft_printf("%d:[", token->type);
-	write(1, str + token->start, token->len);
-	ft_printf("], ");
-}
-
-int	shell_init(t_shell *shell)
-{
-	static const t_clear_info	clear = {0};
+	static const t_clear_info	clear = {
+		(void (*)(void *))token_clear, T_STACK};
 
 	if (__builtin_expect(!shell, 0))
 		return (0);
 	shell->cmd = NULL;
+	shell->prompt = ft_strdup(prompt);
 	collection_create(&shell->tokens, sizeof(t_token), 32, clear);
 	return (1);
 }
@@ -42,15 +29,6 @@ void	shell_destroy(t_shell *shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
+	alloc_f((void *)shell->prompt);
 	collection_destroy(&shell->tokens);
-}
-
-int	__shell_prompt(t_shell *shell)
-{
-	collection_clear(&shell->tokens);
-	if (tokenize(shell->cmd, &shell->tokens))
-		return (E_PARSE_LEX);
-	collection_iter(&shell->tokens, (void *)shell->cmd, __tokens_iter);
-	ft_printf("\n");
-	return (E_OK);
 }
