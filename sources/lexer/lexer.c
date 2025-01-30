@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 11:42:00 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 12:22:35 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	find_token(const t_token_pattern *patterns, int nb_patterns,
 	return (max_len);
 }
 
-int tokenize(const char *cmd, t_collection *tokens)
+int	tokenize(const char *cmd, t_collection *tokens)
 {
 	const t_token_pattern	*patterns;
 	t_token_type			type;

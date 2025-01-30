@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 19:46:48 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 11:46:45 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 12:22:10 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,3 @@ int	sig_handle(int num, t_sig_callb handler, t_sig_type type)
 		return (E_SYS_SIG);
 	return (E_OK);
 }
-
-

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 11:54:00 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 12:23:27 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,3 @@ void	rl_shell_prompt(t_shell *shell)
 		buf = readline(shell->prompt);
 	}
 }
-
