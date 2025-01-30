@@ -5,16 +5,66 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 14:40:09 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/23 15:59:04 by thomarna         ###   ########.fr       */
+/*   Created: 2025/01/30 10:42:16 by thomarna          #+#    #+#             */
+/*   Updated: 2025/01/30 16:39:11 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "collection.h"
-#include "libft_string.h"
 #include "minishell.h"
+#include "safe.h"
+#include <fcntl.h>
+#include <unistd.h>
 
-static void	prompt_line(const char *prompt, t_collection *c, char *delimiter)
+#define TMP_PREFIX "ms"
+#define TMP_ID 100000000
+
+int	is_exist(const char *fname)
+{
+	if (access(fname, F_OK))
+		return (1);
+	return (0);
+}
+
+char	*random_string(int len)
+{
+	char			*filename;
+	int				fd;
+	unsigned char	*buffer;
+	int				i;
+
+	i = -1;
+	buffer = malloc(sizeof(char) * len + 1);
+	filename = malloc(sizeof(char) * len + 1);
+	if (!filename || !buffer)
+		return (NULL);
+	fd = safe_open("/dev/random", O_RDONLY);
+	if (safe_read(fd, buffer, len) != len)
+	{
+		close(fd);
+		return (NULL);
+	}
+	close(fd);
+	while (++i < len)
+		filename[i] = (buffer[i] % 26) + 97;
+	filename[len] = '\0';
+	return (filename);
+}
+
+int	create_tmp(void)
+{
+	int		fd;
+	char	*filename;
+	char	*tmp;
+
+	tmp = random_string(12);
+	if (!tmp)
+		return (-1);
+	filename = ft_strjoin("/tmp/", tmp);
+	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 644);
+	return (fd);
+}
+
+static void	prompt_line(const char *prompt, int fd, char *delimiter)
 {
 	char	*buf;
 
@@ -24,30 +74,24 @@ static void	prompt_line(const char *prompt, t_collection *c, char *delimiter)
 		if (ft_strcmp(buf, delimiter) == 0)
 		{
 			free(buf);
-			break;
+			break ;
 		}
-		collection_append(c, &((char *){ft_strdup(buf)}));
-		/* ft_printf("[%s]\n", buf); */
+		write(fd, buf, ft_strlen(buf));
+		write(fd, "\n", 1);
 		free(buf);
 		buf = readline(prompt);
 	}
 }
 
-void    str_print(void *ptr, void *arg)
-{
-    (void) arg;
-    ft_printf("%s, ", *(char **)ptr);
-}
-
-
 int	main(int ac, char **av)
 {
-	t_collection	c;
+	int	fd;
+
 	if (ac < 2)
 		return (0);
-
-	collection_create(&c, sizeof(char **), 2, (t_clear_info){alloc_f, T_HEAP});
-	prompt_line("> ", &c, av[1]);
-    collection_iter(&c, NULL, str_print);
-    collection_destroy(&c);
+	fd = create_tmp();
+	if (fd == -1)
+		return (1);
+	prompt_line("> ", fd, av[1]);
+	close(fd);
 }
