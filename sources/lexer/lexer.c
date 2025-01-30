@@ -6,13 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 12:22:35 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 15:03:06 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int	find_token(const t_token_pattern *patterns, int nb_patterns,
+static int	find_token(const t_pattern *patterns, int nb_patterns,
 				const char *input, t_token_type *type)
 {
 	int	max_len;
@@ -36,9 +36,9 @@ static int	find_token(const t_token_pattern *patterns, int nb_patterns,
 
 int	tokenize(const char *cmd, t_collection *tokens)
 {
-	const t_token_pattern	*patterns;
-	t_token_type			type;
-	int						len;
+	const t_pattern	*patterns;
+	t_token_type	type;
+	int				len;
 
 	patterns = get_patterns(false);
 	while (*cmd)

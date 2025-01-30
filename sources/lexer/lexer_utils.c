@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:37:17 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 11:42:41 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/01/30 15:01:36 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ bool	is_chr_word(char c, const char *banned)
 	return (!banned || !(*banned));
 }
 
-const t_token_pattern	*get_patterns(bool dquote)
+const t_pattern	*get_patterns(bool dquote)
 {
-	static const t_token_pattern	m_patterns[LEX_NB] = {
+	static const t_pattern	m_patterns[LEX_NB] = {
 	{T_NUMBER, match_number}, {T_HERE_DOC, match_here_doc},
 	{T_APPEND, match_append}, {T_AND, match_and},
 	{T_SQUOTE, match_squote}, {T_DQUOTE, match_dquote},
@@ -47,7 +47,7 @@ const t_token_pattern	*get_patterns(bool dquote)
 	{T_LBRACKET, match_lbracket}, {T_RBRACKET, match_rbracket},
 	{T_REDIR_OUT, match_redir_out}, {T_IDENT, match_ident},
 	{T_OR, match_or}};
-	static const t_token_pattern	d_patterns[LEX_STR_NB] = {
+	static const t_pattern	d_patterns[LEX_STR_NB] = {
 	{T_NUMBER, match_number}, {T_WORD, match_word},
 	{T_IDENT, match_ident}};
 
