@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:35:25 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/13 13:38:52 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:05:52 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,14 @@ void	hm_del(t_hm *h, const char *key)
 	}
 }
 
-int	main(int ac, char **av, char **ep)
-{
-	t_collection	c;
-
-	(void)ac;
-	(void)av;
-	init_env(ep, &c);
-	printf("%s\n", *(char **)hm_get(&c, "PATH"));
-	hm_del(&c, "PATH");
-	get_env(&c);	
-}
+/* int	main(int ac, char **av, char **ep) */
+/* { */
+/* 	t_collection	c; */
+/*  */
+/* 	(void)ac; */
+/* 	(void)av; */
+/* 	init_env(ep, &c); */
+/* 	printf("%s\n", *(char **)hm_get(&c, "PATH")); */
+/* 	hm_del(&c, "PATH"); */
+/* 	env_builtin(&c); */
+/* } */

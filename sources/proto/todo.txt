@@ -1,0 +1,111 @@
+Builtins:
+- pwd
+- cd (.. | - | -- | ~ | empty)
+- env ✓
+- echo (-n)
+- export (value)
+- unset (value)
+- exit (value)
+
+Get_env_var secure > (Grab)
+
+
+check ENV var 
+- HOME > bash: cd: HOME not set
+- TERM > 'GRAOU': unknown terminal type. || TERM environment variable not set.
+- LANG
+- PWD
+- OLD_PWD
+
+pwd:
+    Print the name of the current working directory.
+    
+    Options:
+      -L	print the value of $PWD if it names the current working
+    		directory
+      -P	print the physical directory, without any symbolic links
+    
+    By default, `pwd' behaves as if `-L' were specified.
+    
+    Exit Status:
+    Returns 0 unless an invalid option is given or the current directory
+    cannot be read.
+
+cd: (with & without path)
+actual pwd > set to OLD_PWD
+-> without (or ~) check if HOME exist, if exist cd HOME else > bash: cd: HOME not set
+-> with > Check if is folder & have rights (F_ACCESS, R_ACCESS ?)
+-> .. ?? (if current folder removed) > cd .. > bash: cd: ../: No such file or directory
+-> - go to OLDPWD path > cd: OLDPWD not set
+-> cd ~- | cd ~+ > alone > HOME
+-> cd ~-/project (OLD_PWD) | cd ~+/project (PWD) IF EXIST !!!
+If the tilde-prefix is ‘~+’, the value of the shell variable PWD replaces the tilde-prefix. If the tilde-prefix is ‘~-’, the value of the shell variable OLDPWD, if it is set, is substituted.
+
+
+
+help cd:
+Change the current directory to DIR.  The default DIR is the value of the
+HOME shell variable.
+A null directory name is the same as the current directory.  If DIR begins
+with a slash (/), then CDPATH is not used.
+The default is to follow symbolic links, as if `-L' were specified.
+    `..' is processed by removing the immediately previous pathname component
+    back to a slash or the beginning of DIR.
+    
+    Exit Status:
+    Returns 0 if the directory is changed, and if $PWD is set successfully when
+    -P is used; non-zero otherwise.
+TILDE EXPANSION
+If  a  word begins with an unquoted tilde character (`~'), all of the characters preceding the first unquoted slash (or all characters, if there is no unquoted slash) are consid‐
+       ered a tilde-prefix.  If none of the characters in the tilde-prefix are quoted, the characters in the tilde-prefix following the tilde are treated as a possible login  name.   If
+       this  login  name  is  the null string, the tilde is replaced with the value of the shell parameter HOME.  If HOME is unset, the home directory of the user executing the shell is
+       substituted instead.  Otherwise, the tilde-prefix is replaced with the home directory associated with the specified login name.
+
+       If the tilde-prefix is a `~+', the value of the shell variable PWD replaces the tilde-prefix.  If the tilde-prefix is a `~-', the value of the shell variable  OLDPWD,  if  it  is
+       set,  is  substituted.   If the characters following the tilde in the tilde-prefix consist of a number N, optionally prefixed by a `+' or a `-', the tilde-prefix is replaced with
+       the corresponding element from the directory stack, as it would be displayed by the dirs builtin invoked with the tilde-prefix as an argument.  If the  characters  following  the
+       tilde in the tilde-prefix consist of a number without a leading `+' or `-', `+' is assumed.
+
+
+
+echo (-n): (-n without endline)
+
+
+help echo:
+Write arguments to the standard output.
+    
+    Display the ARGs, separated by a single space character and followed by a
+    newline, on the standard output.
+    
+    Options:
+      -n	do not append a newline
+    Exit Status:
+    Returns success unless a write error occurs.
+
+
+export:\
+
+help export:
+Marks each NAME for automatic export to the environment of subsequently
+    executed commands.  If VALUE is supplied, assign VALUE before exporting.
+Exit Status:
+    Returns success unless an invalid option is given or NAME is invalid.
+
+
+unset:
+
+help unset:
+Unset values and attributes of shell variables and functions.
+    
+    For each NAME, remove the corresponding variable or function.
+Without options, unset first tries to unset a variable, and if that fails,
+    tries to unset a function.    
+Some variables cannot be unset; also see `readonly'.
+
+exit:
+
+help exit:
+Exit the shell.
+    
+    Exits the shell with a status of N.  If N is omitted, the exit status
+    is that of the last command executed.
