@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 13:50:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/17 16:42:47 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:18:42 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	cd_hyphen(t_hm *h)
 	oldpwd = hm_get(h, "OLDPWD");
 	if (oldpwd == NULL)
 		printf("cd: OLDPWD not set\n");
-	else if (!chdir(oldpwd))
+	else if (!chdir(*(char **)oldpwd))
 		hm_set(h, "PWD", &((char *){ft_strdup(oldpwd)}));
 	else
 	{
 		printf("cd: ");
-		if (access(oldpwd, F_OK) == -1)
-			printf("%s: No such file or directory\n", oldpwd);
-		else if (access(oldpwd, R_OK) == -1)
-			printf("%s: Permission denied\n", oldpwd);
+		if (access(*(char **)oldpwd, F_OK) == -1)
+			printf("%s: No such file or directory\n", *(char **)oldpwd);
+		else if (access(*(char **)oldpwd, R_OK) == -1)
+			printf("%s: Permission denied\n", *(char **)oldpwd);
 		else
-			printf("%s: Not a directory\n", oldpwd);
+			printf("%s: Not a directory\n", *(char **)oldpwd);
 	}
 }
 

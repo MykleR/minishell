@@ -37,10 +37,6 @@ actual pwd > set to OLD_PWD
 -> with > Check if is folder & have rights (F_ACCESS, R_ACCESS ?)
 -> .. ?? (if current folder removed) > cd .. > bash: cd: ../: No such file or directory
 -> - go to OLDPWD path > cd: OLDPWD not set
--> cd ~- | cd ~+ > alone > HOME
--> cd ~-/project (OLD_PWD) | cd ~+/project (PWD) IF EXIST !!!
-If the tilde-prefix is ‘~+’, the value of the shell variable PWD replaces the tilde-prefix. If the tilde-prefix is ‘~-’, the value of the shell variable OLDPWD, if it is set, is substituted.
-
 
 
 help cd:
