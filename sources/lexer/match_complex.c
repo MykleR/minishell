@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 01:26:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/29 16:54:17 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/19 17:45:26 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,17 @@ int	match_word(const char *s)
 	int	pos;
 
 	pos = 0;
-	while (is_chr_word(s[pos], LEX_BAN))
+	while (is_chr_word(s[pos], LEX_NOTWORD))
 		pos++;
 	return (pos);
 }
 
-int	match_number(const char *s)
+int	match_space(const char *s)
 {
-	int		pos;
+	int	pos;
 
 	pos = 0;
-	while (ft_isdigit(s[pos]))
+	while (ft_isspace(s[pos]))
 		pos++;
 	return (pos);
 }

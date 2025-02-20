@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   match_single.c                                     :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 02:47:56 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/19 23:58:21 by mrouves          ###   ########.fr       */
+/*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
+/*   Updated: 2025/02/20 01:23:41 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <lexer.h>
+#include <parser.h>
 
-int	match_pipe(const char *s)
+static t_action get_action(int state, int terminal)
 {
-	return (*s == '|');
+    if (state < 0 || state >= S_COUNT || terminal < 0 || terminal > T_COUNT)
+        return (t_action){ACT_ERROR, -1};
+    return action_table[state][terminal];
 }
 
-int	match_redir_in(const char *s)
+t_ast_node	*lalr_parse(t_collection *tokens)
 {
-	return (*s == '<');
-}
-
-int	match_redir_out(const char *s)
-{
-	return (*s == '>');
-}
-
-int	match_lparen(const char *s)
-{
-	return (*s == '(');
-}
-
-int	match_rparen(const char *s)
-{
-	return (*s == ')');
+	(void)tokens;
+	(void) get_action;
+	return (NULL);
 }

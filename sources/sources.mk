@@ -6,11 +6,12 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/30 11:46:32 by mrouves          ###   ########.fr        #
+#    Updated: 2025/02/20 01:25:52 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
 				utils.c\
+				parser.c\
 				shell/shell.c\
 				shell/shell_rl.c\
 				lexer/lexer.c\
