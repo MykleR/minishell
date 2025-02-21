@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/20 01:25:36 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/21 02:17:03 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ typedef enum e_n_terminals
 
 typedef enum e_action_type
 {
+    ACT_ERROR,
     ACT_SHIFT,
     ACT_REDUCE,
     ACT_ACCEPT,
-    ACT_ERROR
 } t_action_type;
 
 typedef enum e_ast_type
@@ -56,7 +56,7 @@ typedef enum e_ast_redir
 	AST_APP,
 }	t_ast_redir;
 
-typedef union u_expression
+typedef union u_ast_expression
 {
 	struct
 	{
@@ -69,25 +69,36 @@ typedef union u_expression
 		t_ast_redir redir;
 		int			fd;
 	};
-}	t_expression;
+}	t_ast_expression;
 
 typedef struct s_ast_node
 {
 	t_ast_type			type;
-	t_expression		expression;
+	t_ast_expression	expression;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
 }	t_ast_node;
 
+typedef struct s_parser
+{
+	t_ast_node	*ast;
+	t_stack		stack;
+	uint32_t	token_id;
+}	t_parser;
+
+typedef struct s_parse_stack
+{
+    int					state;
+    t_ast_node			*node;   // AST node for semantic actions
+}	t_parse_stack;
+
 typedef struct
 {
 	t_action_type	type;
-	int				arg;
+	int				value;
 }	t_action;
 
-
-t_ast_node	*lalr_parse(t_collection *tokens);
-
+int	lalr_parse(t_parser *parser, t_collection *tokens);
 
 // NOT NORMED ONLY PURPOSE IS PROTOTYPING
 int goto_table[S_COUNT][NT_COUNT] = {
