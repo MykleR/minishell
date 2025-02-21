@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/21 02:31:55 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:30:28 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 static t_action get_action(int state, t_token_type terminal)
 {
+
     if (state < 0 || state >= S_COUNT || terminal < 0 || terminal > T_COUNT)
         return (t_action){ACT_ERROR, -1};
-    return action_table[state][terminal];
+    return ((char *)ACTION_TABLE) + state * T_COUNT + terminal;
 }
 
 /*
@@ -56,6 +57,13 @@ static void	lalr_reduce(t_parser *parser, t_action action)
 	(void) production;
 }
 
+static void lalr_shift(t_parser *parser, t_token *token, t_action action)
+{
+	parser->token_id++;
+	stack_push(&parser->stack, &((t_parse_stack){
+		action.value, create_leaf(token)}));
+}
+
 int	lalr_parse(t_parser *parser, t_collection *tokens)
 {
 	t_token		*token;
@@ -63,17 +71,16 @@ int	lalr_parse(t_parser *parser, t_collection *tokens)
 	int			state;
 
 	parser->ast = NULL;
-	parser->token_id = -1;
+	parser->token_id = 0;
 	collection_clear(&parser->stack);
     stack_push(&parser->stack, &((t_parse_stack){0, NULL}));
-    while (++parser->token_id < tokens->len)
+    while (parser->token_id < tokens->len)
 	{
 		token = collection_get(tokens, parser->token_id);
         state = ((t_parse_stack *)stack_top(&parser->stack))->state;
 		action = get_action(state, token->type);
 		if (action.type == ACT_SHIFT)
-			stack_push(&parser->stack, &((t_parse_stack){
-				action.value, create_leaf(token)}));
+			lalr_shift(parser, token, action);
 		else if (action.type == ACT_REDUCE)
 			lalr_reduce(parser, action);
 		else if (action.type == ACT_ACCEPT)

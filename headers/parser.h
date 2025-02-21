@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/21 02:17:03 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:30:14 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,367 +100,97 @@ typedef struct
 
 int	lalr_parse(t_parser *parser, t_collection *tokens);
 
-// NOT NORMED ONLY PURPOSE IS PROTOTYPING
-int goto_table[S_COUNT][NT_COUNT] = {
-    {
-        [NT_LIST] = 1,
-        [NT_PIPELINE] = 2,
-        [NT_CMD_REDIR] = 5,
-        [NT_CMD_WORD] = 4,
-        [NT_CMD] = 3,
-        [NT_SUBSHELL] = 6,
-    },
-	{
-        [NT_CMD_REDIR] = 19,
-        [NT_CMD_WORD] = 18,
-    },
-	{[NT_CMD_WORD] = 20},
-	{[NT_CMD_WORD] = 21},
-	{[NT_CMD_WORD] = 22},
-	{
-        [NT_LIST] = 23,
-        [NT_PIPELINE] = 2,
-        [NT_CMD_REDIR] = 5,
-        [NT_CMD_WORD] = 4,
-        [NT_CMD] = 3,
-        [NT_SUBSHELL] = 6
-    },
-	{
-        [NT_PIPELINE] = 24,
-        [NT_CMD_REDIR] = 5,
-        [NT_CMD_WORD] = 4,
-        [NT_CMD] = 3,
-        [NT_SUBSHELL] = 6
-    },
-	{
-        [NT_PIPELINE] = 25,
-        [NT_CMD_REDIR] = 5,
-        [NT_CMD_WORD] = 4,
-        [NT_CMD] = 3,
-        [NT_SUBSHELL] = 6
-    },
-	{
-        [NT_CMD_REDIR] = 5,
-        [NT_CMD_WORD] = 4,
-        [NT_CMD] = 26,
-        [NT_SUBSHELL] = 6
-    },
-	{
-		[NT_CMD_REDIR] = 19,
-		[NT_CMD_WORD] = 18
-	},
-};
+#define GOTO_TABLE "\
+\x00\x01\x02\x05\x04\x03\x06\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x13\x12\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x14\x00\x00\
+\x00\x00\x00\x00\x15\x00\x00\
+\x00\x00\x00\x00\x16\x00\x00\
+\x00\x17\x02\x05\x04\x03\x06\
+\x00\x00\x18\x05\x04\x03\x06\
+\x00\x00\x19\x05\x04\x03\x06\
+\x00\x00\x00\x05\x04\x1a\x06\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x13\x12\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\
+"
 
-t_action action_table[S_COUNT][T_COUNT] = {
-	{
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_LPAREN] = {ACT_SHIFT, 14},
-    },
-	{
-		[T_AND] = {ACT_SHIFT, 15},
-		[T_OR] = {ACT_SHIFT, 16},
-		[T_EOF] = {ACT_ACCEPT, 0}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 3},
-		[T_OR] = {ACT_REDUCE, 3},
-		[T_PIPE] = {ACT_SHIFT,17},
-		[T_RPAREN] = {ACT_REDUCE, 3},
-		[T_EOF] = {ACT_REDUCE, 3}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 5},
-		[T_OR] = {ACT_REDUCE, 5},
-		[T_PIPE] = {ACT_REDUCE, 5},
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_RPAREN] = {ACT_REDUCE, 5},
-		[T_EOF] = {ACT_REDUCE, 5}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 13},
-		[T_OR] = {ACT_REDUCE, 13},
-		[T_PIPE] = {ACT_REDUCE, 13},
-		[T_REDIR_IN] = {ACT_REDUCE, 13},
-		[T_REDIR_OUT] = {ACT_REDUCE, 13},
-		[T_APPEND] = {ACT_REDUCE, 13},
-		[T_WORD] = {ACT_REDUCE, 13},
-		[T_IDENT] = {ACT_REDUCE, 13},
-		[T_DQUOTE] = {ACT_REDUCE, 13},
-		[T_SQUOTE] = {ACT_REDUCE, 13},
-		[T_RPAREN] = {ACT_REDUCE, 13},
-		[T_EOF] = {ACT_REDUCE, 13}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 14},
-		[T_OR] = {ACT_REDUCE, 14},
-		[T_PIPE] = {ACT_REDUCE, 14},
-		[T_REDIR_IN] = {ACT_REDUCE, 14},
-		[T_REDIR_OUT] = {ACT_REDUCE, 14},
-		[T_APPEND] = {ACT_REDUCE, 14},
-		[T_WORD] = {ACT_REDUCE, 14},
-		[T_IDENT] = {ACT_REDUCE, 14},
-		[T_DQUOTE] = {ACT_REDUCE, 14},
-		[T_SQUOTE] = {ACT_REDUCE, 14},
-		[T_RPAREN] = {ACT_REDUCE, 14},
-		[T_EOF] = {ACT_REDUCE, 14}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 17},
-		[T_OR] = {ACT_REDUCE, 17},
-		[T_PIPE] = {ACT_REDUCE, 17},
-		[T_REDIR_IN] = {ACT_REDUCE, 17},
-		[T_REDIR_OUT] = {ACT_REDUCE, 17},
-		[T_APPEND] = {ACT_REDUCE, 17},
-		[T_WORD] = {ACT_REDUCE, 17},
-		[T_IDENT] = {ACT_REDUCE, 17},
-		[T_DQUOTE] = {ACT_REDUCE, 17},
-		[T_SQUOTE] = {ACT_REDUCE, 17},
-		[T_RPAREN] = {ACT_REDUCE, 17},
-		[T_EOF] = {ACT_REDUCE, 17}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 9},
-		[T_OR] = {ACT_REDUCE, 9},
-		[T_PIPE] = {ACT_REDUCE, 9},
-		[T_REDIR_IN] = {ACT_REDUCE, 9},
-		[T_REDIR_OUT] = {ACT_REDUCE, 9},
-		[T_APPEND] = {ACT_REDUCE, 9},
-		[T_WORD] = {ACT_REDUCE, 9},
-		[T_IDENT] = {ACT_REDUCE, 9},
-		[T_DQUOTE] = {ACT_REDUCE, 9},
-		[T_SQUOTE] = {ACT_REDUCE, 9},
-		[T_RPAREN] = {ACT_REDUCE, 9},
-		[T_EOF] = {ACT_REDUCE, 9}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 10},
-		[T_OR] = {ACT_REDUCE, 10},
-		[T_PIPE] = {ACT_REDUCE, 10},
-		[T_REDIR_IN] = {ACT_REDUCE, 10},
-		[T_REDIR_OUT] = {ACT_REDUCE, 10},
-		[T_APPEND] = {ACT_REDUCE, 10},
-		[T_WORD] = {ACT_REDUCE, 10},
-		[T_IDENT] = {ACT_REDUCE, 10},
-		[T_DQUOTE] = {ACT_REDUCE, 10},
-		[T_SQUOTE] = {ACT_REDUCE, 10},
-		[T_RPAREN] = {ACT_REDUCE, 10},
-		[T_EOF] = {ACT_REDUCE, 10}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 11},
-		[T_OR] = {ACT_REDUCE, 11},
-		[T_PIPE] = {ACT_REDUCE, 11},
-		[T_REDIR_IN] = {ACT_REDUCE, 11},
-		[T_REDIR_OUT] = {ACT_REDUCE, 11},
-		[T_APPEND] = {ACT_REDUCE, 11},
-		[T_WORD] = {ACT_REDUCE, 11},
-		[T_IDENT] = {ACT_REDUCE, 11},
-		[T_DQUOTE] = {ACT_REDUCE, 11},
-		[T_SQUOTE] = {ACT_REDUCE, 11},
-		[T_RPAREN] = {ACT_REDUCE, 11},
-		[T_EOF] = {ACT_REDUCE, 11}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 12},
-		[T_OR] = {ACT_REDUCE, 12},
-		[T_PIPE] = {ACT_REDUCE, 12},
-		[T_REDIR_IN] = {ACT_REDUCE, 12},
-		[T_REDIR_OUT] = {ACT_REDUCE, 12},
-		[T_APPEND] = {ACT_REDUCE, 12},
-		[T_WORD] = {ACT_REDUCE, 12},
-		[T_IDENT] = {ACT_REDUCE, 12},
-		[T_DQUOTE] = {ACT_REDUCE, 12},
-		[T_SQUOTE] = {ACT_REDUCE, 12},
-		[T_RPAREN] = {ACT_REDUCE, 12},
-		[T_EOF] = {ACT_REDUCE, 12}
-	},
-	{
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-	},
-	{
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-	},
-	{
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-	},
-	{
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_LPAREN] = {ACT_SHIFT, 14},
-	},
-	{
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_LPAREN] = {ACT_SHIFT, 14},
-	},
-	{
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_LPAREN] = {ACT_SHIFT, 14},
-	},
-	{
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_LPAREN] = {ACT_SHIFT, 14},
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 15},
-		[T_OR] = {ACT_REDUCE, 15},
-		[T_PIPE] = {ACT_REDUCE, 15},
-		[T_REDIR_IN] = {ACT_REDUCE, 15},
-		[T_REDIR_OUT] = {ACT_REDUCE, 15},
-		[T_APPEND] = {ACT_REDUCE, 15},
-		[T_WORD] = {ACT_REDUCE, 15},
-		[T_IDENT] = {ACT_REDUCE, 15},
-		[T_DQUOTE] = {ACT_REDUCE, 15},
-		[T_SQUOTE] = {ACT_REDUCE, 15},
-		[T_RPAREN] = {ACT_REDUCE, 15},
-		[T_EOF] = {ACT_REDUCE, 15}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 16},
-		[T_OR] = {ACT_REDUCE, 16},
-		[T_PIPE] = {ACT_REDUCE, 16},
-		[T_REDIR_IN] = {ACT_REDUCE, 16},
-		[T_REDIR_OUT] = {ACT_REDUCE, 16},
-		[T_APPEND] = {ACT_REDUCE, 16},
-		[T_WORD] = {ACT_REDUCE, 16},
-		[T_IDENT] = {ACT_REDUCE, 16},
-		[T_DQUOTE] = {ACT_REDUCE, 16},
-		[T_SQUOTE] = {ACT_REDUCE, 16},
-		[T_RPAREN] = {ACT_REDUCE, 16},
-		[T_EOF] = {ACT_REDUCE, 16}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 6},
-		[T_OR] = {ACT_REDUCE, 6},
-		[T_PIPE] = {ACT_REDUCE, 6},
-		[T_REDIR_IN] = {ACT_REDUCE, 6},
-		[T_REDIR_OUT] = {ACT_REDUCE, 6},
-		[T_APPEND] = {ACT_REDUCE, 6},
-		[T_WORD] = {ACT_REDUCE, 6},
-		[T_IDENT] = {ACT_REDUCE, 6},
-		[T_DQUOTE] = {ACT_REDUCE, 6},
-		[T_SQUOTE] = {ACT_REDUCE, 6},
-		[T_RPAREN] = {ACT_REDUCE, 6},
-		[T_EOF] = {ACT_REDUCE, 6}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 7},
-		[T_OR] = {ACT_REDUCE, 7},
-		[T_PIPE] = {ACT_REDUCE, 7},
-		[T_REDIR_IN] = {ACT_REDUCE, 7},
-		[T_REDIR_OUT] = {ACT_REDUCE, 7},
-		[T_APPEND] = {ACT_REDUCE, 7},
-		[T_WORD] = {ACT_REDUCE, 7},
-		[T_IDENT] = {ACT_REDUCE, 7},
-		[T_DQUOTE] = {ACT_REDUCE, 7},
-		[T_SQUOTE] = {ACT_REDUCE, 7},
-		[T_RPAREN] = {ACT_REDUCE, 7},
-		[T_EOF] = {ACT_REDUCE, 7}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 8},
-		[T_OR] = {ACT_REDUCE, 8},
-		[T_PIPE] = {ACT_REDUCE, 8},
-		[T_REDIR_IN] = {ACT_REDUCE, 8},
-		[T_REDIR_OUT] = {ACT_REDUCE, 8},
-		[T_APPEND] = {ACT_REDUCE, 8},
-		[T_WORD] = {ACT_REDUCE, 8},
-		[T_IDENT] = {ACT_REDUCE, 8},
-		[T_DQUOTE] = {ACT_REDUCE, 8},
-		[T_SQUOTE] = {ACT_REDUCE, 8},
-		[T_RPAREN] = {ACT_REDUCE, 8},
-		[T_EOF] = {ACT_REDUCE, 8}
-	},
-	{
-		[T_AND] = {ACT_SHIFT, 15},
-		[T_OR] = {ACT_SHIFT, 16},
-		[T_RPAREN] = {ACT_SHIFT, 27},
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 1},
-		[T_OR] = {ACT_REDUCE, 1},
-		[T_PIPE] = {ACT_SHIFT, 17},
-		[T_RPAREN] = {ACT_REDUCE, 1},
-		[T_EOF] = {ACT_REDUCE, 1}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 2},
-		[T_OR] = {ACT_REDUCE, 2},
-		[T_PIPE] = {ACT_SHIFT, 17},
-		[T_RPAREN] = {ACT_REDUCE, 2},
-		[T_EOF] = {ACT_REDUCE, 2}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 4},
-		[T_OR] = {ACT_REDUCE, 4},
-		[T_PIPE] = {ACT_REDUCE, 4},
-		[T_REDIR_IN] = {ACT_SHIFT, 11},
-		[T_REDIR_OUT] = {ACT_SHIFT, 12},
-		[T_APPEND] = {ACT_SHIFT, 13},
-		[T_WORD] = {ACT_SHIFT, 7},
-		[T_IDENT] = {ACT_SHIFT, 8},
-		[T_DQUOTE] = {ACT_SHIFT, 9},
-		[T_SQUOTE] = {ACT_SHIFT, 10},
-		[T_RPAREN] = {ACT_REDUCE, 4},
-		[T_EOF] = {ACT_REDUCE, 4}
-	},
-	{
-		[T_AND] = {ACT_REDUCE, 18},
-		[T_OR] = {ACT_REDUCE, 18},
-		[T_PIPE] = {ACT_REDUCE, 18},
-		[T_REDIR_IN] = {ACT_REDUCE, 18},
-		[T_REDIR_OUT] = {ACT_REDUCE, 18},
-		[T_APPEND] = {ACT_REDUCE, 18},
-		[T_WORD] = {ACT_REDUCE, 18},
-		[T_IDENT] = {ACT_REDUCE, 18},
-		[T_DQUOTE] = {ACT_REDUCE, 18},
-		[T_SQUOTE] = {ACT_REDUCE, 18},
-		[T_RPAREN] = {ACT_REDUCE, 18},
-		[T_EOF] = {ACT_REDUCE, 18}
-	},
-};
+#define ACTION_TABLE "\
+\x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
+\x0f\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
+\x03\x03\x11\x00\x00\x00\x00\x00\x00\x00\x00\x03\x03\
+\x05\x05\x05\x0b\x0c\x0d\x07\x08\x09\x0a\x00\x05\x05\
+\x0d\x0d\x0d\x0d\x0d\x0d\x0d\x0d\x0d\x0d\x00\x0d\x0d\
+\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x0e\x00\x0e\x0e\
+\x11\x11\x11\x11\x11\x11\x11\x11\x11\x11\x00\x11\x11\
+\x09\x09\x09\x09\x09\x09\x09\x09\x09\x09\x00\x09\x09\
+\x0a\x0a\x0a\x0a\x0a\x0a\x0a\x0a\x0a\x0a\x00\x0a\x0a\
+\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x00\x0b\x0b\
+\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x0c\x00\x0c\x0c\
+\x00\x00\x00\x00\x00\x00\x07\x08\x09\x0a\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x07\x08\x09\x0a\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x07\x08\x09\x0a\x00\x00\x00\
+\x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
+\x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
+\x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
+\x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
+\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x00\x0f\x0f\
+\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x00\x10\x10\
+\x06\x06\x06\x06\x06\x06\x06\x06\x06\x06\x00\x06\x06\
+\x07\x07\x07\x07\x07\x07\x07\x07\x07\x07\x00\x07\x07\
+\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x00\x08\x08\
+\x0f\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1b\x00\
+\x01\x01\x11\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01\
+\x02\x02\x11\x00\x00\x00\x00\x00\x00\x00\x00\x02\x02\
+\x04\x04\x04\x0b\x0c\x0d\x07\x08\x09\x0a\x00\x04\x04\
+\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x00\x12\x12\
+"
+
+#define RULES "\
+\x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
+\x1\x1\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x3\
+\x2\x2\x1\x0\x0\x0\x0\x0\x0\x0\x0\x2\x2\
+\x2\x2\x2\x1\x1\x1\x1\x1\x1\x1\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x0\x0\x0\x0\x0\x0\x1\x1\x1\x1\x0\x0\x0\
+\x0\x0\x0\x0\x0\x0\x1\x1\x1\x1\x0\x0\x0\
+\x0\x0\x0\x0\x0\x0\x1\x1\x1\x1\x0\x0\x0\
+\x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
+\x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
+\x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
+\x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+\x1\x1\x0\x0\x0\x0\x0\x0\x0\x0\x0\x1\x0\
+\x2\x2\x1\x0\x0\x0\x0\x0\x0\x0\x0\x2\x2\
+\x2\x2\x1\x0\x0\x0\x0\x0\x0\x0\x0\x2\x2\
+\x2\x2\x2\x1\x1\x1\x1\x1\x1\x1\x0\x2\x2\
+\x2\x2\x2\x2\x2\x2\x2\x2\x2\x2\x0\x2\x2\
+"
 
 #endif
