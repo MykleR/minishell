@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 19:46:48 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 12:22:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/21 15:14:38 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	error_print(t_error_type e)
 {
+	const char	*errors = E_MSG_OK E_MSG_LEX E_MSG_AST E_MSG_CLOSE \
+		E_MSG_WRITE E_MSG_FORK E_MSG_OPEN E_MSG_PIPE E_MSG_DUP2 E_MSG_SIG;
 	const char	*msg;
 
-	msg = ERROR_MSGS;
+	msg = errors;
 	msg += (int)e;
 	write(2, msg, ft_strlen(msg));
 }

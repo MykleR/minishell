@@ -6,7 +6,7 @@
 #    By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/14 16:26:20 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/14 13:42:00 by mrouves          ###   ########.fr        #
+#    Updated: 2025/02/21 15:29:36 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ WARN_STRING		= "[⚠]"
 COM_STRING		= "Compiling"
 
 define run_and_test
-printf "%b" "$(COM_STRING) $(@F)$(NO_COLOR)\r"; \
 $(1) 2> $@.log; \
 RESULT=$$?; \
 if [ $$RESULT -ne 0 ]; then \
