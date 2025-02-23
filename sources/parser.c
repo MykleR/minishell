@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/21 17:30:28 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:49:55 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,14 @@
 
 static t_action get_action(int state, t_token_type terminal)
 {
+	uint32_t	index;
 
-    if (state < 0 || state >= S_COUNT || terminal < 0 || terminal > T_COUNT)
-        return (t_action){ACT_ERROR, -1};
-    return ((char *)ACTION_TABLE) + state * T_COUNT + terminal;
+    index = state * T_COUNT + terminal;
+	if (state < 0 || state >= S_COUNT || terminal < 0 || terminal >= T_COUNT)
+		return ((t_action){ACT_ERROR, -1});
+	return ((t_action){ACTION_TABLE[index], RULES[index]});
 }
 
-/*
-if token.type is T_WORD, T_IDENT, T_SQUOTE, T_DQUOTE:
-        node = create_ast_node(AST_CMD)
-        node.expression.argv = [token.val]
-        node.expression.argc = 1
-        return node
-*/
 static t_ast_node	*create_leaf(t_token *token)
 {
 	t_ast_node	*node;

@@ -6,13 +6,14 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/21 15:53:54 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:20:35 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 

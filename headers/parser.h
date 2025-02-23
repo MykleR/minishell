@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/21 17:31:16 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/22 19:13:40 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 # include <lexer.h>
 
-# define S_COUNT	28
-# define T_COUNT	13
-# define NT_COUNT	 7
+# define STATE_COUNT		28
+# define TERM_COUNT			13
+# define NTERM_COUNT		7
+# define PROD_COUNT			19
 
 // terminals are lexer tokens so no need to redefine them
 // thos are non terminals:
@@ -100,7 +101,10 @@ typedef struct
 
 int	lalr_parse(t_parser *parser, t_collection *tokens);
 
-#define GOTO_TABLE "\
+# define PRODUCTION "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
+# define RHS_LEN	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x2"
+
+# define GOTO_TABLE "\
 \x00\x01\x02\x05\x04\x03\x06\
 \x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x00\x00\
