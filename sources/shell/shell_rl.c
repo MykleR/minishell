@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/01/30 12:23:27 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 17:01:25 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ static int	on_shell_prompt(t_shell *shell)
 	collection_clear(&shell->tokens);
 	if (tokenize(shell->cmd, &shell->tokens))
 		return (E_PARSE_LEX);
-	collection_iter(&shell->tokens, NULL,
-		(void (*)(void *, void *))__token_iprint);
-	return (E_OK);
+	return (lalr_parse(&shell->parser, &shell->tokens));
 }
 
 void	rl_shell_nl(int num)

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/22 19:13:40 by mykle            ###   ########.fr       */
+/*   Updated: 2025/02/24 17:05:54 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 // terminals are lexer tokens so no need to redefine them
 // thos are non terminals:
-typedef enum e_n_terminals
+typedef enum e_n_terminal
 {
 	NT_PROGRAM,
 	NT_LIST,
@@ -31,15 +31,15 @@ typedef enum e_n_terminals
 	NT_CMD_WORD,
 	NT_CMD,
 	NT_SUBSHELL,
-}	t_n_terminals;
+}	t_n_terminal;
 
 typedef enum e_action_type
 {
-    ACT_ERROR,
-    ACT_SHIFT,
-    ACT_REDUCE,
-    ACT_ACCEPT,
-} t_action_type;
+	ACT_ERROR,
+	ACT_SHIFT,
+	ACT_REDUCE,
+	ACT_ACCEPT,
+}	t_action_type;
 
 typedef enum e_ast_type
 {
@@ -67,7 +67,7 @@ typedef union u_ast_expression
 	struct
 	{
 		char		*file;
-		t_ast_redir redir;
+		t_ast_redir	redir;
 		int			fd;
 	};
 }	t_ast_expression;
@@ -89,11 +89,11 @@ typedef struct s_parser
 
 typedef struct s_parse_stack
 {
-    int					state;
-    t_ast_node			*node;   // AST node for semantic actions
+	int			state;
+	t_ast_node	*node;
 }	t_parse_stack;
 
-typedef struct
+typedef struct s_action
 {
 	t_action_type	type;
 	int				value;
@@ -101,10 +101,10 @@ typedef struct
 
 int	lalr_parse(t_parser *parser, t_collection *tokens);
 
-# define PRODUCTION "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
-# define RHS_LEN	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x2"
+# define PRODUCTIONS "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
+# define RHS_LENS	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x3"
 
-# define GOTO_TABLE "\
+# define GOTO_VALUES "\
 \x00\x01\x02\x05\x04\x03\x06\
 \x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x00\x00\
@@ -135,7 +135,7 @@ int	lalr_parse(t_parser *parser, t_collection *tokens);
 \x00\x00\x00\x00\x00\x00\x00\
 "
 
-#define ACTION_TABLE "\
+# define ACTION_VALUES "\
 \x00\x00\x00\x0b\x0c\x0d\x07\x08\x09\x0a\x0e\x00\x00\
 \x0f\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
 \x03\x03\x11\x00\x00\x00\x00\x00\x00\x00\x00\x03\x03\
@@ -166,7 +166,7 @@ int	lalr_parse(t_parser *parser, t_collection *tokens);
 \x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x00\x12\x12\
 "
 
-#define RULES "\
+# define ACTION_TYPES "\
 \x0\x0\x0\x1\x1\x1\x1\x1\x1\x1\x1\x0\x0\
 \x1\x1\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x3\
 \x2\x2\x1\x0\x0\x0\x0\x0\x0\x0\x0\x2\x2\

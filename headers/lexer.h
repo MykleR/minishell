@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/19 23:55:13 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 16:35:25 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@
 
 typedef enum e_token_type
 {
-	T_EOF,
-	T_WORD,
-	T_IDENT,
-	T_PIPE,
+	T_AND,
 	T_OR,
+	T_PIPE,
 	T_REDIR_IN,
 	T_REDIR_OUT,
 	T_APPEND,
-	T_AND,
+	T_WORD,
+	T_IDENT,
+	T_DQUOTE,
+	T_SQUOTE,
 	T_LPAREN,
 	T_RPAREN,
-	T_SQUOTE,
-	T_DQUOTE,
+	T_EOF,
 	T_SPACE,
 	T_HERE_DOC,
 	T_WILDCARD,
