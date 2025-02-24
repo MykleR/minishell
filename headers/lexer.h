@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/24 16:35:25 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 19:50:37 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,36 @@
 # define LEX_NOTWORD "|&*<>;\\\"'$ ()"
 # define LEX_DQ_NOTWORD "*$\\"
 
-typedef enum e_token_type
+typedef enum e_terminal
 {
-	T_AND,
-	T_OR,
-	T_PIPE,
-	T_REDIR_IN,
-	T_REDIR_OUT,
-	T_APPEND,
-	T_WORD,
-	T_IDENT,
-	T_DQUOTE,
-	T_SQUOTE,
-	T_LPAREN,
-	T_RPAREN,
-	T_EOF,
-	T_SPACE,
-	T_HERE_DOC,
-	T_WILDCARD,
-}	t_token_type;
+	T_AND		= 0,
+	T_OR		= 1,
+	T_PIPE		= 2,
+	T_REDIR_IN	= 3,
+	T_REDIR_OUT	= 4,
+	T_APPEND	= 5,
+	T_WORD		= 6,
+	T_IDENT		= 7,
+	T_DQUOTE	= 8,
+	T_SQUOTE	= 9,
+	T_LPAREN	= 10,
+	T_RPAREN	= 11,
+	T_EOF		= 12,
+	T_SPACE		= 13,
+	T_HERE_DOC	= 14,
+	T_WILDCARD	= 15,
+}	t_terminal;
 
 typedef struct s_pattern
 {
-	t_token_type	type;
-	int				(*match)(const char *);
+	t_terminal	type;
+	int			(*match)(const char *);
 }	t_pattern;
 
 typedef struct s_token
 {
-	t_token_type	type;
-	const char		*val;
+	t_terminal	type;
+	const char	*val;
 }	t_token;
 
 int				match_squote(const char *s);

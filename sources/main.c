@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/19 23:45:43 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 20:31:46 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	main(void)
 		error_print(E_SYS_SIG);
 		return (EXIT_FAILURE);
 	}
-	shell_init(&shell, SHELL_PROMPT);
-	rl_shell_prompt(&shell);
+	if (shell_init(&shell, SHELL_PROMPT))
+		rl_shell_prompt(&shell);
 	shell_destroy(&shell);
 	return (EXIT_SUCCESS);
 }

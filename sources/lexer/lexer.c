@@ -6,14 +6,14 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/19 23:54:44 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 20:37:43 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 static int	find_token(const t_pattern *patterns, int nb_patterns,
-				const char *input, t_token_type *type)
+				const char *input, t_terminal *type)
 {
 	int	max_len;
 	int	len;
@@ -37,9 +37,11 @@ static int	find_token(const t_pattern *patterns, int nb_patterns,
 int	tokenize(const char *cmd, t_collection *tokens)
 {
 	const t_pattern	*patterns;
-	t_token_type	type;
+	t_terminal		type;
 	int				len;
 
+	if (__builtin_expect(!cmd || !tokens, 0))
+		return (E_PARSE_LEX);
 	patterns = get_patterns(false);
 	while (*cmd)
 	{
@@ -48,7 +50,7 @@ int	tokenize(const char *cmd, t_collection *tokens)
 			return (E_PARSE_LEX);
 		if (type != T_SPACE)
 			collection_append(tokens, &((t_token){
-				type, ft_substr(cmd, 0, len)}));
+					type, ft_substr(cmd, 0, len)}));
 		cmd += len;
 	}
 	collection_append(tokens, &((t_token){T_EOF, 0}));

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/22 18:20:35 by mykle            ###   ########.fr       */
+/*   Updated: 2025/02/24 21:03:38 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,9 @@ void	shell_clear(t_shell	*shell);
 
 void	rl_shell_nl(int num);
 void	rl_shell_prompt(t_shell *shell);
+
+int		safe_open(const char *filename, int flags);
+ssize_t	safe_read(int fd, void *buffer, size_t count);
+ssize_t	safe_write(int fd, const void *buffer, size_t count);
 
 #endif

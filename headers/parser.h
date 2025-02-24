@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 17:05:54 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/24 20:57:32 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,44 @@
 
 # include <lexer.h>
 
-# define STATE_COUNT		28
-# define TERM_COUNT			13
-# define NTERM_COUNT		7
-# define PROD_COUNT			19
+# define NB_STATE	28
+# define NB_NTERM	7
+# define NB_TERM	13
+# define NB_PROD	19
 
-// terminals are lexer tokens so no need to redefine them
-// thos are non terminals:
 typedef enum e_n_terminal
 {
-	NT_PROGRAM,
-	NT_LIST,
-	NT_PIPELINE,
-	NT_CMD_REDIR,
-	NT_CMD_WORD,
-	NT_CMD,
-	NT_SUBSHELL,
+	NT_PROGRAM		= 0,
+	NT_LIST			= 1,
+	NT_PIPELINE		= 2,
+	NT_CMD_REDIR	= 3,
+	NT_CMD_WORD		= 4,
+	NT_CMD			= 5,
+	NT_SUBSHELL		= 6,
 }	t_n_terminal;
 
 typedef enum e_action_type
 {
-	ACT_ERROR,
-	ACT_SHIFT,
-	ACT_REDUCE,
-	ACT_ACCEPT,
+	ACT_ERROR	= 0,
+	ACT_SHIFT	= 1,
+	ACT_REDUCE	= 2,
+	ACT_ACCEPT	= 3,
 }	t_action_type;
 
 typedef enum e_ast_type
 {
-	AST_CMD,
-	AST_PIPE,
-	AST_AND,
-	AST_OR,
-	AST_REDIR,
+	AST_CMD		= 0,
+	AST_PIPE	= 1,
+	AST_AND		= 2,
+	AST_OR		= 3,
+	AST_REDIR	= 4,
 }	t_ast_type;
 
 typedef enum e_ast_redir
 {
-	AST_OUT,
-	AST_IN,
-	AST_APP,
+	AST_OUT	= 0,
+	AST_IN	= 1,
+	AST_APP	= 2,
 }	t_ast_redir;
 
 typedef union u_ast_expression
@@ -80,6 +78,18 @@ typedef struct s_ast_node
 	struct s_ast_node	*right;
 }	t_ast_node;
 
+typedef struct s_parse_trace
+{
+	int			state;
+	t_ast_node	*node;
+}	t_parse_trace;
+
+typedef struct s_parse_action
+{
+	t_action_type	type;
+	int				value;
+}	t_action;
+
 typedef struct s_parser
 {
 	t_ast_node	*ast;
@@ -87,19 +97,11 @@ typedef struct s_parser
 	uint32_t	token_id;
 }	t_parser;
 
-typedef struct s_parse_stack
-{
-	int			state;
-	t_ast_node	*node;
-}	t_parse_stack;
-
-typedef struct s_action
-{
-	t_action_type	type;
-	int				value;
-}	t_action;
-
-int	lalr_parse(t_parser *parser, t_collection *tokens);
+t_n_terminal	lalr_get_prod(int rule);
+int				lalr_get_rhs(int rule);
+int				lalr_get_goto(int rule, int state);
+t_action		lalr_get_action(int state, t_terminal term);
+int				lalr_parse(t_parser *parser, t_collection *tokens);
 
 # define PRODUCTIONS "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
 # define RHS_LENS	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x3"
