@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 20:57:32 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/25 13:42:33 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSER_H
 
 # include <lexer.h>
+# include <ast.h>
 
 # define NB_STATE	28
 # define NB_NTERM	7
@@ -39,49 +40,10 @@ typedef enum e_action_type
 	ACT_ACCEPT	= 3,
 }	t_action_type;
 
-typedef enum e_ast_type
-{
-	AST_CMD		= 0,
-	AST_PIPE	= 1,
-	AST_AND		= 2,
-	AST_OR		= 3,
-	AST_REDIR	= 4,
-}	t_ast_type;
-
-typedef enum e_ast_redir
-{
-	AST_OUT	= 0,
-	AST_IN	= 1,
-	AST_APP	= 2,
-}	t_ast_redir;
-
-typedef union u_ast_expression
-{
-	struct
-	{
-		char	**argv;
-		int		argc;
-	};
-	struct
-	{
-		char		*file;
-		t_ast_redir	redir;
-		int			fd;
-	};
-}	t_ast_expression;
-
-typedef struct s_ast_node
-{
-	t_ast_type			type;
-	t_ast_expression	expression;
-	struct s_ast_node	*left;
-	struct s_ast_node	*right;
-}	t_ast_node;
-
 typedef struct s_parse_trace
 {
 	int			state;
-	t_ast_node	*node;
+	t_ast	*node;
 }	t_parse_trace;
 
 typedef struct s_parse_action
@@ -92,7 +54,7 @@ typedef struct s_parse_action
 
 typedef struct s_parser
 {
-	t_ast_node	*ast;
+	t_ast		*ast;
 	t_stack		stack;
 	uint32_t	token_id;
 }	t_parser;
@@ -102,6 +64,7 @@ int				lalr_get_rhs(int rule);
 int				lalr_get_goto(int rule, int state);
 t_action		lalr_get_action(int state, t_terminal term);
 int				lalr_parse(t_parser *parser, t_collection *tokens);
+t_ast			*production(int	rule, t_ast *rhs_nodes);
 
 # define PRODUCTIONS "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
 # define RHS_LENS	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x3"

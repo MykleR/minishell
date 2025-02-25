@@ -6,11 +6,12 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/02/24 20:17:46 by mrouves          ###   ########.fr        #
+#    Updated: 2025/02/25 13:36:44 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
 				utils.c\
+				parser/ast.c\
 				parser/lalr_parse.c\
 				parser/lalr_getters.c\
 				shell/shell.c\
