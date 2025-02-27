@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 20:47:21 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/27 02:04:37 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,28 @@ int	shell_init(t_shell *shell, const char *prompt)
 	static const size_t			mem_token = sizeof(t_token);
 	static const size_t			mem_trace = sizeof(t_parse_trace);
 
-	if (__builtin_expect(!shell, 0))
-		return (0);
+	if (__builtin_expect(!shell || shell_sig_set(), 0))
+		return (E_SYS_SIG);
 	shell->cmd = NULL;
 	shell->prompt = ft_strdup(prompt);
 	return (collection_create(&shell->tokens, mem_token, 32, clear_t)
 		&& collection_create(&shell->parser.stack, mem_trace, 32, clear_s));
+}
+
+int	shell_sig_set(void)
+{
+	if (sig_handle(SIGINT, (t_sig_callb)rl_shell_nl, SIG_SIMPLE)
+		|| sig_handle(SIGQUIT, (t_sig_callb){0}, SIG_IGNORE))
+		return (E_SYS_SIG);
+	return (E_OK);
+}
+
+int	shell_sig_reset(void)
+{
+	if (sig_handle(SIGINT, (t_sig_callb){0}, SIG_RESTORE)
+		|| sig_handle(SIGQUIT, (t_sig_callb){0}, SIG_RESTORE))
+		return (E_SYS_SIG);
+	return (E_OK);
 }
 
 void	shell_clear(t_shell	*shell)

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:31 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/25 13:10:00 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/27 02:00:25 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define AST_H
 
 # include <libft.h>
+# include <lexer.h>
 
 typedef enum e_ast_type
 {
@@ -55,5 +56,7 @@ typedef struct s_ast
 }	t_ast;
 
 t_ast	*ast_new(t_ast *l, t_ast *r, t_ast_type type, t_ast_expr expr);
+t_ast	*ast_from_token(t_token *token);
+void	ast_print(t_ast *ast, int depth);
 
 #endif

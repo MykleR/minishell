@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 20:33:50 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/27 02:11:50 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,14 @@ static int	on_shell_prompt(t_shell *shell)
 {
 	if (tokenize(shell->cmd, &shell->tokens))
 		return (E_PARSE_LEX);
-	return (lalr_parse(&shell->parser, &shell->tokens));
+	if (lalr_parse(&shell->parser, &shell->tokens))
+		return (E_PARSE_AST);
+	while (shell->parser.stack.len > 1)
+	{
+		t_parse_trace	*trace = stack_pop(&shell->parser.stack);
+		ast_print(trace != NULL ? trace->node : NULL, 0);
+	}
+	return (E_OK);
 }
 
 void	rl_shell_nl(int num)

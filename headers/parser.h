@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/25 13:42:33 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/02/27 01:38:02 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int				lalr_get_rhs(int rule);
 int				lalr_get_goto(int rule, int state);
 t_action		lalr_get_action(int state, t_terminal term);
 int				lalr_parse(t_parser *parser, t_collection *tokens);
-t_ast			*production(int	rule, t_ast *rhs_nodes);
+t_ast			*production(int	rule, t_ast **rhs_nodes);
 
 # define PRODUCTIONS "\x0\x1\x1\x1\x2\x2\x3\x3\x3\x4\x4\x4\x4\x5\x5\x5\x5\x5\x6"
 # define RHS_LENS	"\x1\x3\x3\x1\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2\x1\x3"
