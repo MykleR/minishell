@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:08:10 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/17 14:11:09 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/02/28 09:40:42 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char	*get_value(char *src)
 void	init_env(char **ep, t_collection *c)
 {
 	hm_create(c, 2, sizeof(char **), (t_clear_info){alloc_f, T_HEAP});
+	hm_set(c, "?", &((char *){ft_strdup("0")}));
 	while (*ep)
 	{
 		hm_set(c, get_key(*ep), &((char *){ft_strdup(get_value(*ep))}));
