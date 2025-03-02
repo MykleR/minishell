@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   old_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 14:40:09 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/23 15:59:04 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/02 14:45:10 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	prompt_line(const char *prompt, t_collection *c, char *delimiter)
 		if (ft_strcmp(buf, delimiter) == 0)
 		{
 			free(buf);
-			break;
+			break ;
 		}
 		collection_append(c, &((char *){ft_strdup(buf)}));
 		/* ft_printf("[%s]\n", buf); */
@@ -33,21 +33,20 @@ static void	prompt_line(const char *prompt, t_collection *c, char *delimiter)
 	}
 }
 
-void    str_print(void *ptr, void *arg)
+void	str_print(void *ptr, void *arg)
 {
-    (void) arg;
-    ft_printf("%s, ", *(char **)ptr);
+	(void)arg;
+	ft_printf("%s, ", *(char **)ptr);
 }
-
 
 int	main(int ac, char **av)
 {
 	t_collection	c;
+
 	if (ac < 2)
 		return (0);
-
 	collection_create(&c, sizeof(char **), 2, (t_clear_info){alloc_f, T_HEAP});
 	prompt_line("> ", &c, av[1]);
-    collection_iter(&c, NULL, str_print);
-    collection_destroy(&c);
+	collection_iter(&c, NULL, str_print);
+	collection_destroy(&c);
 }

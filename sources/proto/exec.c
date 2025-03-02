@@ -5,103 +5,140 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 16:02:25 by thomarna          #+#    #+#             */
-/*   Updated: 2025/01/20 16:29:11 by thomarna         ###   ########.fr       */
+/*   Created: 2025/03/02 14:37:36 by thomarna          #+#    #+#             */
+/*   Updated: 2025/03/02 16:13:44 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "proto.h"
+#include "ast.h"
+#include "hashmap.h"
 #include "minishell.h"
+#include "proto.h"
+#include <fcntl.h>
 
-void	free_split(char **split)
+void	handle_redirection(t_ast *node)
 {
-	int	i;
+	int	fd;
 
-	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
+	if (node->type == AST_REDIR_IN)
 	{
-		free(split[i]);
-		i++;
+		fd = safe_open(node->expr.redir.file, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
 	}
-	free(split);
-}
-//REW0RK NEED With real signals (126, 127 toussa toussa)
-int	err0r(char *cmd)
-{
-	char	**str;
-
-	str = ft_split(cmd, ' ');
-	if (str[0])
+	else if (node->type == AST_REDIR_OUT)
 	{
-		if (errno == 14)
-			ft_dprintf(2, "%s: command not found\n", str[0]);
-		else
-			ft_dprintf(2, "pipex: %s: %s\n", str[0], strerror(errno));
-	}
-	else
-	{
-		if (errno == 14)
-			ft_dprintf(2, " : command not found\n");
-		else
-			ft_dprintf(2, "pipex: %s\n", strerror(errno));
-	}
-	free_split(str);
-	return (1);
-}
-
-
-//NEED REWORK WITH COLLECTIONs ???
-//HashMap au lieu de char**ep (Dependra du parsing des envars avec les builtins ect.. )
-char	*get_path(char **ep, char *cmd)
-{
-	char	**paths;
-	char	*tmp;
-	char	*path;
-	int		i;
-
-	i = -1;
-	while (*ep && ft_strnstr(*ep, "PATH", 4) == 0)
-		ep++;
-	if (!*ep)
-		return (NULL);
-	paths = ft_split(*ep + 5, ':');
-	while (paths[++i])
-	{
-		tmp = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (access(path, F_OK | X_OK) == 0)
+		fd = open(node->expr.redir.file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1)
 		{
-			free_split(paths);
-			return (path);
+			perror("open");
+			return ;
 		}
-		free(path);
+		dup2(fd, STDOUT_FILENO);
 	}
-	free_split(paths);
-	return (0);
+	else
+	{
+		fd = open(node->expr.redir.file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd == -1)
+		{
+			perror("open");
+			return ;
+		}
+		dup2(fd, STDOUT_FILENO);
+	}
+	close(fd);
 }
 
-int	execmd(char **ep, char *av)
+void	execute_subshell(t_ast *node, t_hm *h)
 {
-	char	**cmds;
-	char	*path;
+	pid_t	pid;
+	int		last_exit;
 
-	cmds = ft_split(av, ' ');
-	if (cmds == NULL)
-		err0r("");
-	if (access(cmds[0], F_OK | X_OK) == 0)
-		path = cmds[0];
-	else
-		path = get_path(ep, cmds[0]);
-	if (path == NULL)
+	last_exit = ft_atoi(hm_get(h, "?"));
+	pid = fork();
+	if (pid == 0)
 	{
-		free_split(cmds);
-		return (1);
+		execute_ast(node->expr.binary.left, h);
+		exit(last_exit);
 	}
-	execve(path, cmds, ep);
-	free(path);
-	free_split(cmds);
-	return (1);
+	else if (pid > 0)
+	{
+		waitpid(pid, &last_exit, 0);
+		last_exit = WEXITSTATUS(last_exit);
+	}
+	else
+	{
+		perror("fork");
+	}
+}
+
+void	execute_pipe(t_ast *left, t_ast *right, t_hm *h)
+{
+	int		fd[2];
+	pid_t	pid1;
+	pid_t	pid2;
+
+	pipe(fd);
+	pid1 = fork();
+	if (pid1 == 0)
+	{
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		execute_ast(left, h);
+		exit(EXIT_FAILURE);
+	}
+	pid2 = fork();
+	if (pid2 == 0)
+	{
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		execute_ast(right, h);
+		exit(EXIT_FAILURE);
+	}
+	close(fd[0]);
+	close(fd[1]);
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
+}
+
+void	execute_cmd(t_ast *node, t_hm *h)
+{
+	(void)h;
+	(void)node;
+}
+
+void	execute_ast(t_ast *node, t_hm *h)
+{
+	int	last_exit;
+
+	last_exit = ft_atoi(hm_get(h, "?"));
+	if (!node)
+		return ;
+	if (node->type == AST_CMD)
+		execute_cmd(node, h);
+	else if (node->type == AST_PIPE)
+		execute_pipe(node->expr.binary.left, node->expr.binary.left, h);
+	else if (node->type == AST_AND)
+	{
+		execute_ast(node->expr.binary.left, h);
+		if (last_exit == 0)
+			execute_ast(node->expr.binary.right, h);
+	}
+	else if (node->type == AST_OR)
+	{
+		execute_ast(node->expr.binary.left, h);
+		if (last_exit != 0)
+			execute_ast(node->expr.binary.right, h);
+	}
+	else if (node->type == AST_REDIR_IN || node->type == AST_REDIR_OUT
+		|| node->type == AST_REDIR_APP)
+	{
+		handle_redirection(node);
+		execute_ast(node->expr.binary.left, h);
+	}
+	else if (node->type == AST_SUBSHELL)
+		execute_subshell(node, h);
+	else
+		printf("Error\n");
 }
