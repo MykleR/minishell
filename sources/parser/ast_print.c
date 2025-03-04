@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:25:55 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/28 00:49:08 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/03 23:39:55 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,8 @@ static void ast_type_info(t_ast_type type, const char **str, const char **color)
             *str = "PIPE";
             *color = COLOR_BLUE;
             break;
-        case AST_REDIR_IN:
-            *str = "REDIR_IN";
-            *color = COLOR_MAGENTA;
-            break;
-        case AST_REDIR_OUT:
-            *str = "REDIR_OUT";
-            *color = COLOR_MAGENTA;
-            break;
-        case AST_REDIR_APP:
-            *str = "APPEND";
+        case AST_REDIR:
+            *str = "REDIR";
             *color = COLOR_MAGENTA;
             break;
         case AST_CMD:
@@ -118,11 +110,15 @@ static void ast_print_recursive(t_ast *node, int indent)
                 printf(" [%s%s%s]", COLOR_CYAN, node->expr.cmd.argv[0], COLOR_RESET);
             break;
             
-        case AST_REDIR_IN:
-        case AST_REDIR_OUT:
-        case AST_REDIR_APP:
-            if (node->expr.redir.file)
-                printf(" -> %s'%s'%s", COLOR_CYAN, node->expr.redir.file, COLOR_RESET);
+        case AST_REDIR:
+            if (!node->expr.redir.file)
+				break;
+			if (node->expr.redir.type == REDIR_IN)
+                printf(" -> %sREDIR_IN:'%s'%s", COLOR_CYAN, node->expr.redir.file, COLOR_RESET);
+			if (node->expr.redir.type == REDIR_OUT)
+				printf(" -> %sREDIR_OUT:'%s'%s", COLOR_CYAN, node->expr.redir.file, COLOR_RESET);
+			if (node->expr.redir.type == REDIR_APP)
+				printf(" -> %sREDIR_APP:'%s'%s", COLOR_CYAN, node->expr.redir.file, COLOR_RESET);
             break;
             
         default:
@@ -154,9 +150,7 @@ static void ast_print_recursive(t_ast *node, int indent)
             }
             break;
             
-        case AST_REDIR_IN:
-        case AST_REDIR_OUT:
-        case AST_REDIR_APP:
+        case AST_REDIR:
             // Redirection expressions
             if (node->expr.redir.next)
             {

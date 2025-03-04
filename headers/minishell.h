@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/27 02:01:35 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/03 23:54:10 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <parser.h>
 # include <errors.h>
 # include <signals.h>
+# include <execution.h>
 
 # define SHELL_PROMPT "shell >> "
 # define HERED_PROMPT "heredoc >> "

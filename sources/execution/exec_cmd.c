@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 00:31:29 by mrouves          ###   ########.fr       */
+/*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
+/*   Updated: 2025/03/04 01:05:56 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <execution.h>
 
-__attribute__((destructor))
-static void	__cleanup(void)
+int	execute_cmd(t_cmd_expr *cmd)
 {
-	rl_clear_history();
-}
+	pid_t	pid;
 
-int	main(void)
-{
-	static t_shell	shell = {0};
-
-	if (sig_handle(SIGINT, (t_sig_callb)rl_shell_nl, SIG_SIMPLE)
-		|| sig_handle(SIGQUIT, (t_sig_callb){0}, SIG_IGNORE))
-	{
-		error_print(E_SYS_SIG);
+	if (__builtin_expect(!cmd || cmd->argc < 0 || !cmd->argv, 0))
 		return (EXIT_FAILURE);
+	pid = fork();
+	if (pid == -1)
+		return (EXIT_FAILURE);
+	if (pid == 0)
+	{
+		execvp(cmd->argv[0], cmd->argv);
+		ft_printf("Command '%s' not found.\n", cmd->argv[0]);
+		exit(127);
 	}
-	if (shell_init(&shell, SHELL_PROMPT))
-		rl_shell_prompt(&shell);
-	shell_destroy(&shell);
-	ft_printf("exit\n");
-	return (EXIT_SUCCESS);
+	return (query_child(pid));
 }

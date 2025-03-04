@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/28 01:27:24 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/04 01:05:08 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ static int	on_shell_prompt(t_shell *shell)
 	if (lalr_parse(&shell->parser, &shell->tokens))
 		return (E_PARSE_AST);
 	ast_print(shell->parser.ast);
+	printf("--- output ---\n");
+	evaluate(shell->parser.ast);
+	printf("--------------\n");
 	return (E_OK);
 }
 

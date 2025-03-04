@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:41:03 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/01 03:44:06 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/04 00:16:16 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,10 @@ static t_ast	*ast_cmd_rec(t_ast *cmd, t_ast *word)
 		expr = &(find_last_command(cmd))->expr.cmd;
 	}
 	expr->argv = ft_realloc(expr->argv,
-			sizeof(char *) * (expr->argc + 1),
+			sizeof(char *) * (expr->argc + 2),
 			sizeof(char *) * expr->argc);
 	expr->argv[expr->argc++] = ft_strdup(word->expr.token->val);
+	expr->argv[expr->argc] = NULL;
 	return (cmd);
 }
 
@@ -83,11 +84,11 @@ t_ast	*production(int rule, t_ast **rhs)
 	if (rule == R_CMD_SUBSHELL)
 		return (ast_new(AST_SUBSHELL, (t_ast_expr){.binary = {rhs[0], NULL}}));
 	if (rule == R_REDIR_IN)
-		return (ast_from_redir(AST_REDIR_IN, rhs[1]));
+		return (ast_from_redir(REDIR_IN, rhs[1]));
 	if (rule == R_REDIR_OUT)
-		return (ast_from_redir(AST_REDIR_OUT, rhs[1]));
+		return (ast_from_redir(REDIR_OUT, rhs[1]));
 	if (rule == R_REDIR_APP)
-		return (ast_from_redir(AST_REDIR_APP, rhs[1]));
+		return (ast_from_redir(REDIR_APP, rhs[1]));
 	if (rule == R_CMD_WORD)
 		return (ast_from_word(rhs[0]));
 	if (rule == R_CMD_WORD_REC)

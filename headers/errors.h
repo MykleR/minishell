@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 16:55:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 21:04:26 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/01 03:53:21 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # define NB_ERRORS 10
 
 # define E_MSG_OK "OK.\n\0"
-# define E_MSG_LEX "Syntax error near unexpected token\n\0"
-# define E_MSG_AST "Syntax error near unexpected token\n\0"
+# define E_MSG_LEX "Syntax error near unexpected token (LEXER)\n\0"
+# define E_MSG_AST "Syntax error near unexpected token (AST)\n\0"
 # define E_MSG_CLOSE "Syscall close unexpectedly failed\n\0"
 # define E_MSG_WRITE "Syscall write unexpectedly failed\n\0"
 # define E_MSG_FORK "Syscall fork unexpectedly failed\n\0"
