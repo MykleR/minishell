@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors.h                                           :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
+/*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 16:55:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/01 03:53:21 by mrouves          ###   ########.fr       */
+/*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
+/*   Updated: 2025/03/05 21:59:08 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERRORS_H
-# define ERRORS_H
+#ifndef UTILS_H
+# define UTILS_H
 
+# include <libft.h>
+
+# include <errno.h>
+# include <stdio.h>
+# include <string.h>
 # include <unistd.h>
+# include <signal.h>
+# include <fcntl.h>
+# include <sys/wait.h>
 
 # define NB_ERRORS 10
 
@@ -42,6 +50,28 @@ typedef enum e_errors_type
 	E_SYS_SIG	= E_SYS_DUP2 + sizeof(E_SYS_DUP2) - 1,
 }	t_error_type;
 
+
+typedef enum e_sig_type
+{
+	SIG_IGNORE,
+	SIG_RESTORE,
+	SIG_SIMPLE,
+	SIG_COMPLEX
+}	t_sig_type;
+
+
+typedef struct sigaction	t_sigaction;
+
+typedef union u_sig_callb
+{
+	void		(*h_simple)(int);
+	void		(*h_complex)(int, siginfo_t *, void *);
+}	t_sig_callb;
+
+int		safe_fork(void);
+int		safe_open(const char *filename, int flags);
+int		sig_handle(int num, t_sig_callb handler, t_sig_type type);
 void	error_print(t_error_type e);
+
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:37:17 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/19 23:55:25 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:09:36 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <lexer.h>
 
 void	token_clear(t_token *token)
 {

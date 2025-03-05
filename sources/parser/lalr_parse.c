@@ -6,12 +6,11 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 01:31:13 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:08:35 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parser.h>
-#include <errors.h>
 
 static void	lalr_reduce(t_parser *parser, int rule)
 {

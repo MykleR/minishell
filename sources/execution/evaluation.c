@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:22:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 00:31:52 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 22:13:52 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	query_child(pid_t pid)
 {
 	int	status;
 
+	if (pid < 0)
+		return (EXIT_FAILURE);
 	status = 0;
 	if (waitpid(pid, &status, 0) == -1) 
 		return (EXIT_FAILURE);
@@ -24,22 +26,23 @@ int	query_child(pid_t pid)
 	return (WTERMSIG(status) + 128);
 }
 
-int	make_redir(t_redir *redir, int fd, int target)
+int	redirection(int fd_to, int fd_from, t_ast *todo)
 {
-	redir->fd = target;
-	redir->backup = dup(target);
-	return (redir->backup != -1 && dup2(fd, target) != -1);
-}
+	int		status;
+	int		backup;
 
-int	restore_redir(t_redir *redir)
-{
-	int	status;
-
-	status = dup2(redir->backup, redir->fd);
-	status = status != -1 && close(redir->backup) != -1;
+	if (fd_to < 0 || fd_from < 0)
+		return (EXIT_FAILURE);
+	backup = dup(fd_from);
+	status = backup != -1 && dup2(fd_to, fd_from) != -1;
+	close(fd_to);
+	if (!status)
+		return (EXIT_FAILURE);
+	status = evaluate(todo);
+	dup2(backup, fd_from);
+	close(backup);
 	return (status);
 }
-
 
 int	evaluate(t_ast *ast)
 {

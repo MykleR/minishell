@@ -6,11 +6,11 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 20:37:43 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:09:30 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <lexer.h>
 
 static int	find_token(const t_pattern *patterns, int nb_patterns,
 				const char *input, t_terminal *type)

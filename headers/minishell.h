@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/03 23:54:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:19:04 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# include <libft.h>
 # include <lexer.h>
 # include <parser.h>
-# include <errors.h>
-# include <signals.h>
 # include <execution.h>
+# include <utils.h>
 
 # define SHELL_PROMPT "shell >> "
 # define HERED_PROMPT "heredoc >> "
@@ -44,7 +42,6 @@ int		shell_sig_reset(void);
 void	rl_shell_nl(int num);
 void	rl_shell_prompt(t_shell *shell);
 
-int		safe_open(const char *filename, int flags);
 ssize_t	safe_read(int fd, void *buffer, size_t count);
 ssize_t	safe_write(int fd, const void *buffer, size_t count);
 

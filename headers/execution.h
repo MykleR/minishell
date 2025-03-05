@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/03 23:53:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 22:04:19 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,12 @@
 # define EXECUTION_H
 
 # include <ast.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <errors.h>
 
 # define F_READ O_RDONLY
 # define F_APPEND (O_WRONLY | O_CREAT | O_APPEND)
 # define F_WRITE (O_WRONLY | O_CREAT | O_TRUNC)
 
-typedef enum e_access { R, W } t_access;
+typedef enum e_access { READ, WRITE } t_access;
 
 typedef struct s_redir
 {
@@ -32,8 +28,7 @@ typedef struct s_redir
 }	t_redir;
 
 int		query_child(pid_t pid);
-int		make_redir(t_redir *redir, int fd, int target);
-int		restore_redir(t_redir *redir);
+int		redirection(int fd_to, int fd_from, t_ast *todo);
 
 int		execute_cmd(t_cmd_expr *cmd);
 int		execute_pipe(t_binary_expr *pipe);

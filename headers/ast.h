@@ -6,14 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:31 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 01:31:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:10:27 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef AST_H
 # define AST_H
 
-# include <libft.h>
 # include <lexer.h>
 
 typedef enum e_ast_type

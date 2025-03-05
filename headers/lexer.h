@@ -6,14 +6,14 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/05 00:32:02 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 17:09:13 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include <libft.h>
+# include <utils.h>
 
 # define LEX_NB 14
 # define LEX_STR_NB 2
