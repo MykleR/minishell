@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:31 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/03 23:39:09 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:31:10 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ struct s_ast
 };
 
 t_ast	*ast_new(t_ast_type type, t_ast_expr expr);
-t_ast	*ast_from_token(t_token *token);
 t_ast	*ast_from_word(t_ast *word);
 t_ast	*ast_from_redir(t_redir_type type, t_ast *word);
 bool	ast_is_redir(t_ast *ast);

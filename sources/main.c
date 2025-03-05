@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 00:31:29 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:59:57 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,18 @@ __attribute__((destructor))
 static void	__cleanup(void)
 {
 	rl_clear_history();
+}
+
+__attribute__((constructor))
+static void __construct(void)
+{
+	rl_outstream = stderr;
+	rl_readline_name = SHELL_PROMPT;
+	if (!isatty(STDIN_FILENO))
+	{
+		rl_readline_name = "";
+		rl_prep_term_function = 0;
+	}
 }
 
 int	main(void)
@@ -31,6 +43,7 @@ int	main(void)
 	if (shell_init(&shell, SHELL_PROMPT))
 		rl_shell_prompt(&shell);
 	shell_destroy(&shell);
-	ft_printf("exit\n");
+	if (isatty(STDIN_FILENO))
+		ft_dprintf(STDERR_FILENO, "exit\n");
 	return (EXIT_SUCCESS);
 }

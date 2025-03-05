@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/24 19:50:37 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 00:32:02 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ typedef enum e_terminal
 	T_AND		= 0,
 	T_OR		= 1,
 	T_PIPE		= 2,
-	T_REDIR_IN	= 3,
-	T_REDIR_OUT	= 4,
-	T_APPEND	= 5,
-	T_WORD		= 6,
-	T_IDENT		= 7,
-	T_DQUOTE	= 8,
-	T_SQUOTE	= 9,
-	T_LPAREN	= 10,
-	T_RPAREN	= 11,
+	T_LPAREN	= 3,
+	T_RPAREN	= 4,
+	T_REDIR_IN	= 5,
+	T_REDIR_OUT	= 6,
+	T_APPEND	= 7,
+	T_WORD		= 8,
+	T_IDENT		= 9,
+	T_DQUOTE	= 10,
+	T_SQUOTE	= 11,
 	T_EOF		= 12,
 	T_SPACE		= 13,
 	T_HERE_DOC	= 14,

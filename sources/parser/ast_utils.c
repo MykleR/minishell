@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:05:01 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 00:12:42 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:50:46 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ t_ast	*ast_new(t_ast_type type, t_ast_expr expr)
 	node->type = type;
 	node->expr = expr;
 	return (node);
-}
-
-/*
-** This function creates a temporary TOKEN AST node
-*/
-t_ast	*ast_from_token(t_token *token)
-{
-	return (ast_new(AST_TOKEN, (t_ast_expr){.token = token}));
 }
 
 /*

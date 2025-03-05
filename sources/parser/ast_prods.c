@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:41:03 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 00:16:16 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 00:36:18 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ static t_ast	*ast_redir_rec(t_ast *cmd, t_ast *redir)
 
 t_ast	*production(int rule, t_ast **rhs)
 {
-	if (rule == R_LIST_CMD_AND_LIST)
+	if (rule == R_LIST_AND_LIST)
 		return (ast_new(AST_AND, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
-	if (rule == R_LIST_CMD_OR_LIST)
+	if (rule == R_LIST_OR_LIST)
 		return (ast_new(AST_OR, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
-	if (rule == R_LIST_CMD_PIPE_LIST)
+	if (rule == R_LIST_PIPE_LIST)
 		return (ast_new(AST_PIPE, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
-	if (rule == R_CMD_SUBSHELL)
-		return (ast_new(AST_SUBSHELL, (t_ast_expr){.binary = {rhs[0], NULL}}));
+	if (rule == R_LIST_SUBSHELL)
+		return (ast_new(AST_SUBSHELL, (t_ast_expr){.binary = {rhs[1], NULL}}));
 	if (rule == R_REDIR_IN)
 		return (ast_from_redir(REDIR_IN, rhs[1]));
 	if (rule == R_REDIR_OUT)
@@ -95,7 +95,5 @@ t_ast	*production(int rule, t_ast **rhs)
 		return (ast_cmd_rec(rhs[0], rhs[1]));
 	if (rule == R_CMD_REDIR_REC)
 		return (ast_redir_rec(rhs[0], rhs[1]));
-	if (rule == R_SUBSHELL_LIST)
-		return (rhs[1]);
 	return (rhs[0]);
 }

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/04 01:05:08 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:56:06 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	rl_shell_prompt(t_shell *shell)
 {
 	char	*buf;
 
-	buf = readline(shell->prompt);
+	buf = readline(rl_readline_name);
 	while (buf)
 	{
 		shell->cmd = ft_strdup(buf);
@@ -49,6 +49,6 @@ void	rl_shell_prompt(t_shell *shell)
 			error_print(on_shell_prompt(shell));
 		}
 		shell_clear(shell);
-		buf = readline(shell->prompt);
+		buf = readline(rl_readline_name);
 	}
 }

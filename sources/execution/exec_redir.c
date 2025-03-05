@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirs.c                                           :+:      :+:    :+:   */
+/*   exec_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:26:07 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/03 23:43:24 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:35:34 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	execute_redir(t_redir_expr *expr)
 	t_redir	redir;
 	int		status;
 
-	if (__builtin_expect(!expr || !expr->next || !expr->file, 0))
+	if (__builtin_expect(!expr || !expr->file, 0))
 		return (EXIT_FAILURE);
 	expr->fd = open(expr->file, get_flags(expr->type), 0666);
 	if (__builtin_expect(expr->fd == -1

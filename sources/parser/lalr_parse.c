@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/28 01:31:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 01:31:13 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ static void	lalr_reduce(t_parser *parser, int rule)
 		rhs_nodes[rhs_len] = ((t_parse_trace *)stack_pop(&parser->stack))->node;
 	top = stack_top(&parser->stack);
 	go_to = lalr_get_goto(rule, top->state);
-	stack_push(&parser->stack, &((t_parse_trace){go_to,
-			production(rule, rhs_nodes)}));
+	stack_push(&parser->stack, &((t_parse_trace){
+		go_to, production(rule, rhs_nodes)}));
 }
 
 static void	lalr_shift(t_parser *parser, int state, t_collection *tokens)
 {
 	t_token	*token;
-	t_ast	*leaf;
+	t_ast	*node;
 
 	token = collection_get(tokens, parser->token_id);
-	leaf = ast_from_token(token);
+	node = ast_new(AST_TOKEN, (t_ast_expr){.token = token});
 	parser->token_id++;
-	stack_push(&parser->stack, &((t_parse_trace){state, leaf}));
+	stack_push(&parser->stack, &((t_parse_trace){state, node}));
 }
 
 int	lalr_parse(t_parser *parser, t_collection *tokens)
