@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 17:19:04 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/05 23:55:32 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,18 @@
 # include <utils.h>
 
 # define SHELL_PROMPT "shell >> "
-# define HERED_PROMPT "heredoc >> "
+# define ENV_MEM 1024
 
 typedef struct s_shell
 {
 	const char		*cmd;
-	const char		*prompt;
+	const char		*name;
 	t_collection	tokens;
 	t_parser		parser;
+	t_hm			env;
 }	t_shell;
 
-int		shell_init(t_shell *shell, const char *prompt);
+int		shell_init(t_shell *shell, const char *name, const char **env);
 void	shell_destroy(t_shell *shell);
 void	shell_clear(t_shell	*shell);
 int		shell_sig_set(void);

@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/05 21:59:08 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 01:14:42 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef enum e_errors_type
 	E_SYS_SIG	= E_SYS_DUP2 + sizeof(E_SYS_DUP2) - 1,
 }	t_error_type;
 
-
 typedef enum e_sig_type
 {
 	SIG_IGNORE,
@@ -58,7 +57,6 @@ typedef enum e_sig_type
 	SIG_SIMPLE,
 	SIG_COMPLEX
 }	t_sig_type;
-
 
 typedef struct sigaction	t_sigaction;
 
@@ -70,8 +68,10 @@ typedef union u_sig_callb
 
 int		safe_fork(void);
 int		safe_open(const char *filename, int flags);
+
+int		env_init(t_hm *env, const char **envp);
+
 int		sig_handle(int num, t_sig_callb handler, t_sig_type type);
 void	error_print(t_error_type e);
-
 
 #endif

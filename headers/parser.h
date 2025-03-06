@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 17:08:33 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 00:05:05 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <lexer.h>
 # include <ast.h>
-# include <utils.h>
 
 # define NB_STATE	26
 # define NB_NTERM	5

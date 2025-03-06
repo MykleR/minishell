@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 17:08:35 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 01:17:51 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	lalr_reduce(t_parser *parser, int rule)
 	top = stack_top(&parser->stack);
 	go_to = lalr_get_goto(rule, top->state);
 	stack_push(&parser->stack, &((t_parse_trace){
-		go_to, production(rule, rhs_nodes)}));
+			go_to, production(rule, rhs_nodes)}));
 }
 
 static void	lalr_shift(t_parser *parser, int state, t_collection *tokens)

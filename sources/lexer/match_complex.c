@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 01:26:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 20:56:30 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/05 22:54:42 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,42 @@ int	match_squote(const char *s)
 {
 	int	len;
 
-	if (*s != '\'')
+	len = match_word(s);
+	while (match_ident(s + len))
+		len += match_ident(s + len);
+	if (s[len] != '\'')
 		return (0);
-	len = 1;
+	len++;
 	while (s[len] && s[len] != '\'')
 		len++;
-	if (s[len] == '\'')
-		return (len + 1);
-	return (0);
+	if (s[len] != '\'')
+		return (0);
+	len++;
+	len += match_word(s + len);
+	while (match_ident(s + len))
+		len += match_ident(s + len);
+	return (len);
 }
 
 int	match_dquote(const char *s)
 {
 	int	len;
 
-	if (*s != '"')
+	len = match_word(s);
+	while (match_ident(s + len))
+		len += match_ident(s + len);
+	if (s[len] != '"')
 		return (0);
-	len = 1;
+	len++;
 	while (s[len] && s[len] != '"')
 		len++;
-	if (s[len] == '"')
-		return (len + 1);
-	return (0);
+	if (s[len] != '"')
+		return (0);
+	len++;
+	len += match_word(s + len);
+	while (match_ident(s + len))
+		len += match_ident(s + len);
+	return (len);
 }
 
 int	match_ident(const char *s)

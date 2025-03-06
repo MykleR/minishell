@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 22:21:02 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 01:18:11 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ static int	on_shell_prompt(t_shell *shell)
 		return (E_PARSE_LEX);
 	if (lalr_parse(&shell->parser, &shell->tokens))
 		return (E_PARSE_AST);
-	//ast_print(shell->parser.ast);
-	printf("exit status: %d\n",evaluate(shell->parser.ast));
+	ast_print(shell->parser.ast);
+	ft_dprintf(2, "------- output -------\n");
+	ft_dprintf(2, "----------------------\n exit status: %d\n",
+		evaluate(shell->parser.ast));
 	return (E_OK);
 }
 
@@ -32,6 +34,7 @@ void	rl_shell_nl(int num)
 	rl_redisplay();
 }
 
+//rl_readline_name = ft_strjoin(*(char **)hm_get(&shell->env, "PWD"), " : ");
 void	rl_shell_prompt(t_shell *shell)
 {
 	char	*buf;

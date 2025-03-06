@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:22:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 22:13:52 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 01:16:11 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	query_child(pid_t pid)
 	if (pid < 0)
 		return (EXIT_FAILURE);
 	status = 0;
-	if (waitpid(pid, &status, 0) == -1) 
+	if (waitpid(pid, &status, 0) == -1)
 		return (EXIT_FAILURE);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));

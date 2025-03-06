@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 22:04:19 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 01:15:32 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 
 # include <ast.h>
 
-# define F_READ O_RDONLY
-# define F_APPEND (O_WRONLY | O_CREAT | O_APPEND)
-# define F_WRITE (O_WRONLY | O_CREAT | O_TRUNC)
+# define PATH_MAX 4096
 
-typedef enum e_access { READ, WRITE } t_access;
+typedef enum e_access
+{
+	READ,
+	WRITE
+}	t_access;
 
 typedef struct s_redir
 {
 	int	fd;
 	int	backup;
 }	t_redir;
+
+int		builtin_cd(char *path, t_hm *env);
+int		builtin_echo(char **args, t_hm *env);
+int		builtin_pwd(void);
 
 int		query_child(pid_t pid);
 int		redirection(int fd_to, int fd_from, t_ast *todo);

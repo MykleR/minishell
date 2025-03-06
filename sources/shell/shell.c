@@ -6,26 +6,28 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/27 02:04:37 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/06 00:21:36 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	shell_init(t_shell *shell, const char *prompt)
+int	shell_init(t_shell *shell, const char *prompt, const char **env)
 {
 	static const t_clear_info	clear_t = {
 		(void (*)(void *))token_clear, T_STACK};
 	static const t_clear_info	clear_s = {0};
-	static const size_t			mem_token = sizeof(t_token);
-	static const size_t			mem_trace = sizeof(t_parse_trace);
+	static const t_clear_info	clear_e = {alloc_f, T_HEAP};
 
 	if (__builtin_expect(!shell || shell_sig_set(), 0))
 		return (E_SYS_SIG);
 	shell->cmd = NULL;
-	shell->prompt = ft_strdup(prompt);
-	return (collection_create(&shell->tokens, mem_token, 32, clear_t)
-		&& collection_create(&shell->parser.stack, mem_trace, 32, clear_s));
+	shell->name = ft_strdup(prompt);
+	collection_create(&shell->tokens, sizeof(t_token), 32, clear_t);
+	collection_create(&shell->parser.stack, sizeof(t_parse_trace), 32, clear_s);
+	hm_create(&shell->env, ENV_MEM, sizeof(char **), clear_e);
+	env_init(&shell->env, env);
+	return (E_OK);
 }
 
 int	shell_sig_set(void)
@@ -50,7 +52,6 @@ void	shell_clear(t_shell	*shell)
 		return ;
 	alloc_f((void *)shell->cmd);
 	shell->cmd = NULL;
-	shell->prompt = SHELL_PROMPT;
 	shell->parser.ast = NULL;
 	shell->parser.token_id = 0;
 	collection_clear(&shell->tokens);
@@ -61,7 +62,8 @@ void	shell_destroy(t_shell *shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
-	alloc_f((void *)shell->prompt);
+	alloc_f((void *)shell->name);
 	collection_destroy(&shell->tokens);
 	collection_destroy(&shell->parser.stack);
+	collection_destroy(&shell->env);
 }

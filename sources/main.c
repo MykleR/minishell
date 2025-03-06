@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 01:59:57 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/06 01:19:01 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	__cleanup(void)
 }
 
 __attribute__((constructor))
-static void __construct(void)
+static void	__construct(void)
 {
 	rl_outstream = stderr;
 	rl_readline_name = SHELL_PROMPT;
@@ -30,17 +30,12 @@ static void __construct(void)
 	}
 }
 
-int	main(void)
+int	main(int ac, const char **av, const char **env)
 {
 	static t_shell	shell = {0};
 
-	if (sig_handle(SIGINT, (t_sig_callb)rl_shell_nl, SIG_SIMPLE)
-		|| sig_handle(SIGQUIT, (t_sig_callb){0}, SIG_IGNORE))
-	{
-		error_print(E_SYS_SIG);
-		return (EXIT_FAILURE);
-	}
-	if (shell_init(&shell, SHELL_PROMPT))
+	(void)ac;
+	if (shell_init(&shell, av[0] + 2, env) == E_OK)
 		rl_shell_prompt(&shell);
 	shell_destroy(&shell);
 	if (isatty(STDIN_FILENO))
