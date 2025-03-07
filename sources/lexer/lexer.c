@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 03:38:39 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 16:03:33 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ int	tokenize(const char *cmd, t_collection *tokens)
 					type, ft_substr(cmd, 0, len)}));
 		cmd += len;
 	}
-	collection_append(tokens, &((t_token){T_EOF, 0}));
+	collection_append(tokens, &((t_token){T_EOF, ft_strdup("newline")}));
 	return (E_OK);
 }

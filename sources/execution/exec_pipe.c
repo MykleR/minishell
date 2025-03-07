@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:33:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 03:07:36 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 16:31:19 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	execute_pipe(t_binary_expr *expr, t_hmap *env)
 
 	if (!expr || safe_pipe(tube) == -1)
 		return (EXIT_FAILURE);
-	rpid = use_tube(tube, READ, expr->right, env);
 	lpid = use_tube(tube, WRITE, expr->left, env);
+	rpid = use_tube(tube, READ, expr->right, env);
 	safe_close(tube[READ]);
 	safe_close(tube[WRITE]);
 	query_child(lpid);

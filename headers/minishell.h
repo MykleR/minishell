@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 01:27:09 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:06:07 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <execution.h>
 # include <utils.h>
 
-# define SHELL_PROMPT "shell >> "
+# define SHELL_PROMPT "minishell:~$ "
 # define ENV_MEM 1024
 
 typedef struct s_shell

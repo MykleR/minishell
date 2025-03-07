@@ -6,12 +6,16 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:26:07 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 03:56:39 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:22:58 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <execution.h>
 
+/*
+ * TODO: IMPLEMENT EXPANSION AND EXPAND REDIRECTION FILE
+
+*/
 static inline int	get_fd_from(t_redir_type type)
 {
 	if (type == REDIR_IN)

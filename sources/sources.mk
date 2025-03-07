@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/07 03:58:56 by mykle            ###   ########.fr        #
+#    Updated: 2025/03/07 17:18:49 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
@@ -32,5 +32,6 @@ SOURCES		:=	main.c\
 				execution/exec_redir.c\
 				execution/exec_logic.c\
 				builtins/builtin_cd.c\
-				builtins/builtin_pwd.c\
 				builtins/builtin_exit.c\
+				builtins/builtin_unset.c\
+				builtins/builtin_pwd.c\

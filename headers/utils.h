@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/07 03:39:19 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 16:32:56 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,14 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 
-# define NB_ERRORS 10
-
+# define E_MSG_ERROR "%s: %s\n\0"
 # define E_MSG_OK "OK.\n\0"
 # define E_MSG_LEX "syntax error near unexpected token '%s'\n\0"
 # define E_MSG_AST "syntax error near unexpected token '%s'\n\0"
-# define E_MSG_IS_DIR "Is a directory\n\0"
-# define E_MSG_NOFILE "No such file or directory\n\0"
 # define E_MSG_OPEN "%s: %s: %s\n\0"
-# define E_MSG_TOO_MANY "%s: too many arguments\n\0"
-# define E_MSG_NOCMD "Command '%s' not found\n\0"
-# define E_MSG_NOENV "%s: '%s' not set\n\0"
+# define E_MSG_TOOMANY "%s: too many arguments\n\0"
+# define E_MSG_NOTCMD "Command '%s' not found\n\0"
+# define E_MSG_NOTSET "%s: '%s' not set\n\0"
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
 
 typedef enum e_errors_type
@@ -42,13 +39,11 @@ typedef enum e_errors_type
 	E_OK			= 0,
 	E_PARSE_LEX		= E_OK + sizeof(E_MSG_OK) - 1,
 	E_PARSE_AST		= E_PARSE_LEX + sizeof(E_MSG_LEX) - 1,
-	E_IS_DIR		= E_PARSE_AST + sizeof(E_MSG_AST) - 1,
-	E_NOFILE		= E_IS_DIR + sizeof(E_MSG_IS_DIR) - 1,
-	E_OPEN			= E_NOFILE + sizeof(E_MSG_NOFILE) - 1,
-	E_TOO_MANY		= E_OPEN + sizeof(E_MSG_OPEN) - 1,
-	E_NOCMD			= E_TOO_MANY + sizeof(E_MSG_TOO_MANY) - 1,
-	E_NOENV			= E_NOCMD + sizeof(E_MSG_NOCMD) - 1,
-	E_NUMERIC		= E_NOENV + sizeof(E_MSG_NOENV) - 1
+	E_OPEN			= E_PARSE_AST + sizeof(E_MSG_AST) - 1,
+	E_TOOMANY		= E_OPEN + sizeof(E_MSG_OPEN) - 1,
+	E_NOTCMD		= E_TOOMANY + sizeof(E_MSG_TOOMANY) - 1,
+	E_NOTSET		= E_NOTCMD + sizeof(E_MSG_NOTCMD) - 1,
+	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1
 }	t_error_type;
 
 typedef enum e_sig_type

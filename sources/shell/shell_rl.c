@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 04:05:44 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:07:05 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 static int	on_shell_prompt(t_shell *shell, const char *cmd)
 {
-	if (tokenize(cmd, &shell->tokens))
+	int	status;
+
+	if (tokenize(cmd, &shell->tokens)
+		|| lalr_parse(&shell->parser, &shell->tokens))
 		return (EXIT_FAILURE);
-	if (lalr_parse(&shell->parser, &shell->tokens))
-		return (error(E_PARSE_AST,
-				((t_token *)collection_get(&shell->tokens, shell->parser.token_id))->val));
 	ast_print(shell->parser.ast);
 	ft_dprintf(2, "------- output -------\n");
-	ft_dprintf(2, "----------------------\n exit status: %d\n",
-		evaluate(shell->parser.ast, &shell->env));
+	status = evaluate(shell->parser.ast, &shell->env);
+	ft_dprintf(2, "----------------------\n");
+	hmap_set(&shell->env, "?", &(char *){ft_itoa(status)});
+	ft_dprintf(2, "[exit status => %s]\n",
+			*(char **)hmap_get(&shell->env, "?"));
 	return (E_OK);
 }
 
@@ -48,7 +51,6 @@ void	rl_shell_prompt(t_shell *shell)
 			on_shell_prompt(shell, buf);
 		}
 		shell_clear(shell);
-		rl_readline_name = ft_strjoin(*(char **)hmap_get(&shell->env, "PWD"), " : ");
 		free(buf);
 		buf = readline(rl_readline_name);
 	}

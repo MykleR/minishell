@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:45:48 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/07 03:10:37 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 17:24:20 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,3 @@ int	builtin_pwd(const char **args, int argc, t_hmap *env)
 	}
 	return (error(E_ERROR, "pwd"));
 }
-

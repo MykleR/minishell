@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 01:29:34 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 16:06:06 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	shell_init(t_shell *shell, const char *name, const char **env)
 	static const t_clear_info	clear_s = {0};
 	static const t_clear_info	clear_e = {alloc_f, T_HEAP};
 
-	if (__builtin_expect(!shell || shell_sig_set(), 0))
+	if (__builtin_expect(shell_sig_set(), 0))
 		return (E_ERROR);
 	shell->name = ft_strdup(name);
 	collection_init(&shell->tokens, sizeof(t_token), 32, clear_t);

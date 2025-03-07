@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 04:07:27 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 16:04:57 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ int	lalr_parse(t_parser *parser, t_collection *tokens)
 	t_parse_trace	*top;
 	t_token			*token;
 
-	if (__builtin_expect(!parser || !tokens, 0))
-		return (EXIT_FAILURE);
 	parser->token_id = 0;
 	stack_push(&parser->stack, &((t_parse_trace){0, NULL}));
 	while (parser->token_id < tokens->len
@@ -63,5 +61,7 @@ int	lalr_parse(t_parser *parser, t_collection *tokens)
 		else if (action.type == ACT_REDUCE)
 			lalr_reduce(parser, action.value);
 	}
-	return (action.type != ACT_ACCEPT);
+	if (action.type == ACT_ERROR)
+		return (error(E_PARSE_AST, token->val));
+	return (E_OK);
 }
