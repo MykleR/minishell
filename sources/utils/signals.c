@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:05:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/05 17:05:25 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 02:58:54 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	sig_handle(int num, t_sig_callb handler, t_sig_type type)
 		sig.sa_flags = SA_RESETHAND;
 	else if (type == SIG_COMPLEX)
 		sig.sa_flags |= SA_SIGINFO;
-	if (sigaction(num, &sig, 0) == -1)
-		return (E_SYS_SIG);
+	if (sigaction(num, &sig, 0) == E_ERROR)
+		return (error(E_ERROR, "sigaction"));
 	return (E_OK);
 }

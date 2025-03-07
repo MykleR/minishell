@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:04:54 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/05 18:40:58 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 03:13:53 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	safe_open(const char *filename, int mode)
 	int	fd;
 
 	fd = open(filename, mode, 0644);
-	if (fd == -1)
-		ft_dprintf(STDERR_FILENO, "%s: %s\n", filename, strerror(errno));
+	if (fd == E_ERROR)
+		error(E_OPEN, "open", filename, strerror(errno));
 	return (fd);
 }
 
@@ -27,7 +27,37 @@ int	safe_fork(void)
 	int	pid;
 
 	pid = fork();
-	if (pid == -1)
-		ft_dprintf(STDERR_FILENO, "fork: %s\n", strerror(errno));
+	if (pid == E_ERROR)
+		error(E_ERROR, "fork");
 	return (pid);
+}
+
+int safe_pipe(int pipefd[2])
+{
+	int	ret;
+
+	ret = pipe(pipefd);
+	if (ret == E_ERROR)
+		error(E_ERROR, "pipe");
+	return (ret);
+}
+
+int	safe_close(int fd)
+{
+	int	ret;
+
+	ret = close(fd);
+	if (ret == E_ERROR)
+		error(E_ERROR, "close");
+	return (ret);
+}
+
+int	safe_dup2(int oldfd, int newfd)
+{
+	int	ret;
+
+	ret = dup2(oldfd, newfd);
+	if (ret == E_ERROR)
+		error(E_ERROR, "dup2");
+	return (ret);
 }

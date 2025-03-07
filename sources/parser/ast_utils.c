@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:05:01 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 01:50:46 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/06 16:06:16 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ t_ast	*ast_from_word(t_ast *word)
 {
 	char	**argv;
 
+	if (!word || word->type != AST_TOKEN)
+		return (NULL);
 	argv = alloc_m(sizeof(char *) * 2);
 	argv[0] = ft_strdup(word->expr.token->val);
 	argv[1] = NULL;

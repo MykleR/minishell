@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:22:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/06 01:16:11 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 16:45:09 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,39 +26,21 @@ int	query_child(pid_t pid)
 	return (WTERMSIG(status) + 128);
 }
 
-int	redirection(int fd_to, int fd_from, t_ast *todo)
-{
-	int		status;
-	int		backup;
-
-	if (fd_to < 0 || fd_from < 0)
-		return (EXIT_FAILURE);
-	backup = dup(fd_from);
-	status = backup != -1 && dup2(fd_to, fd_from) != -1;
-	close(fd_to);
-	if (!status)
-		return (EXIT_FAILURE);
-	status = evaluate(todo);
-	dup2(backup, fd_from);
-	close(backup);
-	return (status);
-}
-
-int	evaluate(t_ast *ast)
+int	evaluate(t_ast *ast, t_hmap *env)
 {
 	if (!ast)
 		return (EXIT_SUCCESS);
 	if (ast->type == AST_SUBSHELL)
-		return (evaluate(ast->expr.binary.left));
+		return (evaluate(ast->expr.binary.left, env));
 	if (ast->type == AST_CMD)
-		return (execute_cmd(&ast->expr.cmd));
+		return (execute_cmd(&ast->expr.cmd, env));
 	else if (ast->type == AST_PIPE)
-		return (execute_pipe(&ast->expr.binary));
+		return (execute_pipe(&ast->expr.binary, env));
 	else if (ast->type == AST_AND)
-		return (execute_and(&ast->expr.binary));
+		return (execute_and(&ast->expr.binary, env));
 	else if (ast->type == AST_OR)
-		return (execute_or(&ast->expr.binary));
+		return (execute_or(&ast->expr.binary, env));
 	else if (ast->type == AST_REDIR)
-		return (execute_redir(&ast->expr.redir));
+		return (execute_redir(&ast->expr.redir, env));
 	return (EXIT_FAILURE);
 }

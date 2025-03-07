@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 15:00:04 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/17 16:42:50 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:01:07 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 void	init_env(char **ep, t_collection *c);
 char	*get_value(char *src);
 char	*get_key(char *src);
-void	env_builtin(t_hm *h);
-char	*get_env(t_hm *h, char *key);
+void	env_builtin(t_hmap *h);
+char	*get_env(t_hmap *h, char *key);
 void	ft_pwd(void);
 #endif

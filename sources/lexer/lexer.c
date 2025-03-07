@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 17:09:30 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 03:38:39 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ int	tokenize(const char *cmd, t_collection *tokens)
 	int				len;
 
 	if (__builtin_expect(!cmd || !tokens, 0))
-		return (E_PARSE_LEX);
+		return (EXIT_FAILURE);
 	patterns = get_patterns(false);
 	while (*cmd)
 	{
 		len = find_token(patterns, LEX_NB, cmd, &type);
 		if (!len)
-			return (E_PARSE_LEX);
+			return (error(E_PARSE_LEX, cmd));
 		if (type != T_SPACE)
 			collection_append(tokens, &((t_token){
 					type, ft_substr(cmd, 0, len)}));

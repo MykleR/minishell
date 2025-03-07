@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 22:29:18 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/06 00:05:05 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/07 01:16:45 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@
 # define NB_NTERM	5
 # define NB_TERM	13
 # define NB_PROD	17
-
-typedef enum e_n_terminal
-{
-	NT_PROGRAM		= 0,
-	NT_LIST			= 1,
-	NT_CMD_REDIR	= 2,
-	NT_CMD_WORD		= 3,
-	NT_CMD			= 4,
-}	t_n_terminal;
 
 typedef enum e_grammar_rules
 {
@@ -78,12 +69,12 @@ typedef struct s_parser
 	uint32_t	token_id;
 }	t_parser;
 
-t_n_terminal	lalr_get_prod(int rule);
-int				lalr_get_rhs(int rule);
-int				lalr_get_goto(int rule, int state);
-t_action		lalr_get_action(int state, t_terminal term);
-int				lalr_parse(t_parser *parser, t_collection *tokens);
-t_ast			*production(int rule, t_ast **rhs_nodes);
+int			lalr_parse(t_parser *parser, t_collection *tokens);
+int			lalr_get_prod(int rule);
+int			lalr_get_rhs(int rule);
+int			lalr_get_goto(int rule, int state);
+t_action	lalr_get_action(int state, t_terminal term);
+t_ast		*production(int rule, t_ast **rhs_nodes);
 
 # define PRODUCTIONS	"\x0\x1\x1\x1\x1\x1\x2\x2\x2\x3\x3\x3\x3\x4\x4\x4\x4"
 # define RHS_LENS		"\x1\x3\x3\x3\x3\x1\x2\x2\x2\x1\x1\x1\x1\x1\x1\x2\x2"

@@ -6,13 +6,13 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 22:28:37 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/06 00:23:41 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/06 16:03:18 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <utils.h>
 
-char	*expand(t_hm *env, const char *str)
+char	*expand(const char *str, t_hmap *env)
 {
 	(void)env;
 	(void)str;

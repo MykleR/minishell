@@ -1,29 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enviroment.c                                       :+:      :+:    :+:   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/06 23:45:49 by mykle            ###   ########.fr       */
+/*   Created: 2025/03/06 17:26:50 by mykle             #+#    #+#             */
+/*   Updated: 2025/03/06 17:26:51 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
-
-int	env_init(t_hmap *env, const char **envp)
-{
-	char	*key;
-	char	*value;
-
-	while (*envp)
-	{
-		key = ft_substr(*envp, 0, ft_strchr(*envp, '=') - *envp);
-		value = ft_strdup(ft_strchr(*envp, '=') + 1);
-		hmap_set(env, key, &value);
-		alloc_f(key);
-		envp++;
-	}
-	return (E_OK);
-}
+#include <execution.h>

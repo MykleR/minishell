@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enviroment.c                                       :+:      :+:    :+:   */
+/*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/06 23:45:49 by mykle            ###   ########.fr       */
+/*   Created: 2025/03/06 16:45:48 by mykle             #+#    #+#             */
+/*   Updated: 2025/03/07 03:10:37 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <execution.h>
 
-int	env_init(t_hmap *env, const char **envp)
+int	builtin_pwd(const char **args, int argc, t_hmap *env)
 {
-	char	*key;
-	char	*value;
+	char	buffer[PATH_MAX];
 
-	while (*envp)
+	(void)args;
+	(void)argc;
+	(void)env;
+	if (getcwd(buffer, PATH_MAX))
 	{
-		key = ft_substr(*envp, 0, ft_strchr(*envp, '=') - *envp);
-		value = ft_strdup(ft_strchr(*envp, '=') + 1);
-		hmap_set(env, key, &value);
-		alloc_f(key);
-		envp++;
+		ft_printf("%s\n", buffer);
+		return (EXIT_SUCCESS);
 	}
-	return (E_OK);
+	return (error(E_ERROR, "pwd"));
 }
+

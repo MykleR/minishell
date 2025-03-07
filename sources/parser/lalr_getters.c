@@ -6,13 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 18:37:37 by mrouves           #+#    #+#             */
-/*   Updated: 2025/02/24 19:30:42 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/07 01:10:19 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parser.h>
 
-t_n_terminal	lalr_get_prod(int rule)
+int	lalr_get_prod(int rule)
 {
 	if (rule < 0 || rule >= NB_PROD)
 		return (0);

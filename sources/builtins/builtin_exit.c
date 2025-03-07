@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enviroment.c                                       :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/06 23:45:49 by mykle            ###   ########.fr       */
+/*   Created: 2025/03/06 17:26:45 by mykle             #+#    #+#             */
+/*   Updated: 2025/03/07 03:52:13 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <execution.h>
 
-int	env_init(t_hmap *env, const char **envp)
+int	builtin_exit(const char **args, int argc, t_hmap *env)
 {
-	char	*key;
-	char	*value;
+	int64_t	exit_code;
 
-	while (*envp)
+	(void)env;
+	if (argc > 1)
+		return (error(E_TOO_MANY, "exit"));
+	if (!argc || !args[0])
+		exit(EXIT_SUCCESS);
+	if (!ft_safe_atoi64(args[0], &exit_code))
 	{
-		key = ft_substr(*envp, 0, ft_strchr(*envp, '=') - *envp);
-		value = ft_strdup(ft_strchr(*envp, '=') + 1);
-		hmap_set(env, key, &value);
-		alloc_f(key);
-		envp++;
+		error(E_NUMERIC, "exit", args[0]);
+		exit(2);
 	}
-	return (E_OK);
+	exit((int)exit_code);
 }
