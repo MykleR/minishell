@@ -6,49 +6,47 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:41:03 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 00:36:18 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/11 19:41:03 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <parser.h>
 
 // Find the last redirection node in a chain
-static t_ast	*find_last_redir(t_ast *redir)
+static t_ast	*find_last_redir(t_ast *node)
 {
-	if (!redir || !ast_is_redir(redir))
-		return (NULL);
-	while (ast_is_redir(redir->expr.redir.next))
-		redir = redir->expr.redir.next;
-	return (redir);
+	while (ast_is_redir(node->expr.redir.next))
+		node = node->expr.redir.next;
+	return (node);
 }
 
 // Find the command node at the end of a redirection chain
-static t_ast	*find_last_command(t_ast *redir)
+static t_ast	*find_last_command(t_ast *node)
 {
-	t_ast	*last;
+	t_ast	*lcmd;
 
-	last = find_last_redir(redir);
-	if (!last || !last->expr.redir.next
-		|| last->expr.redir.next->type != AST_CMD)
-		return (NULL);
-	return (last->expr.redir.next);
+	if (!ast_is_redir(node))
+		return (node);
+	lcmd = find_last_redir(node)->expr.redir.next;
+	if (lcmd && lcmd->type == AST_CMD)
+		return (lcmd);
+	return (NULL);
 }
 
 // Recursive grammar rule: cmd -> cmd WORD
 static t_ast	*ast_cmd_rec(t_ast *cmd, t_ast *word)
 {
 	t_cmd_expr	*expr;
+	t_ast		*last;
 
-	expr = &cmd->expr.cmd;
-	if (ast_is_redir(cmd))
+	last = find_last_command(cmd);
+	if (!last || last->type != AST_CMD)
 	{
-		if (!find_last_command(cmd))
-		{
+		if (ast_is_redir(cmd))
 			find_last_redir(cmd)->expr.redir.next = ast_from_word(word);
-			return (cmd);
-		}
-		expr = &(find_last_command(cmd))->expr.cmd;
+		return (cmd);
 	}
+	expr = &last->expr.cmd;
 	expr->argv = ft_realloc(expr->argv,
 			sizeof(char *) * (expr->argc + 2),
 			sizeof(char *) * expr->argc);
@@ -69,16 +67,17 @@ static t_ast	*ast_redir_rec(t_ast *cmd, t_ast *redir)
 		last->expr.redir.next = redir;
 		return (cmd);
 	}
-	redir->expr.redir.next = cmd;
+	if (redir)
+		redir->expr.redir.next = cmd;
 	return (redir);
 }
 
 t_ast	*production(int rule, t_ast **rhs)
 {
-	if (rule == R_LIST_AND_LIST)
-		return (ast_new(AST_AND, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
 	if (rule == R_LIST_OR_LIST)
 		return (ast_new(AST_OR, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
+	if (rule == R_LIST_AND_LIST)
+		return (ast_new(AST_AND, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
 	if (rule == R_LIST_PIPE_LIST)
 		return (ast_new(AST_PIPE, (t_ast_expr){.binary = {rhs[0], rhs[2]}}));
 	if (rule == R_LIST_SUBSHELL)
@@ -89,9 +88,9 @@ t_ast	*production(int rule, t_ast **rhs)
 		return (ast_from_redir(REDIR_OUT, rhs[1]));
 	if (rule == R_REDIR_APP)
 		return (ast_from_redir(REDIR_APP, rhs[1]));
-	if (rule == R_CMD_WORD)
+	if (rule == R_CMD_ARG)
 		return (ast_from_word(rhs[0]));
-	if (rule == R_CMD_WORD_REC)
+	if (rule == R_CMD_ARG_REC)
 		return (ast_cmd_rec(rhs[0], rhs[1]));
 	if (rule == R_CMD_REDIR_REC)
 		return (ast_redir_rec(rhs[0], rhs[1]));

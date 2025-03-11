@@ -6,29 +6,27 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 17:25:39 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/11 23:11:43 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/*
- * TODO: IMPLEMENT EXPANSION AND EXPAND ARGUMENTS
-*/
-
 static int	handle_builtins(t_cmd_expr *cmd, t_hmap *env)
 {
 	int								i;
 	const char						**argv;
-	static const t_match_builtin	blts[NB_BUILTINS] = {
-	{"cd", builtin_cd}, {"pwd", builtin_pwd}, {"exit", builtin_exit},
-	{"unset", builtin_unset}};
+	static const t_match_builtin	builts[NB_BUILTINS] = {
+	{"unset", builtin_unset},
+	{"exit", builtin_exit},
+	{"pwd", builtin_pwd},
+	{"cd", builtin_cd}};
 
 	i = -1;
 	argv = (const char **)cmd->argv + 1;
 	while (++i < NB_BUILTINS)
-		if (!ft_strcmp(blts[i].name, *cmd->argv))
-			return (blts[i].func(argv, cmd->argc - 1, env));
+		if (!ft_strcmp(builts[i].name, cmd->argv[0]))
+			return (builts[i].func(argv, cmd->argc - 1, env));
 	return (E_ERROR);
 }
 

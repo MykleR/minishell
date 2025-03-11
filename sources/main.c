@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 16:07:49 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/11 23:51:10 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ int	main(int ac, const char **av, const char **env)
 {
 	static t_shell	shell = {0};
 
-	if(ac > 1 || !ac)
-		return (EXIT_FAILURE);
+	(void)ac;
 	if (shell_init(&shell, av[0] + 2, env) == E_OK)
 		rl_shell_prompt(&shell);
 	shell_destroy(&shell);

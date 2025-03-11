@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 01:08:32 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 16:04:57 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/11 22:59:04 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static void	lalr_shift(t_parser *parser, int state, t_token *token)
 {
 	t_ast	*node;
 
+	parser->token_id++;
 	node = ast_new(AST_TOKEN, (t_ast_expr){.token = token});
 	stack_push(&parser->stack, &((t_parse_trace){state, node}));
-	parser->token_id++;
 }
 
 int	lalr_parse(t_parser *parser, t_collection *tokens)
@@ -48,9 +48,7 @@ int	lalr_parse(t_parser *parser, t_collection *tokens)
 
 	parser->token_id = 0;
 	stack_push(&parser->stack, &((t_parse_trace){0, NULL}));
-	while (parser->token_id < tokens->len
-		&& action.type != ACT_ERROR
-		&& action.type != ACT_ACCEPT)
+	while (parser->token_id < tokens->len)
 	{
 		top = stack_top(&parser->stack);
 		token = collection_get(tokens, parser->token_id);
@@ -60,6 +58,8 @@ int	lalr_parse(t_parser *parser, t_collection *tokens)
 			lalr_shift(parser, action.value, token);
 		else if (action.type == ACT_REDUCE)
 			lalr_reduce(parser, action.value);
+		else
+			break ;
 	}
 	if (action.type == ACT_ERROR)
 		return (error(E_PARSE_AST, token->val));

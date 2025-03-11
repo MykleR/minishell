@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 17:07:05 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/11 23:14:17 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	on_shell_prompt(t_shell *shell, const char *cmd)
 	ft_dprintf(2, "----------------------\n");
 	hmap_set(&shell->env, "?", &(char *){ft_itoa(status)});
 	ft_dprintf(2, "[exit status => %s]\n",
-			*(char **)hmap_get(&shell->env, "?"));
+		*(char **)hmap_get(&shell->env, "?"));
 	return (E_OK);
 }
 
