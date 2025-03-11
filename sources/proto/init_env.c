@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:08:10 by thomarna          #+#    #+#             */
-/*   Updated: 2025/02/28 09:40:42 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:58:50 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ char	*get_value(char *src)
 
 void	init_env(char **ep, t_collection *c)
 {
-	hm_create(c, 2, sizeof(char **), (t_clear_info){alloc_f, T_HEAP});
-	hm_set(c, "?", &((char *){ft_strdup("0")}));
+	hmap_init(c, 2, sizeof(char **), (t_clear_info){alloc_f, T_HEAP});
+	hmap_set(c, "?", &((char *){ft_strdup("0")}));
 	while (*ep)
 	{
-		hm_set(c, get_key(*ep), &((char *){ft_strdup(get_value(*ep))}));
+		hmap_set(c, get_key(*ep), &((char *){ft_strdup(get_value(*ep))}));
 		ep++;
 	}
 }
@@ -50,13 +50,13 @@ void	init_env(char **ep, t_collection *c)
 static void	print_env(void *ptr, void *arg)
 {
 	(void)arg;
-	ft_printf("%s=%s\n", *(char **)ptr, *(char **)hm_get(arg, *(char **)ptr));
+	ft_printf("%s=%s\n", *(char **)ptr, *(char **)hmap_get(arg, *(char **)ptr));
 }
 
-void	env_builtin(t_hm *h)
+void	env_builtin(t_hmap *h)
 {
 	t_collection	*keys;
 
-	keys = &(((t_hm_bucket *)h->data))->keys;
+	keys = &(((t_hmap_bucket *)h->data))->keys;
 	collection_iter(keys, h, print_env);
 }
