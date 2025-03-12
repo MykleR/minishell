@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/07 17:18:26 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 14:16:54 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <ast.h>
 
 # define PATH_MAX 4096
-# define NB_BUILTINS 4
+# define NB_BUILTINS 5
 
 typedef enum e_access
 {

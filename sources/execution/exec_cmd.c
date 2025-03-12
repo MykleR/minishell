@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 23:11:43 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 14:16:34 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static int	handle_builtins(t_cmd_expr *cmd, t_hmap *env)
 	{"unset", builtin_unset},
 	{"exit", builtin_exit},
 	{"pwd", builtin_pwd},
-	{"cd", builtin_cd}};
+	{"cd", builtin_cd},
+	{"export", builtin_export}};
 
 	i = -1;
 	argv = (const char **)cmd->argv + 1;

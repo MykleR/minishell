@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/11 17:47:39 by mrouves          ###   ########.fr        #
+#    Updated: 2025/03/12 14:15:23 by thomarna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
@@ -34,3 +34,4 @@ SOURCES		:=	main.c\
 				builtins/builtin_exit.c\
 				builtins/builtin_unset.c\
 				builtins/builtin_pwd.c\
+				builtins/builtin_export.c\
