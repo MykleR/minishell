@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/12 20:59:16 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 21:50:01 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ static int	handle_builtins(t_cmd_expr *cmd, t_hmap *env)
 
 int	execute_cmd(t_cmd_expr *cmd, t_hmap *env)
 {
-	pid_t	pid;
-	int		status;
+	struct stat	buf;
+	pid_t		pid;
+	int			status;
 
 	(void)env;
 	if (!cmd || cmd->argc <= 0 || !cmd->argv)
@@ -48,6 +49,8 @@ int	execute_cmd(t_cmd_expr *cmd, t_hmap *env)
 	if (!pid)
 	{
 		execvp(cmd->argv[0], cmd->argv);
+		if (!stat(cmd->argv[0], &buf) && buf.st_mode & S_IFDIR)
+			exit(error(E_ISDIR, cmd->argv[0]) * 126);
 		exit(error(E_NOTCMD, cmd->argv[0]) * 127);
 	}
 	return (query_child(pid));

@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:04:54 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/11 23:12:17 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 21:46:21 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	safe_open(const char *filename, int mode)
 {
 	int	fd;
 
+	if (!filename || !*filename)
+		return (E_ERROR);
 	fd = open(filename, mode, 0644);
 	if (fd == E_ERROR)
 		error(E_OPEN, "open", filename, strerror(errno));
@@ -45,7 +47,9 @@ int	safe_pipe(int pipefd[2])
 int	safe_close(int fd)
 {
 	int	ret;
-
+	
+	if (fd < 0)
+		return (EXIT_SUCCESS);
 	ret = close(fd);
 	if (ret == E_ERROR)
 		error(E_ERROR, "close");

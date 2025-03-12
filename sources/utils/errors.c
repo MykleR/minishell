@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:59:51 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/12 21:26:13 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 21:42:19 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	error(t_error_type e, ...)
 	char				*msg;
 	const static int	fd = STDERR_FILENO;
 	const static char	*errors = E_MSG_OK E_MSG_LEX E_MSG_AST E_MSG_OPEN \
-		E_MSG_TOOMANY E_MSG_NOTCMD E_MSG_NOTSET E_MSG_NUMERIC E_MSG_IDENTIF;
+		E_MSG_TOOMANY E_MSG_NOTCMD E_MSG_NOTSET E_MSG_NUMERIC E_MSG_IDENTIF \
+		E_MSG_ISDIR;
 
 	if (e == E_OK)
 		return (e);

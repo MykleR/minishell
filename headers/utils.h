@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/12 21:26:50 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 21:43:09 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 # define E_MSG_ERROR "%s: %s\n\0"
 # define E_MSG_OK "OK.\n\0"
@@ -33,6 +35,7 @@
 # define E_MSG_NOTSET "%s: '%s' not set\n\0"
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
 # define E_MSG_IDENTIF "%s: '%s': not a valid identifier\n\0"
+# define E_MSG_ISDIR "%s: Is a directory\n\0"
 
 typedef enum e_errors_type
 {
@@ -45,7 +48,8 @@ typedef enum e_errors_type
 	E_NOTCMD		= E_TOOMANY + sizeof(E_MSG_TOOMANY) - 1,
 	E_NOTSET		= E_NOTCMD + sizeof(E_MSG_NOTCMD) - 1,
 	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1,
-	E_IDENTIF		= E_NUMERIC + sizeof(E_MSG_NUMERIC) - 1
+	E_IDENTIF		= E_NUMERIC + sizeof(E_MSG_NUMERIC) - 1,
+	E_ISDIR			= E_IDENTIF + sizeof(E_MSG_IDENTIF) - 1
 }	t_error_type;
 
 typedef enum e_sig_type

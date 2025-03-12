@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 23:14:17 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 22:26:51 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ static int	on_shell_prompt(t_shell *shell, const char *cmd)
 	if (tokenize(cmd, &shell->tokens)
 		|| lalr_parse(&shell->parser, &shell->tokens))
 		return (EXIT_FAILURE);
-	ast_print(shell->parser.ast);
-	ft_dprintf(2, "------- output -------\n");
+	//ast_print(shell->parser.ast);
 	status = evaluate(shell->parser.ast, &shell->env);
-	ft_dprintf(2, "----------------------\n");
 	hmap_set(&shell->env, "?", &(char *){ft_itoa(status)});
-	ft_dprintf(2, "[exit status => %s]\n",
-		*(char **)hmap_get(&shell->env, "?"));
+	//ft_dprintf(2, "[exit status => %s]\n",
+	//	*(char **)hmap_get(&shell->env, "?"));
 	return (E_OK);
 }
 
