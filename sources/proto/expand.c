@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:08:06 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/11 18:11:55 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:08:12 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,12 @@
 #include "minishell.h"
 #include "proto.h"
 
-char *detect_envar(char *str)
+char	*detect_envar(char *str)
 {
-
 	while (*str)
 	{
 		if (*str == '+')
-		{	
 			return (str + 1);
-		}
 		str++;
 	}
 	return (0);
@@ -30,40 +27,51 @@ char *detect_envar(char *str)
 
 int	expand(t_hmap *h, char *str)
 {
-	char *tmp;
-	char buff[4096];
-	int i;
+	char	*tmp;
+	char	buff[4096];
+	int		i;
+	int		j;
+	int		squote;
+	int		dquote;
 
 	i = 0;
-	tmp = *(char **)hmap_get(h, detect_envar(str));
-	/* printf("%s\n", *(char **)tmp); */
-	if (tmp)
+	j = 0;
+	squote = 0;
+	dquote = 0;
+	while (str[i])
 	{
-		while (str[i])
+		if (str[i] == '\'')
+			squote = !squote;
+		if (str[i] == '"')
+			dquote = !dquote;
+		if (str[i] == '+' && !squote)
 		{
-			if (str[i] != '+')
-				buff[i] = str[i];
-			else
+			/* Rajouter dans le if le check de si !(dquote && squote) ou les différents cas mais ça marche po :( */
+			tmp = *(char **)hmap_get(h, detect_envar(str));
+			if (tmp)
 			{
 				while (*tmp)
-				{
-					buff[i] = *tmp;
-					tmp++;
+					buff[j++] = *tmp++;
+				while (str[i] && str[i] != ' ')
 					i++;
-				}
+				continue ;
 			}
-			i++;
 		}
+		else
+			buff[j++] = str[i];
+		i++;
 	}
+	buff[j] = '\0';
 	printf("%s\n", buff);
 	return (0);
 }
 
-int main(int ac, char **av, char **ep)
+int	main(int ac, char **av, char **ep)
 {
-	if (ac > 1) 
+	t_collection	c;
+
+	if (ac > 1)
 	{
-		t_collection c;
 		init_env(ep, &c);
 		expand(&c, av[1]);
 		/* printf("%s\n", av[1]); */
