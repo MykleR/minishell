@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/12 14:16:34 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:59:16 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ static int	handle_builtins(t_cmd_expr *cmd, t_hmap *env)
 	int								i;
 	const char						**argv;
 	static const t_match_builtin	builts[NB_BUILTINS] = {
+	{"export", builtin_export},
 	{"unset", builtin_unset},
 	{"exit", builtin_exit},
+	{"echo", builtin_echo},
 	{"pwd", builtin_pwd},
-	{"cd", builtin_cd},
-	{"export", builtin_export}};
+	{"env", builtin_env},
+	{"cd", builtin_cd}};
 
 	i = -1;
 	argv = (const char **)cmd->argv + 1;
@@ -44,9 +46,9 @@ int	execute_cmd(t_cmd_expr *cmd, t_hmap *env)
 		return (status);
 	pid = safe_fork();
 	if (!pid)
-		exit(execvp(cmd->argv[0], cmd->argv) + 128);
-	status = query_child(pid);
-	if (status)
-		return (error(E_NOTCMD, cmd->argv[0]) * status);
-	return (EXIT_SUCCESS);
+	{
+		execvp(cmd->argv[0], cmd->argv);
+		exit(error(E_NOTCMD, cmd->argv[0]) * 127);
+	}
+	return (query_child(pid));
 }

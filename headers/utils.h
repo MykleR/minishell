@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/07 16:32:56 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/12 21:26:50 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define E_MSG_NOTCMD "Command '%s' not found\n\0"
 # define E_MSG_NOTSET "%s: '%s' not set\n\0"
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
+# define E_MSG_IDENTIF "%s: '%s': not a valid identifier\n\0"
 
 typedef enum e_errors_type
 {
@@ -43,7 +44,8 @@ typedef enum e_errors_type
 	E_TOOMANY		= E_OPEN + sizeof(E_MSG_OPEN) - 1,
 	E_NOTCMD		= E_TOOMANY + sizeof(E_MSG_TOOMANY) - 1,
 	E_NOTSET		= E_NOTCMD + sizeof(E_MSG_NOTCMD) - 1,
-	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1
+	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1,
+	E_IDENTIF		= E_NUMERIC + sizeof(E_MSG_NUMERIC) - 1
 }	t_error_type;
 
 typedef enum e_sig_type
@@ -68,7 +70,10 @@ int		safe_close(int fd);
 int		safe_dup2(int oldfd, int newfd);
 int		safe_pipe(int pipefd[2]);
 
+void	__env_print_ex(t_hmap_bucket *bucket, void *arg);
+void	__env_print_ev(t_hmap_bucket *bucket, void *arg);
 int		env_init(t_hmap *env, const char **envp);
+char	**env_to_array(t_hmap *env);
 
 int		sig_handle(int num, t_sig_callb handler, t_sig_type type);
 

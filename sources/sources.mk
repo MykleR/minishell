@@ -6,14 +6,14 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/12 14:15:23 by thomarna         ###   ########.fr        #
+#    Updated: 2025/03/12 21:03:28 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
 				utils/errors.c\
 				utils/signals.c\
 				utils/safes.c\
-				utils/enviroment.c\
+				utils/environment.c\
 				shell/shell.c\
 				shell/shell_rl.c\
 				lexer/lexer.c\
@@ -32,6 +32,8 @@ SOURCES		:=	main.c\
 				execution/exec_logic.c\
 				builtins/builtin_cd.c\
 				builtins/builtin_exit.c\
+				builtins/builtin_echo.c\
 				builtins/builtin_unset.c\
 				builtins/builtin_pwd.c\
+				builtins/builtin_env.c\
 				builtins/builtin_export.c\
