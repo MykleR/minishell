@@ -6,11 +6,22 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/13 05:43:33 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:29:23 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+static void	on_shell_prompt(t_shell *shell, const char *cmd)
+{
+	if (tokenize(cmd, &shell->tokens)
+		|| heredoc_handler(&shell->tokens)
+		|| lalr_parse(&shell->parser, &shell->tokens))
+		return ;
+	shell->status = evaluate(shell->parser.ast, &shell->env);
+	hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
+	ft_dprintf(STDERR_FILENO, "[%d]\n", shell->status);
+}
 
 int	shell_init(t_shell *shell, const char *name, const char **env)
 {
@@ -44,4 +55,24 @@ void	shell_destroy(t_shell *shell)
 	collection_destroy(&shell->tokens);
 	collection_destroy(&shell->parser.stack);
 	collection_destroy(&shell->env);
+}
+
+void	shell_readline(t_shell *shell)
+{
+	char	*buf;
+
+	buf = readline(rl_readline_name);
+	while (buf)
+	{
+		if (ft_strlen(buf) > 0)
+		{
+			add_history(buf);
+			sig_ignore();
+			on_shell_prompt(shell, buf);
+			sig_set();
+		}
+		shell_clear(shell);
+		free(buf);
+		buf = readline(rl_readline_name);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/12 22:58:46 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:31:27 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	main(int ac, const char **av, const char **env)
 
 	(void)ac;
 	if (shell_init(&shell, av[0] + 2, env) == E_OK)
-		rl_shell_prompt(&shell);
+		shell_readline(&shell);
 	shell_destroy(&shell);
 	if (isatty(STDIN_FILENO))
 		ft_dprintf(STDERR_FILENO, "exit\n");

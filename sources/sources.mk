@@ -6,17 +6,16 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/13 02:54:48 by mrouves          ###   ########.fr        #
+#    Updated: 2025/03/13 06:30:16 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
+				shell.c\
 				utils/errors.c\
 				utils/signals.c\
 				utils/safes.c\
 				utils/environment.c\
 				utils/heredoc.c\
-				shell/shell.c\
-				shell/shell_rl.c\
 				lexer/lexer.c\
 				lexer/match_complex.c\
 				lexer/match_double.c\

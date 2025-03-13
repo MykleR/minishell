@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/13 05:45:34 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:31:13 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ typedef struct s_shell
 int		shell_init(t_shell *shell, const char *name, const char **env);
 void	shell_destroy(t_shell *shell);
 void	shell_clear(t_shell	*shell);
-
-void	rl_shell_nl_exit(int num);
-void	rl_shell_prompt(t_shell *shell);
+void	shell_readline(t_shell *shell);
 
 #endif
