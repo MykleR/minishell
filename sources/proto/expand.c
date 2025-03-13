@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:08:06 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/12 09:08:12 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/13 13:37:33 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,58 @@ char	*detect_envar(char *str)
 	return (0);
 }
 
-int	expand(t_hmap *h, char *str)
+char	*expand_basic(t_hmap *h, char *str, char *buff, int *j)
 {
 	char	*tmp;
+
+	tmp = *(char **)hmap_get(h, detect_envar(str));
+	if (tmp)
+	{
+		while (*tmp)
+			buff[(*j)++] = *tmp++;
+		while (*str && *str != ' ')
+			str++;
+	}
+
+	return (str);
+}
+
+char	*expand_squote(char *str, char *buff, int *j)
+{
+	printf("Single quote\n");
+	while (*str && *str != '\'')
+		buff[(*j)++] = *str++;
+	return (str);
+}
+
+char	*expand_dquote(t_hmap *h, char *str, char *buff, int *j)
+{
+	char	*tmp;
+
+	printf("dquote\n");
+	while (*str && *str != '"')
+	{
+		if (*str == '+')
+		{
+			tmp = *(char **)hmap_get(h, detect_envar(str));
+			if (tmp)
+			{
+				while (*tmp)
+					buff[(*j)++] = *tmp++;
+				while (*str && *str != ' ')
+					str++;
+				continue ;
+			}
+		}
+		else
+			buff[(*j)++] = *str;
+		str++;
+	}
+	return (str);
+}
+
+int	expand(t_hmap *h, char *str)
+{
 	char	buff[4096];
 	int		i;
 	int		j;
@@ -40,22 +89,25 @@ int	expand(t_hmap *h, char *str)
 	dquote = 0;
 	while (str[i])
 	{
+		printf("%d\n", squote);
 		if (str[i] == '\'')
-			squote = !squote;
-		if (str[i] == '"')
-			dquote = !dquote;
-		if (str[i] == '+' && !squote)
 		{
-			/* Rajouter dans le if le check de si !(dquote && squote) ou les différents cas mais ça marche po :( */
-			tmp = *(char **)hmap_get(h, detect_envar(str));
-			if (tmp)
-			{
-				while (*tmp)
-					buff[j++] = *tmp++;
-				while (str[i] && str[i] != ' ')
-					i++;
-				continue ;
-			}
+			squote = !squote;
+			if (squote)
+				str = expand_squote(str + 1, buff, &j);
+		}
+		else if (str[i] == '"')
+		{
+			dquote = !dquote;
+			if (dquote)
+				str = expand_dquote(h, str + 1, buff, &j);
+		}
+		else if (str[i] == '+' && !squote && !dquote)
+		{
+			printf("before basic: %s\n", str);
+			str = expand_basic(h, str, buff, &j);
+			printf("After basic: %s\n", str);
+
 		}
 		else
 			buff[j++] = str[i];
@@ -74,6 +126,5 @@ int	main(int ac, char **av, char **ep)
 	{
 		init_env(ep, &c);
 		expand(&c, av[1]);
-		/* printf("%s\n", av[1]); */
 	}
 }
