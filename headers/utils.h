@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/12 21:43:09 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:19:33 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
 # define E_MSG_IDENTIF "%s: '%s': not a valid identifier\n\0"
 # define E_MSG_ISDIR "%s: Is a directory\n\0"
+# define E_MSG_HDEOF "warning: here-document at line %s \
+delimited by end-of-file (wanted `%s')\n\0"
 
 typedef enum e_errors_type
 {
@@ -49,24 +51,18 @@ typedef enum e_errors_type
 	E_NOTSET		= E_NOTCMD + sizeof(E_MSG_NOTCMD) - 1,
 	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1,
 	E_IDENTIF		= E_NUMERIC + sizeof(E_MSG_NUMERIC) - 1,
-	E_ISDIR			= E_IDENTIF + sizeof(E_MSG_IDENTIF) - 1
+	E_ISDIR			= E_IDENTIF + sizeof(E_MSG_IDENTIF) - 1,
+	E_HDEOF			= E_ISDIR + sizeof(E_MSG_ISDIR) - 1
 }	t_error_type;
 
-typedef enum e_sig_type
-{
-	SIG_IGNORE,
-	SIG_RESTORE,
-	SIG_SIMPLE,
-	SIG_COMPLEX
-}	t_sig_type;
+int		error(t_error_type e, ...);
 
-typedef struct sigaction	t_sigaction;
+int		heredoc_handler(t_collection *tokens);
 
-typedef union u_sig_callb
-{
-	void		(*h_simple)(int);
-	void		(*h_complex)(int, siginfo_t *, void *);
-}	t_sig_callb;
+int		sig_set(void);
+int		sig_default(void);
+int		sig_ignore(void);
+int		sig_exit(void);
 
 int		safe_fork(void);
 int		safe_open(const char *filename, int flags);
@@ -78,9 +74,5 @@ void	__env_print_ex(t_hmap_bucket *bucket, void *arg);
 void	__env_print_ev(t_hmap_bucket *bucket, void *arg);
 int		env_init(t_hmap *env, const char **envp);
 char	**env_to_array(t_hmap *env);
-
-int		sig_handle(int num, t_sig_callb handler, t_sig_type type);
-
-int		error(t_error_type e, ...);
 
 #endif

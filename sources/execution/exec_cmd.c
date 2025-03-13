@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/12 21:50:01 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 05:38:04 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	execute_cmd(t_cmd_expr *cmd, t_hmap *env)
 	pid = safe_fork();
 	if (!pid)
 	{
+		sig_default();
 		execvp(cmd->argv[0], cmd->argv);
 		if (!stat(cmd->argv[0], &buf) && buf.st_mode & S_IFDIR)
 			exit(error(E_ISDIR, cmd->argv[0]) * 126);

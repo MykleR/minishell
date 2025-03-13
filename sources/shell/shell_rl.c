@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:46:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/12 22:26:51 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:22:24 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,16 @@
 
 static int	on_shell_prompt(t_shell *shell, const char *cmd)
 {
-	int	status;
-
-	if (tokenize(cmd, &shell->tokens)
-		|| lalr_parse(&shell->parser, &shell->tokens))
+	if (tokenize(cmd, &shell->tokens))
 		return (EXIT_FAILURE);
-	//ast_print(shell->parser.ast);
-	status = evaluate(shell->parser.ast, &shell->env);
-	hmap_set(&shell->env, "?", &(char *){ft_itoa(status)});
-	//ft_dprintf(2, "[exit status => %s]\n",
-	//	*(char **)hmap_get(&shell->env, "?"));
+	if (heredoc_handler(&shell->tokens))
+		return (EXIT_FAILURE);
+	if (lalr_parse(&shell->parser, &shell->tokens))
+		return (EXIT_FAILURE);
+	shell->status = evaluate(shell->parser.ast, &shell->env);
+	hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
+	ft_dprintf(STDERR_FILENO, "[%d]\n", shell->status);
 	return (E_OK);
-}
-
-void	rl_shell_nl(int num)
-{
-	(void) num;
-	write(STDERR_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
 }
 
 void	rl_shell_prompt(t_shell *shell)
@@ -46,7 +36,9 @@ void	rl_shell_prompt(t_shell *shell)
 		if (ft_strlen(buf) > 0)
 		{
 			add_history(buf);
+			sig_ignore();
 			on_shell_prompt(shell, buf);
+			sig_set();
 		}
 		shell_clear(shell);
 		free(buf);

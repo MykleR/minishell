@@ -6,27 +6,41 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:05:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/07 02:58:54 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/13 06:16:57 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <utils.h>
+#include <minishell.h>
 
-int	sig_handle(int num, t_sig_callb handler, t_sig_type type)
+static void	rl_nl(int num)
 {
-	t_sigaction	sig;
+	(void) num;
+	write(STDERR_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
 
-	sigemptyset(&sig.sa_mask);
-	sig.sa_sigaction = handler.h_complex;
-	sig.sa_handler = handler.h_simple;
-	sig.sa_flags = SA_RESTART;
-	if (type == SIG_IGNORE || !handler.h_simple)
-		sig.sa_handler = SIG_IGN;
-	else if (type == SIG_RESTORE)
-		sig.sa_flags = SA_RESETHAND;
-	else if (type == SIG_COMPLEX)
-		sig.sa_flags |= SA_SIGINFO;
-	if (sigaction(num, &sig, 0) == E_ERROR)
-		return (error(E_ERROR, "sigaction"));
-	return (E_OK);
+int	sig_set(void)
+{
+	return (signal(SIGINT, rl_nl) == SIG_ERR
+		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
+}
+
+int	sig_default(void)
+{
+	return (signal(SIGINT, SIG_DFL) == SIG_ERR
+		|| signal(SIGQUIT, SIG_DFL) == SIG_ERR);
+}
+
+int	sig_ignore(void)
+{
+	return (signal(SIGINT, SIG_IGN) == SIG_ERR
+		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
+}
+
+int	sig_exit(void)
+{
+	return (signal(SIGINT, exit) == SIG_ERR
+		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
 }

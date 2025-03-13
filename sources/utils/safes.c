@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:04:54 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/12 21:46:21 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/13 06:08:30 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	safe_pipe(int pipefd[2])
 int	safe_close(int fd)
 {
 	int	ret;
-	
+
 	if (fd < 0)
 		return (EXIT_SUCCESS);
 	ret = close(fd);
