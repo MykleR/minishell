@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/14 06:33:39 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/14 06:41:41 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ static void	__construct(void)
 {
 	rl_outstream = stderr;
 	rl_readline_name = "";
-	rl_prep_term_function = 0;
 	if (isatty(STDIN_FILENO))
 	{
 		rl_readline_name = SHELL_PROMPT;
 		ft_dprintf(STDERR_FILENO, "%s", SHELL_BANNER);
 	}
+	else
+		rl_prep_term_function = 0;
 }
 
 int	main(int ac, const char **av, const char **env)
