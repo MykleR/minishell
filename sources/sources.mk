@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/14 03:42:41 by mykle            ###   ########.fr        #
+#    Updated: 2025/03/14 18:34:43 by mykle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
@@ -14,6 +14,7 @@ SOURCES		:=	main.c\
 				utils/errors.c\
 				utils/signals.c\
 				utils/safes.c\
+				utils/expands.c\
 				utils/environment.c\
 				utils/heredoc.c\
 				lexer/lexer.c\

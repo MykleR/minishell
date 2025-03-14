@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/11 19:09:15 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 17:01:53 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,22 @@ typedef struct s_token
 	const char	*val;
 }	t_token;
 
-int				match_arg(const char *s);
-int				match_here_doc(const char *s);
-int				match_append(const char *s);
-int				match_and(const char *s);
-int				match_or(const char *s);
-int				match_space(const char *s);
-int				match_pipe(const char *s);
-int				match_redir_in(const char *s);
-int				match_redir_out(const char *s);
-int				match_lparen(const char *s);
-int				match_rparen(const char *s);
+int		match_arg(const char *s);
+int		match_here_doc(const char *s);
+int		match_append(const char *s);
+int		match_and(const char *s);
+int		match_or(const char *s);
+int		match_space(const char *s);
+int		match_pipe(const char *s);
+int		match_redir_in(const char *s);
+int		match_redir_out(const char *s);
+int		match_lparen(const char *s);
+int		match_rparen(const char *s);
+int		match_ident(const char *s);
 
-void			token_clear(t_token *token);
-void			__token_iprint(t_token *token, void *arg);
+void	token_clear(t_token *token);
+void	__token_iprint(t_token *token, void *arg);
 
-int				tokenize(const char *str, t_collection *tokens);
+int		tokenize(const char *str, t_collection *tokens);
 
 #endif

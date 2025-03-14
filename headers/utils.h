@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/14 03:01:02 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/14 18:25:18 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef enum e_errors_type
 int		error(t_error_type e, ...);
 
 int		heredoc_parse(t_collection *tokens);
+
+char	*replace_var(const char *str, t_hmap *env);
 
 int		sig_set(void);
 int		sig_default(void);

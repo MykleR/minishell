@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:08:06 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/14 15:52:53 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/14 18:32:26 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,12 @@ int	expand(t_hmap *h, char *str)
 int	main(int ac, char **av, char **ep)
 {
 	t_collection	c;
+	char *str = "\"\"Bonjour''$HOME\" a\"$test";
 
 	if (ac > 1)
 	{
-		printf("Input: %s\n", av[1]);
+		printf("Input: %s\n", str);
 		init_env(ep, &c);
-		expand(&c, av[1]);
+		expand(&c, str);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/14 06:32:31 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/14 18:59:59 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static void	on_shell_prompt(t_shell *shell, const char *cmd)
 		return ;
 	shell->status = evaluate(shell->parser.ast, &shell->env);
 	hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
-	ft_dprintf(STDERR_FILENO, "[%d]\n", shell->status);
 }
 
 int	shell_init(t_shell *shell, const char **env)
@@ -42,6 +41,7 @@ void	shell_clear(t_shell	*shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
+	shell->status = 0;
 	collection_clear(&shell->tokens);
 	collection_clear(&shell->parser.stack);
 }

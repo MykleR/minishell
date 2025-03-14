@@ -6,20 +6,11 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 01:26:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 22:45:55 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 18:39:07 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <lexer.h>
-
-static bool	is_chr_word(char c, const char *banned)
-{
-	if (!ft_isprint(c))
-		return (false);
-	while (banned && *banned && *banned != c)
-		banned++;
-	return (!banned || !(*banned));
-}
 
 static int	match_quote(const char *s, char c)
 {
@@ -40,7 +31,7 @@ static int	match_word(const char *s)
 	int	pos;
 
 	pos = 0;
-	while (is_chr_word(s[pos], LEX_NOTWORD))
+	while (ft_isprint(s[pos]) && !ft_strchr(LEX_NOTWORD, s[pos]))
 		pos++;
 	return (pos);
 }
@@ -68,6 +59,19 @@ int	match_space(const char *s)
 
 	pos = 0;
 	while (ft_isspace(s[pos]))
+		pos++;
+	return (pos);
+}
+
+int	match_ident(const char *s)
+{
+	int	pos;
+
+	pos = 0;
+	if (!ft_isalpha(*s) && *s != '_')
+		return (0);
+	pos++;
+	while (ft_isalnum(s[pos]) || s[pos] == '_')
 		pos++;
 	return (pos);
 }

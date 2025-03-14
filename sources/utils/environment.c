@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/12 21:17:58 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 18:45:24 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static void	__env_export(t_hmap_bucket *bucket, t_collection *res)
 	while (bucket && ++i < bucket->keys.len)
 	{
 		value = ((char **)bucket->values.data)[i];
+		if (!value)
+			continue ;
 		tmp = ft_strjoin(((char **)bucket->keys.data)[i], "=");
 		collection_append(res, &(char *){ft_strjoin(tmp, value)});
 		alloc_f(tmp);

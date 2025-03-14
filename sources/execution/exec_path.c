@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 03:38:50 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/14 06:18:25 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/14 17:01:34 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	try_path_dirs(char **args, t_hmap *env, char **envp)
 	char	**path_var;
 	char	*path_copy;
 	char	*dir;
-	
+
 	path_var = hmap_get(env, "PATH");
 	if (!path_var || !*path_var)
 		return ;
