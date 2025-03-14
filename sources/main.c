@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/13 06:31:27 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 05:08:12 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static void	__construct(void)
 		rl_readline_name = "";
 		rl_prep_term_function = 0;
 	}
+	else
+		ft_dprintf(STDERR_FILENO, "%s", SHELL_BANNER);
 }
 
 int	main(int ac, const char **av, const char **env)

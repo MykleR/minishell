@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/13 06:19:33 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 03:01:02 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define E_MSG_ERROR "%s: %s\n\0"
 # define E_MSG_OK "OK.\n\0"
@@ -57,7 +59,7 @@ typedef enum e_errors_type
 
 int		error(t_error_type e, ...);
 
-int		heredoc_handler(t_collection *tokens);
+int		heredoc_parse(t_collection *tokens);
 
 int		sig_set(void);
 int		sig_default(void);

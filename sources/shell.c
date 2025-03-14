@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/13 06:29:23 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 02:52:46 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	on_shell_prompt(t_shell *shell, const char *cmd)
 {
 	if (tokenize(cmd, &shell->tokens)
-		|| heredoc_handler(&shell->tokens)
+		|| heredoc_parse(&shell->tokens)
 		|| lalr_parse(&shell->parser, &shell->tokens))
 		return ;
 	shell->status = evaluate(shell->parser.ast, &shell->env);

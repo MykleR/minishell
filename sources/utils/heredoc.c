@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:46:54 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/13 06:17:48 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/14 03:01:04 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,25 @@
 static char	*generate_filename(void)
 {
 	static int	i = 0;
-	char		*filename;
-	char		*pid;
-	char		*id;
+	char		pid[12];
+	char		id[12];
 
-	id = ft_itoa(i++);
-	pid = ft_itoa(getpid());
-	filename = ft_strjoins((const char *[3]){HEREDOC_PATH, pid, id}, 3, "_");
-	alloc_f(pid);
-	alloc_f(id);
-	return (filename);
+	ft_itoa_buf(i++, id);
+	ft_itoa_buf(getpid(), pid);
+	return (ft_strjoins((const char *[3]){HEREDOC_PATH, pid, id}, 3, "_"));
 }
 
 static int	heredoc_process(int fd, const char *eof)
 {
+	pid_t	pid;
 	int		status;
 	char	*line;
 
+	if (fd < 0)
+		return (E_ERROR);
+	pid = safe_fork();
+	if (pid)
+		return (query_child(pid));
 	sig_exit();
 	status = 1;
 	while (status)
@@ -43,43 +45,30 @@ static int	heredoc_process(int fd, const char *eof)
 		free(line);
 	}
 	safe_close(fd);
-	return (EXIT_SUCCESS);
-}
-
-static int	heredoc_exec(const char *eof, const char *path)
-{
-	int		fd;
-	pid_t	pid;
-
-	fd = safe_open(path, O_CREAT | O_WRONLY | O_TRUNC);
-	if (fd == -1)
-		return (E_ERROR);
-	pid = safe_fork();
-	if (!pid)
-		exit(heredoc_process(fd, eof));
-	safe_close(fd);
-	return (query_child(pid));
+	exit(EXIT_SUCCESS);
 }
 
 static int	heredoc_handle(t_token *token, t_token *arg)
 {
-	const char	*eof;
+	const char	*path;
+	int			fd;
 	int			status;
 
 	token->type = T_REDIR_IN;
 	if (!arg || arg->type != T_ARG)
 		return (E_OK);
-	eof = ft_strdup(arg->val);
-	alloc_f((void *)arg->val);
-	arg->val = generate_filename();
-	status = heredoc_exec(eof, arg->val);
+	path = generate_filename();
+	fd = safe_open(path, O_CREAT | O_WRONLY | O_TRUNC);
+	status = heredoc_process(fd, arg->val);
+	safe_close(fd);
 	if (status)
 		unlink(arg->val);
-	alloc_f((void *)eof);
+	alloc_f((void *)arg->val);
+	arg->val = path;
 	return (status);
 }
 
-int	heredoc_handler(t_collection *tokens)
+int	heredoc_parse(t_collection *tokens)
 {
 	t_token		*token;
 	t_token		*arg;

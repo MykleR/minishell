@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/13 06:30:16 by mrouves          ###   ########.fr        #
+#    Updated: 2025/03/14 03:42:41 by mykle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
@@ -27,6 +27,7 @@ SOURCES		:=	main.c\
 				parser/lalr_getters.c\
 				execution/evaluation.c\
 				execution/exec_cmd.c\
+				execution/exec_path.c\
 				execution/exec_pipe.c\
 				execution/exec_redir.c\
 				execution/exec_logic.c\
