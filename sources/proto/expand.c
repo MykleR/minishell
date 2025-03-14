@@ -6,114 +6,113 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:08:06 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/13 13:37:33 by thomarna         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:52:53 by thomarna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hashmap.h"
+#include "libft_string.h"
 #include "minishell.h"
 #include "proto.h"
+#include <stdio.h>
 
-char	*detect_envar(char *str)
+char	*detect_envar(char *str, int *len)
 {
-	while (*str)
+	int		i;
+	int		j;
+	int		k;
+	char	tmp[4096];
+
+	i = 0;
+	while (str[i])
 	{
-		if (*str == '+')
-			return (str + 1);
-		str++;
+		j = i;
+		while (str[i] != ' ' && str[i] != '\0')
+			i++;
+		k = 0;
+		while (j < i)
+			tmp[k++] = str[j++];
+		tmp[k] = '\0';
+		*len = (int)ft_strlen(tmp);
+		return (ft_strdup(tmp));
+		i++;
 	}
-	return (0);
-}
-
-char	*expand_basic(t_hmap *h, char *str, char *buff, int *j)
-{
-	char	*tmp;
-
-	tmp = *(char **)hmap_get(h, detect_envar(str));
-	if (tmp)
-	{
-		while (*tmp)
-			buff[(*j)++] = *tmp++;
-		while (*str && *str != ' ')
-			str++;
-	}
-
 	return (str);
 }
 
-char	*expand_squote(char *str, char *buff, int *j)
+char	*search_env_var(t_hmap *h, char *str, int *len)
 {
-	printf("Single quote\n");
-	while (*str && *str != '\'')
-		buff[(*j)++] = *str++;
-	return (str);
+	char	**tmp;
+
+	tmp = (char **)hmap_get(h, detect_envar(str, len));
+	if (tmp == NULL)
+		return (NULL);
+	else
+		return (*tmp);
 }
 
-char	*expand_dquote(t_hmap *h, char *str, char *buff, int *j)
+char	*expand_basic(t_hmap *h, char *str, char *buff)
 {
 	char	*tmp;
+	int		i;
+	int		j;
+	int		k;
+	int		len;
 
-	printf("dquote\n");
-	while (*str && *str != '"')
+	i = 0;
+	k = 0;
+	while (str[i] != '\0')
 	{
-		if (*str == '+')
+		if (str[i] == '+')
 		{
-			tmp = *(char **)hmap_get(h, detect_envar(str));
+			tmp = search_env_var(h, str + i + 1, &len);
 			if (tmp)
 			{
-				while (*tmp)
-					buff[(*j)++] = *tmp++;
-				while (*str && *str != ' ')
-					str++;
+				j = 0;
+				while (j < (int)ft_strlen(tmp))
+					buff[k++] = tmp[j++];
+				i += len + 1;
 				continue ;
 			}
 		}
-		else
-			buff[(*j)++] = *str;
-		str++;
+		buff[k++] = str[i++];
 	}
-	return (str);
+	return (buff);
+}
+
+char	*expand_squote(char *str, char *buff)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		buff[i] = str[i];
+		i++;
+	}
+	return (buff);
 }
 
 int	expand(t_hmap *h, char *str)
 {
 	char	buff[4096];
 	int		i;
-	int		j;
-	int		squote;
-	int		dquote;
+	int		quote;
 
 	i = 0;
-	j = 0;
-	squote = 0;
-	dquote = 0;
+	quote = 0;
 	while (str[i])
 	{
-		printf("%d\n", squote);
-		if (str[i] == '\'')
-		{
-			squote = !squote;
-			if (squote)
-				str = expand_squote(str + 1, buff, &j);
-		}
-		else if (str[i] == '"')
-		{
-			dquote = !dquote;
-			if (dquote)
-				str = expand_dquote(h, str + 1, buff, &j);
-		}
-		else if (str[i] == '+' && !squote && !dquote)
-		{
-			printf("before basic: %s\n", str);
-			str = expand_basic(h, str, buff, &j);
-			printf("After basic: %s\n", str);
-
-		}
-		else
-			buff[j++] = str[i];
+		if (!quote && str[i] == '\'')
+			quote = 1;
+		if (!quote && str[i] == '"')
+			quote = 2;
 		i++;
 	}
-	buff[j] = '\0';
+	if (!quote || quote == 2)
+		expand_basic(h, str, buff);
+	if (quote == 1)
+		expand_squote(str, buff);
 	printf("%s\n", buff);
 	return (0);
 }
@@ -124,6 +123,7 @@ int	main(int ac, char **av, char **ep)
 
 	if (ac > 1)
 	{
+		printf("Input: %s\n", av[1]);
 		init_env(ep, &c);
 		expand(&c, av[1]);
 	}
