@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:41:03 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 19:41:03 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/17 18:42:25 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static t_ast	*find_last_command(t_ast *node)
 // Recursive grammar rule: cmd -> cmd WORD
 static t_ast	*ast_cmd_rec(t_ast *cmd, t_ast *word)
 {
-	t_cmd_expr	*expr;
 	t_ast		*last;
 
 	last = find_last_command(cmd);
@@ -46,12 +45,9 @@ static t_ast	*ast_cmd_rec(t_ast *cmd, t_ast *word)
 			find_last_redir(cmd)->expr.redir.next = ast_from_word(word);
 		return (cmd);
 	}
-	expr = &last->expr.cmd;
-	expr->argv = ft_realloc(expr->argv,
-			sizeof(char *) * (expr->argc + 2),
-			sizeof(char *) * expr->argc);
-	expr->argv[expr->argc++] = ft_strdup(word->expr.token->val);
-	expr->argv[expr->argc] = NULL;
+	collection_insert(&last->expr.cmd.args,
+		&(char *){ft_strdup(word->expr.token->val)},
+		last->expr.cmd.args.len - 1);
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/14 18:59:59 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/17 19:44:16 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	shell_clear(t_shell	*shell)
 	shell->status = 0;
 	collection_clear(&shell->tokens);
 	collection_clear(&shell->parser.stack);
+	ast_free(shell->parser.ast);
+	shell->parser.ast = NULL;
 }
 
 void	shell_destroy(t_shell *shell)
@@ -53,6 +55,7 @@ void	shell_destroy(t_shell *shell)
 	collection_destroy(&shell->tokens);
 	collection_destroy(&shell->parser.stack);
 	collection_destroy(&shell->env);
+	ast_free(shell->parser.ast);
 }
 
 void	shell_readline(t_shell *shell)

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 13:05:01 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 21:38:20 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/17 21:16:44 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ t_ast	*ast_new(t_ast_type type, t_ast_expr expr)
 */
 t_ast	*ast_from_word(t_ast *word)
 {
-	char	**argv;
+	const t_clear_info	clear = {alloc_f, T_HEAP};
+	t_cmd_expr			cmd;
 
 	if (!word || word->type != AST_TOKEN)
 		return (NULL);
-	argv = ft_calloc(sizeof(char *), 2);
-	argv[0] = ft_strdup(word->expr.token->val);
-	return (ast_new(AST_CMD, (t_ast_expr){.cmd = {argv, 1}}));
+	collection_init(&cmd.args, sizeof(char *), 8, clear);
+	collection_append(&cmd.args, &(char *){ft_strdup(word->expr.token->val)});
+	collection_append(&cmd.args, &(char *){NULL});
+	return (ast_new(AST_CMD, (t_ast_expr){.cmd = cmd}));
 }
 
 /*
@@ -52,4 +54,23 @@ t_ast	*ast_from_redir(t_redir_type type, t_ast *word)
 bool	ast_is_redir(t_ast *ast)
 {
 	return (ast && (ast->type == AST_REDIR));
+}
+
+void	ast_free(t_ast *ast)
+{
+	if (!ast)
+		return ;
+	if (ast->type == AST_PIPE || ast->type == AST_AND || ast->type == AST_OR)
+	{
+		ast_free(ast->expr.binary.left);
+		ast_free(ast->expr.binary.right);
+	}
+	if (ast->type == AST_CMD)
+		collection_clear(&ast->expr.cmd.args);
+	if (ast->type == AST_REDIR)
+	{
+		ast_free(ast->expr.redir.next);
+		alloc_f(ast->expr.redir.file);
+	}
+	alloc_f(ast);
 }

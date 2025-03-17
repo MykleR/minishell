@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:31 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/05 17:10:27 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/17 19:16:54 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ typedef struct s_redir_expr
 
 typedef struct s_cmd_expr
 {
-	char	**argv;
-	int		argc;
+	t_collection	args;
 }	t_cmd_expr;
 
 typedef union u_ast_expr
@@ -74,5 +73,6 @@ t_ast	*ast_from_word(t_ast *word);
 t_ast	*ast_from_redir(t_redir_type type, t_ast *word);
 bool	ast_is_redir(t_ast *ast);
 void	ast_print(t_ast *ast);
+void	ast_free(t_ast *ast);
 
 #endif

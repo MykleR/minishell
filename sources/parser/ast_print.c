@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:25:55 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/11 22:45:31 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/17 18:43:21 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,20 @@ static char	*get_ast_type_str(t_ast_type type)
 
 static void	print_cmd_args(t_cmd_expr *cmd, int indent)
 {
-	int	i;
+	uint32_t	i;
 
 	i = -1;
-	while (++i < cmd->argc)
-		printf("%*s└─ ARG[%d]: '%s'\n", indent + 2, "", i, cmd->argv[i]);
+	while (++i < cmd->args.len - 1)
+		printf("%*s└─ ARG[%d]: '%s'\n", indent + 2, "", i,
+			((char **)cmd->args.data)[i]);
 }
 
 static void	print_node_info(t_ast *node)
 {
 	if (node->type == AST_TOKEN && node->expr.token)
 		printf(" ('%s')", node->expr.token->val);
-	else if (node->type == AST_CMD && node->expr.cmd.argc > 0)
-		printf(" [%s]", node->expr.cmd.argv[0]);
+	else if (node->type == AST_CMD && node->expr.cmd.args.len > 1)
+		printf(" [%s]", ((char **)node->expr.cmd.args.data)[0]);
 	else if (node->type == AST_REDIR && node->expr.redir.file)
 	{
 		if (node->expr.redir.type == REDIR_IN)

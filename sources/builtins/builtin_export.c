@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:26:50 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/14 17:03:19 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/17 17:51:41 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ static int	insert_env(t_hmap *env, const char *arg)
 
 int	builtin_export(const char **args, int argc, t_hmap *env)
 {
+	int	status;
+
+	status = EXIT_SUCCESS;
 	if (!argc)
 		collection_iter(env, NULL, (t_iter_callb)__env_print_ex);
 	while (argc--)
@@ -40,6 +43,6 @@ int	builtin_export(const char **args, int argc, t_hmap *env)
 			|| (args[argc][match_ident(args[argc])] != '='
 			&& args[argc][match_ident(args[argc])] != '\0')
 			|| insert_env(env, args[argc]))
-			return (error(E_IDENTIF, "export", args[argc]));
-	return (EXIT_SUCCESS);
+			status = error(E_IDENTIF, "export", args[argc]);
+	return (status);
 }
