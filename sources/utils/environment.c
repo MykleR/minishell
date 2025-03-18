@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/14 18:45:24 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/17 23:09:24 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	env_init(t_hmap *env, const char **envp)
 		alloc_f(key);
 		envp++;
 	}
+	hmap_set(env, "?", &(char *){ft_strdup("0")});
 	return (E_OK);
 }
 

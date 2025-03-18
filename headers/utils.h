@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/17 04:34:03 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 05:11:05 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
 # define E_MSG_IDENTIF "%s: '%s': not a valid identifier\n\0"
 # define E_MSG_ISDIR "%s: Is a directory\n\0"
-# define E_MSG_HDEOF "warning: here-document at line %s \
-delimited by end-of-file (wanted `%s')\n\0"
+# define E_MSG_AMBIGUOUS "%s: ambiguous redirect\n\0"
 
 typedef enum e_errors_type
 {
@@ -54,14 +53,16 @@ typedef enum e_errors_type
 	E_NUMERIC		= E_NOTSET + sizeof(E_MSG_NOTSET) - 1,
 	E_IDENTIF		= E_NUMERIC + sizeof(E_MSG_NUMERIC) - 1,
 	E_ISDIR			= E_IDENTIF + sizeof(E_MSG_IDENTIF) - 1,
-	E_HDEOF			= E_ISDIR + sizeof(E_MSG_ISDIR) - 1
+	E_AMBIGUOUS		= E_ISDIR + sizeof(E_MSG_ISDIR) - 1,
 }	t_error_type;
 
 int		error(t_error_type e, ...);
 
 int		heredoc_parse(t_collection *tokens);
 
-char	*replace_vars(const char *str, t_hmap *env);
+char	**expand_simple(const char *str, t_hmap *env, int *argc);
+char	**expand_complex(const char **argv, t_hmap *env, int *argc);
+void	array_free(char **array);
 
 int		sig_set(void);
 int		sig_default(void);

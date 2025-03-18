@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 03:38:50 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/14 17:01:34 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 05:11:29 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ int	exec_path(char **args, t_hmap *env)
 {
 	char	**envp;
 
-	if (!args || !args[0])
-		return (EXIT_FAILURE);
+	if (!args || !args[0] || !*args[0])
+		exit(error(E_NOTCMD, args[0]) * 127);
 	envp = env_to_array(env);
 	if (ft_strncmp(args[0], "/", 1) && ft_strncmp(args[0], "./", 2))
 		try_path_dirs(args, env, envp);
 	try_execute(args[0], args, envp);
-	alloc_f(envp);
+	array_free(envp);
 	exit(error(E_NOTCMD, args[0]) * 127);
 }

@@ -6,13 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 01:26:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/14 18:39:07 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 02:01:37 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <lexer.h>
 
-static int	match_quote(const char *s, char c)
+int	match_quote(const char *s, char c)
 {
 	int	len;
 
@@ -26,12 +26,12 @@ static int	match_quote(const char *s, char c)
 	return (0);
 }
 
-static int	match_word(const char *s)
+int	match_word(const char *s, const char *not_word)
 {
 	int	pos;
 
 	pos = 0;
-	while (ft_isprint(s[pos]) && !ft_strchr(LEX_NOTWORD, s[pos]))
+	while (ft_isprint(s[pos]) && !ft_strchr(not_word, s[pos]))
 		pos++;
 	return (pos);
 }
@@ -45,7 +45,7 @@ int	match_arg(const char *s)
 	total_len = 0;
 	while (len && s[total_len])
 	{
-		len = match_word(s + total_len)
+		len = match_word(s + total_len, LEX_NOTWORD)
 			+ match_quote(s + total_len, '"')
 			+ match_quote(s + total_len, '\'');
 		total_len += len;

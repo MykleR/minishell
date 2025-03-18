@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/14 17:01:53 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 02:46:29 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 # include <utils.h>
 
 # define LEX_NB 11
+# define LEX_NB_QUOTE 3
 
 # define LEX_NOTWORD "|&<>;\\\"' \t\r\n()"
+# define LEX_QUOTE_NOTWORD "\"'"
 
 typedef enum e_terminal
 {
@@ -33,6 +35,9 @@ typedef enum e_terminal
 	T_EOF		= 9,
 	T_SPACE		= 10,
 	T_HERE_DOC	= 11,
+	T_DQUOTE	= 12,
+	T_SQUOTE	= 13,
+	T_NQUOTE	= 14,
 }	t_terminal;
 
 typedef struct s_pattern
@@ -59,10 +64,16 @@ int		match_redir_out(const char *s);
 int		match_lparen(const char *s);
 int		match_rparen(const char *s);
 int		match_ident(const char *s);
+int		match_quote(const char *s, char c);
+int		match_word(const char *s, const char *not_word);
+int		match_nquote(const char *s);
+int		match_dquote(const char *s);
+int		match_squote(const char *s);
 
 void	token_clear(t_token *token);
-void	__token_iprint(t_token *token, void *arg);
+void	token_print(t_token *token, void *arg);
 
 int		tokenize(const char *str, t_collection *tokens);
+int		tokenize_quotes(const char *str, t_collection *tokens);
 
 #endif

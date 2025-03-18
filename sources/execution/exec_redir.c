@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:26:07 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/17 19:21:47 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 05:07:52 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,15 @@ int	redirection(int fd_to, int fd_from, t_ast *todo, t_hmap *env)
 
 int	execute_redir(t_redir_expr *expr, t_hmap *env)
 {
+	char	**expanded;
+	int		argc;
+
 	if (!expr || !expr->file)
 		return (EXIT_FAILURE);
-	expr->fd = safe_open(expr->file, get_flags(expr->type));
+	expanded = expand_simple(expr->file, env, &argc);
+	if (!expanded || argc != 1 || !expanded[0] || !*expanded[0])
+		return (error(E_AMBIGUOUS, expr->file));
+	expr->fd = safe_open(expanded[0], get_flags(expr->type));
+	ft_split_free(expanded);
 	return (redirection(expr->fd, get_fd_from(expr->type), expr->next, env));
 }
