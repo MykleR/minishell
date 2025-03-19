@@ -6,16 +6,12 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:26:07 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/18 05:07:52 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 05:37:59 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <execution.h>
 
-/*
- * TODO: IMPLEMENT EXPANSION AND EXPAND REDIRECTION FILE
-
-*/
 static inline int	get_fd_from(t_redir_type type)
 {
 	if (type == REDIR_IN)
@@ -52,15 +48,18 @@ int	redirection(int fd_to, int fd_from, t_ast *todo, t_hmap *env)
 
 int	execute_redir(t_redir_expr *expr, t_hmap *env)
 {
-	char	**expanded;
-	int		argc;
+	t_collection	expanded;
 
 	if (!expr || !expr->file)
 		return (EXIT_FAILURE);
-	expanded = expand_simple(expr->file, env, &argc);
-	if (!expanded || argc != 1 || !expanded[0] || !*expanded[0])
+	if (expand_simple(expr->file, &expanded, env) != 1)
+	{
+		collection_destroy(&expanded);
 		return (error(E_AMBIGUOUS, expr->file));
-	expr->fd = safe_open(expanded[0], get_flags(expr->type));
-	ft_split_free(expanded);
+	}
+	alloc_f(expr->file);
+	expr->file = ft_strdup(*(char **)expanded.data);
+	collection_destroy(&expanded);
+	expr->fd = safe_open(expr->file, get_flags(expr->type));
 	return (redirection(expr->fd, get_fd_from(expr->type), expr->next, env));
 }

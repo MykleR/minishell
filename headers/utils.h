@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/18 05:11:05 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 06:30:01 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define E_MSG_AST "syntax error near unexpected token '%s'\n\0"
 # define E_MSG_OPEN "%s: %s: %s\n\0"
 # define E_MSG_TOOMANY "%s: too many arguments\n\0"
-# define E_MSG_NOTCMD "Command '%s' not found\n\0"
+# define E_MSG_NOTCMD "%s: command not found\n\0"
 # define E_MSG_NOTSET "%s: '%s' not set\n\0"
 # define E_MSG_NUMERIC "%s: %s: numeric argument required\n\0"
 # define E_MSG_IDENTIF "%s: '%s': not a valid identifier\n\0"
@@ -58,11 +58,11 @@ typedef enum e_errors_type
 
 int		error(t_error_type e, ...);
 
-int		heredoc_parse(t_collection *tokens);
+int		heredoc_parse(t_collection *tokens, t_hmap *env, int *status);
 
-char	**expand_simple(const char *str, t_hmap *env, int *argc);
-char	**expand_complex(const char **argv, t_hmap *env, int *argc);
-void	array_free(char **array);
+char	*expand_vars(const char *str, t_hmap *env);
+int		expand_simple(const char *str, t_collection *out, t_hmap *env);
+int		expand_complex(t_collection *args, t_collection *out, t_hmap *env);
 
 int		sig_set(void);
 int		sig_default(void);

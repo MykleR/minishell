@@ -6,11 +6,23 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 02:21:44 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/18 02:51:00 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 05:33:11 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <lexer.h>
+
+static int	token_len(const char *s, t_pattern pattern)
+{
+	int	pattern_len;
+
+	if (pattern.type == MATCH_COMPLEX)
+		return (pattern.match.complex(s));
+	pattern_len = ft_strlen(pattern.match.simple);
+	if (!ft_strncmp(s, pattern.match.simple, pattern_len))
+		return (pattern_len);
+	return (0);
+}
 
 static int	find_token(const t_pattern *patterns, int nb_patterns,
 				const char *input, t_terminal *type)
@@ -21,20 +33,20 @@ static int	find_token(const t_pattern *patterns, int nb_patterns,
 
 	i = -1;
 	max_len = 0;
-	*type = T_ARG;
+	*type = T_SPACE;
 	while (++i < nb_patterns)
 	{
-		len = patterns[i].match(input);
+		len = token_len(input, patterns[i]);
 		if (len > max_len)
 		{
 			max_len = len;
-			*type = patterns[i].type;
+			*type = patterns[i].token;
 		}
 	}
 	return (max_len);
 }
 
-static int	generic_tokenize(const char *cmd, const t_pattern *patterns,
+static int	tokenize_pattern(const char *cmd, const t_pattern *patterns,
 				int nb_patterns, t_collection *tokens)
 {
 	t_terminal	type;
@@ -54,43 +66,30 @@ static int	generic_tokenize(const char *cmd, const t_pattern *patterns,
 	return (E_OK);
 }
 
-int	tokenize(const char *cmd, t_collection *tokens)
+int	tokenize_cmd(const char *cmd, t_collection *tokens)
 {
-	static const t_pattern	patterns[LEX_NB] = {
-	{T_REDIR_OUT, match_redir_out},
-	{T_REDIR_IN, match_redir_in},
-	{T_HERE_DOC, match_here_doc},
-	{T_APPEND, match_append},
-	{T_LPAREN, match_lparen},
-	{T_RPAREN, match_rparen},
-	{T_SPACE, match_space},
-	{T_PIPE, match_pipe},
-	{T_AND, match_and},
-	{T_ARG, match_arg},
-	{T_OR, match_or}};
+	const t_pattern	patterns[LEX_NB] = {
+	{T_SPACE, MATCH_COMPLEX, (t_match)match_space},
+	{T_ARG, MATCH_COMPLEX, (t_match)match_arg},
+	{T_REDIR_APP, MATCH_SIMPLE, {">>"}},
+	{T_REDIR_OUT, MATCH_SIMPLE, {">"}},
+	{T_REDIR_IN, MATCH_SIMPLE, {"<"}},
+	{T_HEREDOC, MATCH_SIMPLE, {"<<"}},
+	{T_LPAREN, MATCH_SIMPLE, {"("}},
+	{T_RPAREN, MATCH_SIMPLE, {")"}},
+	{T_PIPE, MATCH_SIMPLE, {"|"}},
+	{T_AND, MATCH_SIMPLE, {"&&"}},
+	{T_OR, MATCH_SIMPLE, {"||"}}};
 
-	return (generic_tokenize(cmd, patterns, LEX_NB, tokens));
+	return (tokenize_pattern(cmd, patterns, LEX_NB, tokens));
 }
 
 int	tokenize_quotes(const char *cmd, t_collection *tokens)
 {
-	static const t_pattern	patterns[LEX_NB_QUOTE] = {
-	{T_SQUOTE, match_squote},
-	{T_DQUOTE, match_dquote},
-	{T_NQUOTE, match_nquote}};
+	const t_pattern	patterns[LEX_NB_QUOTE] = {
+	{T_SQUOTE, MATCH_COMPLEX, (t_match)match_squote},
+	{T_DQUOTE, MATCH_COMPLEX, (t_match)match_dquote},
+	{T_NQUOTE, MATCH_COMPLEX, (t_match)match_nquote}};
 
-	return (generic_tokenize(cmd, patterns, LEX_NB_QUOTE, tokens));
-}
-
-void	token_clear(t_token *token)
-{
-	if (token)
-		alloc_f((void *)token->val);
-}
-
-void	token_print(t_token *token, void *arg)
-{
-	(void)arg;
-	if (token)
-		ft_dprintf(STDERR_FILENO, "[%d: %s], ", token->type, token->val);
+	return (tokenize_pattern(cmd, patterns, LEX_NB_QUOTE, tokens));
 }

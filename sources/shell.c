@@ -6,20 +6,24 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/18 02:26:22 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 06:25:02 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static void	on_shell_prompt(t_shell *shell, const char *cmd)
+static int	on_shell_prompt(t_shell *shell, const char *cmd)
 {
-	if (tokenize(cmd, &shell->tokens)
-		|| heredoc_parse(&shell->tokens)
-		|| lalr_parse(&shell->parser, &shell->tokens))
-		return ;
-	shell->status = evaluate(shell->parser.ast, &shell->env);
-	hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
+	int	status;
+
+	if (tokenize_cmd(cmd, &shell->tokens))
+		return (2);
+	if (heredoc_parse(&shell->tokens, &shell->env, &status))
+		return (status);
+	if (lalr_parse(&shell->parser, &shell->tokens))
+		return (2);
+	status = evaluate(shell->parser.ast, &shell->env);
+	return (status);
 }
 
 int	shell_init(t_shell *shell, const char **env)
@@ -41,7 +45,6 @@ void	shell_clear(t_shell	*shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
-	shell->status = 0;
 	collection_clear(&shell->tokens);
 	collection_clear(&shell->parser.stack);
 	ast_free(shell->parser.ast);
@@ -60,20 +63,20 @@ void	shell_destroy(t_shell *shell)
 
 void	shell_readline(t_shell *shell)
 {
-	char	*buf;
+	static char	*buf = (void*)1;
 
-	buf = readline(rl_readline_name);
 	while (buf)
 	{
+		buf = readline(rl_readline_name);
+		shell_clear(shell);
 		if (ft_strlen(buf) > 0)
 		{
 			add_history(buf);
 			sig_ignore();
-			on_shell_prompt(shell, buf);
+			shell->status = on_shell_prompt(shell, buf);
+			hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
 			sig_set();
 		}
-		shell_clear(shell);
 		free(buf);
-		buf = readline(rl_readline_name);
 	}
 }

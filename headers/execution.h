@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/14 03:43:22 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 05:35:59 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,13 @@ typedef struct s_match_builtin
 
 int		evaluate(t_ast *ast, t_hmap *env);
 
-int		exec_path(char **args,				t_hmap *env);
+int		exec_path(const char **args,		t_hmap *env);
 int		execute_cmd(t_cmd_expr *cmd,		t_hmap *env);
 int		execute_pipe(t_binary_expr *pipe,	t_hmap *env);
 int		execute_and(t_binary_expr *and,		t_hmap *env);
 int		execute_or(t_binary_expr *or,		t_hmap *env);
 int		execute_redir(t_redir_expr *redir,	t_hmap *env);
+int		execute_subshell(t_binary_expr *expr, t_hmap *env);
 
 int		builtin_cd(const char **args, int argc, t_hmap *env);
 int		builtin_pwd(const char **args, int argc, t_hmap *env);

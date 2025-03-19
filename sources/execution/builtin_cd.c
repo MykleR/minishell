@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 00:27:31 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/17 18:19:54 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 01:07:40 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 static int	cd_var(t_hmap *env, const char *var_name)
 {
-	char	*var;
+	const char	**var;
 
 	var = hmap_get(env, var_name);
-	if (var)
-		return (builtin_cd((const char **)var, 1, env));
+	if (var && *var)
+		return (builtin_cd(var, 1, env));
 	return (error(E_NOTSET, "cd", var_name));
 }
 

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/18 05:12:30 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 05:34:19 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,28 @@ static int	handle_builtins(const char **argv, int argc, t_hmap *env)
 
 int	execute_cmd(t_cmd_expr *cmd, t_hmap *env)
 {
-	char		**expanded;
-	int			argc;
-	int			status;
-	pid_t		pid;
+	t_collection	expanded;
+	const char		**argv;
+	int				status;
+	int				argc;
+	pid_t			pid;
 
 	if (!cmd || !cmd->args.len)
 		return (EXIT_SUCCESS);
-	expanded = expand_complex((const char **)cmd->args.data, env, &argc);
-	if (!expanded || argc < 1)
+	argc = expand_complex(&cmd->args, &expanded, env);
+	argv = (const char **)expanded.data;
+	collection_destroy(&cmd->args);
+	cmd->args = expanded;
+	if (!argc || !argv)
 		return (EXIT_SUCCESS);
-	status = handle_builtins((const char **)expanded, argc, env);
+	status = handle_builtins(argv, argc, env);
 	if (status != E_ERROR)
 		return (status);
 	pid = safe_fork();
 	if (!pid)
 	{
 		sig_default();
-		exec_path(expanded, env);
+		exec_path(argv, env);
 	}
 	return (query_child(pid));
 }

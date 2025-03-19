@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 00:19:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/17 23:09:24 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 01:01:09 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 static void	__env_export(t_hmap_bucket *bucket, t_collection *res)
 {
 	char		*value;
-	char		*tmp;
+	char		*key;
 	uint32_t	i;
 
 	i = -1;
 	while (bucket && ++i < bucket->keys.len)
 	{
 		value = ((char **)bucket->values.data)[i];
-		if (!value)
+		key = ((char **)bucket->keys.data)[i];
+		if (!value || !ft_strcmp(key, "?"))
 			continue ;
-		tmp = ft_strjoin(((char **)bucket->keys.data)[i], "=");
-		collection_append(res, &(char *){ft_strjoin(tmp, value)});
-		alloc_f(tmp);
+		collection_append(res, &(char *){
+			ft_strjoins((const char *[2]){key, value}, 2, "=")});
 	}
 }
 
@@ -42,6 +42,8 @@ void	__env_print_ex(t_hmap_bucket *bucket, void *arg)
 	{
 		key = ((char **)bucket->keys.data)[i];
 		value = ((char **)bucket->values.data)[i];
+		if (!ft_strcmp(key, "?"))
+			continue ;
 		if (!value)
 			ft_printf("declare -x %s\n", key);
 		else
@@ -61,7 +63,7 @@ void	__env_print_ev(t_hmap_bucket *bucket, void *arg)
 	{
 		key = ((char **)bucket->keys.data)[i];
 		value = ((char **)bucket->values.data)[i];
-		if (!value)
+		if (!value || !ft_strcmp(key, "?"))
 			continue ;
 		ft_printf("%s=%s\n", key, value);
 	}

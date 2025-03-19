@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:22:39 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/17 19:36:55 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/19 03:02:17 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ int	evaluate(t_ast *ast, t_hmap *env)
 {
 	if (!ast)
 		return (EXIT_SUCCESS);
-	if (ast->type == AST_SUBSHELL)
-		return (evaluate(ast->expr.binary.left, env));
 	if (ast->type == AST_CMD)
 		return (execute_cmd(&ast->expr.cmd, env));
+	else if (ast->type == AST_SUBSHELL)
+		return (execute_subshell(&ast->expr.binary, env));
 	else if (ast->type == AST_PIPE)
 		return (execute_pipe(&ast->expr.binary, env));
 	else if (ast->type == AST_AND)

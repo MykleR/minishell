@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:59:51 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/18 04:21:19 by mykle            ###   ########.fr       */
+/*   Updated: 2025/03/18 22:18:59 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	error(t_error_type e, ...)
 {
-	va_list				av;
-	char				*msg;
-	const static int	fd = STDERR_FILENO;
-	const static char	*errors = E_MSG_OK E_MSG_LEX E_MSG_AST E_MSG_OPEN \
+	va_list		av;
+	char		*msg;
+	const int	fd = STDERR_FILENO;
+	const char	*errors = E_MSG_OK E_MSG_LEX E_MSG_AST E_MSG_OPEN \
 		E_MSG_TOOMANY E_MSG_NOTCMD E_MSG_NOTSET E_MSG_NUMERIC E_MSG_IDENTIF \
 		E_MSG_ISDIR E_MSG_AMBIGUOUS;
 
