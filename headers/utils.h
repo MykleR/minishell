@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 06:30:01 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 11:18:34 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <signal.h>
+# include <dirent.h>
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
@@ -58,7 +59,9 @@ typedef enum e_errors_type
 
 int		error(t_error_type e, ...);
 
-int		heredoc_parse(t_collection *tokens, t_hmap *env, int *status);
+int		heredoc_parse(t_collection *tokens, t_collection *files,
+			t_hmap *env, int *status);
+void	__heredoc_destroy(void *ptr);
 
 char	*expand_vars(const char *str, t_hmap *env);
 int		expand_simple(const char *str, t_collection *out, t_hmap *env);

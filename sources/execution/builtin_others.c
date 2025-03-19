@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 04:30:37 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 05:36:53 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:06:00 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	builtin_exit(const char **args, int argc, t_hmap *env)
 
 	(void)env;
 	exit_code = 0;
+	if (hmap_get(env, "?"))
+		exit_code = ft_atoi(*(char **)hmap_get(env, "?"));
 	if (isatty(STDIN_FILENO))
 		ft_dprintf(STDERR_FILENO, "exit\n");
 	if (argc && args[0] && !ft_safe_atoi64(args[0], &exit_code))

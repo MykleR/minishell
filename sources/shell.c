@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 06:25:02 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 13:30:45 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	on_shell_prompt(t_shell *shell, const char *cmd)
 
 	if (tokenize_cmd(cmd, &shell->tokens))
 		return (2);
-	if (heredoc_parse(&shell->tokens, &shell->env, &status))
+	if (heredoc_parse(&shell->tokens, &shell->heredocs, &shell->env, &status))
 		return (status);
 	if (lalr_parse(&shell->parser, &shell->tokens))
 		return (2);
@@ -28,13 +28,14 @@ static int	on_shell_prompt(t_shell *shell, const char *cmd)
 
 int	shell_init(t_shell *shell, const char **env)
 {
-	static const t_clear_info	clear_t = {
-		(void (*)(void *))token_clear, T_STACK};
-	static const t_clear_info	clear_s = {0};
-	static const t_clear_info	clear_e = {alloc_f, T_HEAP};
+	const t_clear_info	clear_t = {(void (*)(void *))token_clear, T_STACK};
+	const t_clear_info	clear_h = {__heredoc_destroy, T_STACK};
+	const t_clear_info	clear_e = {alloc_f, T_HEAP};
+	const t_clear_info	clear_s = {0};
 
 	sig_set();
 	collection_init(&shell->tokens, sizeof(t_token), 32, clear_t);
+	collection_init(&shell->heredocs, sizeof(char **), 32, clear_h);
 	collection_init(&shell->parser.stack, sizeof(t_parse_trace), 32, clear_s);
 	hmap_init(&shell->env, ENV_MEM, sizeof(char **), clear_e);
 	env_init(&shell->env, env);
@@ -45,8 +46,10 @@ void	shell_clear(t_shell	*shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
+	g_sigint = 0;
 	collection_clear(&shell->tokens);
 	collection_clear(&shell->parser.stack);
+	collection_clear(&shell->heredocs);
 	ast_free(shell->parser.ast);
 	shell->parser.ast = NULL;
 }
@@ -58,6 +61,7 @@ void	shell_destroy(t_shell *shell)
 	collection_destroy(&shell->tokens);
 	collection_destroy(&shell->parser.stack);
 	collection_destroy(&shell->env);
+	collection_destroy(&shell->heredocs);
 	ast_free(shell->parser.ast);
 }
 
@@ -68,15 +72,17 @@ void	shell_readline(t_shell *shell)
 	while (buf)
 	{
 		buf = readline(rl_readline_name);
-		shell_clear(shell);
+		if (g_sigint)
+			shell->status = g_sigint;
+		hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
 		if (ft_strlen(buf) > 0)
 		{
 			add_history(buf);
 			sig_ignore();
 			shell->status = on_shell_prompt(shell, buf);
-			hmap_set(&shell->env, "?", &(char *){ft_itoa(shell->status)});
 			sig_set();
 		}
+		shell_clear(shell);
 		free(buf);
 	}
 }

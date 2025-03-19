@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:26:07 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 05:37:59 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 13:04:07 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static inline int	get_flags(t_redir_type type)
 	return (O_RDONLY);
 }
 
-int	redirection(int fd_to, int fd_from, t_ast *todo, t_hmap *env)
+static int	redirection(int fd_to, int fd_from, t_ast *todo, t_hmap *env)
 {
 	int		status;
 	int		backup;
@@ -36,10 +36,8 @@ int	redirection(int fd_to, int fd_from, t_ast *todo, t_hmap *env)
 	if (fd_to < 0 || fd_from < 0)
 		return (EXIT_FAILURE);
 	backup = dup(fd_from);
-	status = backup != -1 && safe_dup2(fd_to, fd_from) != -1;
+	safe_dup2(fd_to, fd_from);
 	safe_close(fd_to);
-	if (!status)
-		return (EXIT_FAILURE);
 	status = evaluate(todo, env);
 	safe_dup2(backup, fd_from);
 	safe_close(backup);

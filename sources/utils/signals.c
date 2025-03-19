@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:05:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/13 06:16:57 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 13:23:50 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	rl_nl(int num)
 {
-	(void) num;
+	g_sigint = 128 + num;
 	write(STDERR_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();

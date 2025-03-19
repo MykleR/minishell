@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 03:38:50 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 05:37:28 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:21:18 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,19 @@
  * Returns nothing if successful (process is replaced), continues if failed
  */
 static void	try_execute(const char *path, const char **args,
-				char **envp, bool dir)
+				char **envp, bool is_dir)
 {
 	struct stat	buf;
 
-	if (!dir && access(path, F_OK) != 0)
+	if (is_dir && access(path, F_OK | X_OK) != 0)
+	{
+		if (errno == EACCES)
+			exit(error(E_ERROR, args[0]) * 126);
+		exit(error(E_ERROR, args[0]) * 127);
+	}
+	if (!is_dir && access(path, F_OK) != 0)
 		return ;
-	if (dir && access(path, F_OK) != 0)
-		exit(error(E_ERROR, path) * 127);
-	if (dir && stat(path, &buf) == 0 && S_ISDIR(buf.st_mode))
+	if (stat(path, &buf) == 0 && S_ISDIR(buf.st_mode))
 		exit(error(E_ISDIR, args[0]) * 126);
 	if (access(path, X_OK) == 0)
 		execve(path, (char **)args, envp);
@@ -48,36 +52,32 @@ static void	try_path_dir(const char *dir, const char **args, char **envp)
 /**
  * Try each directory in PATH environment variable
  */
-static void	try_path_dirs(const char **args, t_hmap *env, char **envp)
+static void	try_path_dirs(const char **args, char *path, char **envp)
 {
-	char	**path_var;
-	char	*path_copy;
 	char	*dir;
 
-	path_var = hmap_get(env, "PATH");
-	if (!path_var || !*path_var)
-		return ;
-	path_copy = ft_strdup(*path_var);
-	dir = ft_strtok(path_copy, ":");
+	dir = ft_strtok(path, ":");
 	while (dir)
 	{
 		try_path_dir(dir, args, envp);
 		dir = ft_strtok(NULL, ":");
 	}
-	alloc_f(path_copy);
 }
 
 int	exec_path(const char **args, t_hmap *env)
 {
+	char	**path;
 	char	**envp;
-	bool	is_asbolute;
 
 	if (!args || !args[0] || !*args[0])
 		exit(error(E_NOTCMD, args[0]) * 127);
+	path = hmap_get(env, "PATH");
+	if (!path)
+		path = &(char *){"./"};
 	envp = env_to_array(env);
-	is_asbolute = ft_strchr(args[0], '/') != NULL;
-	if (!is_asbolute)
-		try_path_dirs(args, env, envp);
-	try_execute(args[0], args, envp, is_asbolute);
+	if (!ft_strchr(args[0], '/'))
+		try_path_dirs(args, *path, envp);
+	else
+		try_execute(args[0], args, envp, true);
 	exit(error(E_NOTCMD, args[0]) * 127);
 }

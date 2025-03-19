@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 22:28:37 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 06:43:58 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 10:54:38 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	nquote_splitting(const char *str,
 	}
 	collection_remove(tokens, index);
 	alloc_f(split);
-	return ((-1) * !i);
+	return (i - 1);
 }
 
 static int	merge_tokens(t_collection *tokens, t_collection *out)

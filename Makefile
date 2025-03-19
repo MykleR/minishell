@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/08 18:27:35 by mrouves           #+#    #+#              #
-#    Updated: 2025/01/29 05:46:39 by mrouves          ###   ########.fr        #
+#    Updated: 2025/03/19 12:26:40 by mrouves          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJS			:= $(addprefix $(DIR_OBJS)/, $(SOURCES:%.c=%.o))
 CC				:= clang
 CFLAGS			:= -Wall -Wextra -Werror -g
 IFLAGS			:= -I $(DIR_HEADERS) -I $(LIBFT_INCLUDES)
-CACHE_MODE		:= 2
+CACHE_MODE		:= 1
 DIR_DUP			= mkdir -p $(@D)
 
 all: $(NAME) $(OBJS)

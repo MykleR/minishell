@@ -6,7 +6,7 @@
 /*   By: thomarna <thomarna@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:54:58 by thomarna          #+#    #+#             */
-/*   Updated: 2025/03/19 06:16:44 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 10:56:38 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef enum e_terminal
 	T_DQUOTE	= 12,
 	T_SQUOTE	= 13,
 	T_NQUOTE	= 14,
+	T_WILDCARD	= 15,
 }	t_terminal;
 
 typedef enum e_match_type

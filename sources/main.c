@@ -6,11 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/18 22:31:54 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:22:10 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+int	g_sigint = 0;
 
 __attribute__((destructor))
 static void	__cleanup(void)

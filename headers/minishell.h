@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 06:34:16 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:21:44 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@
 
 # define SHELL_PROMPT	"\001\033[96m\002SigmaShell:\001\x1b[0m\002~$ "
 # define HEREDOC_PROMPT	"> "
-# define HEREDOC_PATH	"/tmp/.m_heredoc"
+# define HEREDOC_PATH	"/tmp/...m_heredoc"
 # define ENV_MEM 1024
+
+extern int	g_sigint;
 
 typedef struct s_shell
 {
 	t_collection	tokens;
+	t_collection	heredocs;
 	t_parser		parser;
 	t_hmap			env;
 	int				status;
@@ -52,7 +55,7 @@ void	shell_readline(t_shell *shell);
 │▓▓▓▓▓▓▒░░░░░░░░░░░▒▓░░        ░▒▓▓▓▓▓▓                  │\n\
 │▓▓▓▓▓▓▓▓  ░░░░░░░░░▒▒░░▒▒▒▒▒▒░░▒▓▓▓▓▓▓                  │\n\
 │▓▓▓▓▓▓▓▒  ░░░░░░░░░▒▓▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓  mrouves         │\n\
-│▓▓▓▓▓▓▓░   ░░░░░░░░░▒▒▒▓██████▓▒▓▓▓▓▓▓  thomarna        │\n\
+│▓▓▓▓▓▓▓░   ░░░░░░░░░▒▒▒▓██████▓▒▓▓▓▓▓▓  thomarnaque     │\n\
 └────────────────────────────────────────────────────────┘\n\
 \x1b[0m"
 

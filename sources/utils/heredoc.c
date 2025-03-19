@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:46:54 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 06:33:09 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 11:31:39 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,32 @@ static int	heredoc_process(int fd, const char *eof, bool expand, t_hmap *env)
 }
 
 static int	heredoc_handle(t_token *token, t_token *arg,
-				t_hmap *env, int *status)
+				t_hmap *env, t_collection *files)
 {
 	char	*path;
+	int		status;
 	bool	expand;
 	int		fd;
 
 	token->type = T_REDIR_IN;
 	if (!arg || arg->type != T_ARG)
-		return (E_OK);
+		return (EXIT_SUCCESS);
 	path = generate_filename();
 	fd = safe_open(path, O_CREAT | O_WRONLY | O_TRUNC);
+	if (fd < 0)
+		return (EXIT_FAILURE);
+	collection_append(files, &(char *){ft_strdup(path)});
 	expand = !ft_strchr(arg->val, '\'') && !ft_strchr(arg->val, '\"');
 	arg->val = ft_strremove_f(arg->val, "\"\'");
-	*status = heredoc_process(fd, arg->val, expand, env);
+	status = heredoc_process(fd, arg->val, expand, env);
 	safe_close(fd);
-	if (*status)
-		unlink(arg->val);
 	alloc_f((void *)arg->val);
 	arg->val = path;
-	return (*status);
+	return (status);
 }
 
-int	heredoc_parse(t_collection *tokens, t_hmap *env, int *status)
+int	heredoc_parse(t_collection *tokens, t_collection *files,
+		t_hmap *env, int *status)
 {
 	t_token		*token;
 	t_token		*arg;
@@ -88,9 +91,19 @@ int	heredoc_parse(t_collection *tokens, t_hmap *env, int *status)
 	{
 		token = collection_get(tokens, i);
 		arg = collection_get(tokens, i + 1);
-		if (token && token->type == T_HEREDOC
-			&& heredoc_handle(token, arg, env, status))
+		if (!token || token->type != T_HEREDOC)
+			continue ;
+		*status = heredoc_handle(token, arg, env, files);
+		if (*status)
 			return (E_ERROR);
 	}
 	return (E_OK);
+}
+
+void	__heredoc_destroy(void *ptr)
+{
+	if (!ptr || !*(char **)ptr)
+		return ;
+	unlink(*(char **)ptr);
+	alloc_f(*(char **)ptr);
 }
