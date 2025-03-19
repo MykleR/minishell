@@ -6,13 +6,13 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:05:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 13:23:50 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:54:50 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static void	rl_nl(int num)
+void	sig_rl_newline(int num)
 {
 	g_sigint = 128 + num;
 	write(STDERR_FILENO, "\n", 1);
@@ -21,9 +21,17 @@ static void	rl_nl(int num)
 	rl_redisplay();
 }
 
-int	sig_set(void)
+void	sig_exit_heredoc(int num)
 {
-	return (signal(SIGINT, rl_nl) == SIG_ERR
+	(void)num;
+	close(g_sigint);
+	g_sigint = 130;
+	exit(130);
+}
+
+int	sig_set(void (*callb)(int num))
+{
+	return (signal(SIGINT, callb) == SIG_ERR
 		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
 }
 
@@ -36,11 +44,5 @@ int	sig_default(void)
 int	sig_ignore(void)
 {
 	return (signal(SIGINT, SIG_IGN) == SIG_ERR
-		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
-}
-
-int	sig_exit(void)
-{
-	return (signal(SIGINT, exit) == SIG_ERR
 		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR);
 }

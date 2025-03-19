@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:46:54 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 11:31:39 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:55:58 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,11 @@ static int	heredoc_process(int fd, const char *eof, bool expand, t_hmap *env)
 	char		*line;
 	pid_t		pid;
 
-	if (fd < 0)
-		return (EXIT_FAILURE);
 	pid = safe_fork();
 	if (pid)
 		return (query_child(pid));
-	sig_exit();
+	g_sigint = fd;
+	sig_set(sig_exit_heredoc);
 	if (!isatty(STDIN_FILENO))
 		prompt = "";
 	line = readline(prompt);

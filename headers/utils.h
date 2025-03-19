@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 11:18:34 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:55:40 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,11 @@ char	*expand_vars(const char *str, t_hmap *env);
 int		expand_simple(const char *str, t_collection *out, t_hmap *env);
 int		expand_complex(t_collection *args, t_collection *out, t_hmap *env);
 
-int		sig_set(void);
+int		sig_set(void (*callb)(int num));
 int		sig_default(void);
 int		sig_ignore(void);
-int		sig_exit(void);
+void	sig_rl_newline(int num);
+void	sig_exit_heredoc(int num);
 
 int		safe_fork(void);
 int		safe_open(const char *filename, int flags);

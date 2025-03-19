@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 13:30:45 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:56:24 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	shell_init(t_shell *shell, const char **env)
 	const t_clear_info	clear_e = {alloc_f, T_HEAP};
 	const t_clear_info	clear_s = {0};
 
-	sig_set();
+	sig_set(sig_rl_newline);
 	collection_init(&shell->tokens, sizeof(t_token), 32, clear_t);
 	collection_init(&shell->heredocs, sizeof(char **), 32, clear_h);
 	collection_init(&shell->parser.stack, sizeof(t_parse_trace), 32, clear_s);
@@ -80,7 +80,7 @@ void	shell_readline(t_shell *shell)
 			add_history(buf);
 			sig_ignore();
 			shell->status = on_shell_prompt(shell, buf);
-			sig_set();
+			sig_set(sig_rl_newline);
 		}
 		shell_clear(shell);
 		free(buf);
