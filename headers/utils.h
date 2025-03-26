@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:00:07 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 14:55:40 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:57:50 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,10 @@ int		expand_complex(t_collection *args, t_collection *out, t_hmap *env);
 int		sig_set(void (*callb)(int num));
 int		sig_default(void);
 int		sig_ignore(void);
-void	sig_rl_newline(int num);
-void	sig_exit_heredoc(int num);
+void	sig_callb_newline(int num);
+void	sig_callb_exit(int num);
 
-int		safe_fork(void);
-int		safe_open(const char *filename, int flags);
-int		safe_close(int fd);
-int		safe_dup2(int oldfd, int newfd);
-int		safe_pipe(int pipefd[2]);
+int		try_open(const char *filename, int flags);
 
 void	__env_print_ex(t_hmap_bucket *bucket, void *arg);
 void	__env_print_ev(t_hmap_bucket *bucket, void *arg);

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:23:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 14:22:10 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 13:31:22 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ static void	__construct(void)
 		rl_prep_term_function = 0;
 }
 
-int	main(int ac, const char **av, const char **env)
+int	main(int __attribute_maybe_unused__(ac),
+		char **__attribute_maybe_unused__(av),
+		const char **env)
 {
 	static t_shell	shell = {0};
 
-	(void)ac;
-	(void)av;
-	if (shell_init(&shell, env) == E_OK)
-		shell_readline(&shell);
+	shell_init(&shell, env);
+	shell_process(&shell);
 	shell_destroy(&shell);
 	if (isatty(STDIN_FILENO))
 		ft_dprintf(STDERR_FILENO, "exit\n");

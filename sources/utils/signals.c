@@ -6,13 +6,13 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:05:03 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 14:54:50 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:58:08 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	sig_rl_newline(int num)
+void	sig_callb_newline(int num)
 {
 	g_sigint = 128 + num;
 	write(STDERR_FILENO, "\n", 1);
@@ -21,12 +21,9 @@ void	sig_rl_newline(int num)
 	rl_redisplay();
 }
 
-void	sig_exit_heredoc(int num)
+void	sig_callb_exit(int num)
 {
-	(void)num;
-	close(g_sigint);
-	g_sigint = 130;
-	exit(130);
+	exit(128 + num);
 }
 
 int	sig_set(void (*callb)(int num))

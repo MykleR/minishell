@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:24:06 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 14:21:44 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 13:30:41 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # define SHELL_PROMPT	"\001\033[96m\002SigmaShell:\001\x1b[0m\002~$ "
 # define HEREDOC_PROMPT	"> "
-# define HEREDOC_PATH	"/tmp/...m_heredoc"
+# define HEREDOC_PATH	"/tmp/.m_heredoc"
 # define ENV_MEM 1024
 
 extern int	g_sigint;
@@ -34,10 +34,9 @@ typedef struct s_shell
 	int				status;
 }	t_shell;
 
-int		shell_init(t_shell *shell, const char **env);
+void	shell_process(t_shell *shell);
+void	shell_init(t_shell *shell, const char **env);
 void	shell_destroy(t_shell *shell);
-void	shell_clear(t_shell	*shell);
-void	shell_readline(t_shell *shell);
 
 # define SHELL_BANNER "\033[1m\
 ┌────────────────────────────────────────────────────────┐\n\

@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:45:24 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 05:37:16 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:45:24 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_subshell(t_binary_expr *expr, t_hmap *env)
 {
 	pid_t	pid;
 
-	pid = safe_fork();
+	pid = fork();
 	if (pid)
 		return (query_child(pid));
 	exit(evaluate(expr->left, env));

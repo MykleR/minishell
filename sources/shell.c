@@ -6,13 +6,13 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 04:22:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 14:56:24 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 13:32:04 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int	on_shell_prompt(t_shell *shell, const char *cmd)
+static int	shell_command(t_shell *shell, const char *cmd)
 {
 	int	status;
 
@@ -22,27 +22,10 @@ static int	on_shell_prompt(t_shell *shell, const char *cmd)
 		return (status);
 	if (lalr_parse(&shell->parser, &shell->tokens))
 		return (2);
-	status = evaluate(shell->parser.ast, &shell->env);
-	return (status);
+	return (evaluate(shell->parser.ast, &shell->env));
 }
 
-int	shell_init(t_shell *shell, const char **env)
-{
-	const t_clear_info	clear_t = {(void (*)(void *))token_clear, T_STACK};
-	const t_clear_info	clear_h = {__heredoc_destroy, T_STACK};
-	const t_clear_info	clear_e = {alloc_f, T_HEAP};
-	const t_clear_info	clear_s = {0};
-
-	sig_set(sig_rl_newline);
-	collection_init(&shell->tokens, sizeof(t_token), 32, clear_t);
-	collection_init(&shell->heredocs, sizeof(char **), 32, clear_h);
-	collection_init(&shell->parser.stack, sizeof(t_parse_trace), 32, clear_s);
-	hmap_init(&shell->env, ENV_MEM, sizeof(char **), clear_e);
-	env_init(&shell->env, env);
-	return (E_OK);
-}
-
-void	shell_clear(t_shell	*shell)
+static void	shell_clear(t_shell	*shell)
 {
 	if (__builtin_expect(!shell, 0))
 		return ;
@@ -52,6 +35,21 @@ void	shell_clear(t_shell	*shell)
 	collection_clear(&shell->heredocs);
 	ast_free(shell->parser.ast);
 	shell->parser.ast = NULL;
+}
+
+void	shell_init(t_shell *shell, const char **env)
+{
+	const t_clear_info	clear_t = {(void (*)(void *))token_clear, T_STACK};
+	const t_clear_info	clear_h = {__heredoc_destroy, T_STACK};
+	const t_clear_info	clear_e = {alloc_f, T_HEAP};
+	const t_clear_info	clear_s = {0};
+
+	sig_set(sig_callb_newline);
+	collection_init(&shell->tokens, sizeof(t_token), 32, clear_t);
+	collection_init(&shell->heredocs, sizeof(char **), 32, clear_h);
+	collection_init(&shell->parser.stack, sizeof(t_parse_trace), 32, clear_s);
+	hmap_init(&shell->env, ENV_MEM, sizeof(char **), clear_e);
+	env_init(&shell->env, env);
 }
 
 void	shell_destroy(t_shell *shell)
@@ -65,9 +63,9 @@ void	shell_destroy(t_shell *shell)
 	ast_free(shell->parser.ast);
 }
 
-void	shell_readline(t_shell *shell)
+void	shell_process(t_shell *shell)
 {
-	static char	*buf = (void*)1;
+	static char		*buf = (char *)1;
 
 	while (buf)
 	{
@@ -79,8 +77,8 @@ void	shell_readline(t_shell *shell)
 		{
 			add_history(buf);
 			sig_ignore();
-			shell->status = on_shell_prompt(shell, buf);
-			sig_set(sig_rl_newline);
+			shell->status = shell_command(shell, buf);
+			sig_set(sig_callb_newline);
 		}
 		shell_clear(shell);
 		free(buf);

@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 16:59:51 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/18 22:18:59 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:47:50 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,16 @@ int	error(t_error_type e, ...)
 		ft_vdprintf(fd, msg, av);
 	va_end(av);
 	return (EXIT_FAILURE);
+}
+
+int	try_open(const char *filename, int mode)
+{
+	int	fd;
+
+	if (!filename || !*filename)
+		return (E_ERROR);
+	fd = cached_open(filename, mode, 0644);
+	if (fd == E_ERROR)
+		error(E_OPEN, "open", filename, strerror(errno));
+	return (fd);
 }

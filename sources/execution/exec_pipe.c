@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 22:33:33 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 13:18:23 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:43:47 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,14 @@ static inline pid_t	use_tube(int tube[2], t_access mode,
 						t_ast *todo, t_hmap *env)
 {
 	pid_t	pid;
-	int		backup;
 
-	backup = dup(mode);
-	safe_dup2(tube[mode], mode);
-	close(tube[mode]);
-	pid = safe_fork();
+	pid = fork();
 	if (!pid)
 	{
-		close(tube[mode ^ 1]);
-		close(backup);
-		exit(evaluate(todo, env));
+		cached_close(tube[mode ^ 1]);
+		exit(redirection(tube[mode], mode, todo, env));
 	}
-	safe_dup2(backup, mode);
-	close(backup);
+	cached_close(tube[mode]);
 	return (pid);
 }
 
@@ -39,7 +33,7 @@ int	execute_pipe(t_binary_expr *expr, t_hmap *env)
 	pid_t	lpid;
 	pid_t	rpid;
 
-	if (!expr || safe_pipe(tube) == -1)
+	if (!expr || cached_pipe(tube) == -1)
 		return (EXIT_FAILURE);
 	lpid = use_tube(tube, WRITE, expr->left, env);
 	rpid = use_tube(tube, READ, expr->right, env);

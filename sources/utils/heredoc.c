@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 02:46:54 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 14:55:58 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:57:52 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 static char	*generate_filename(void)
 {
 	static int	i = 0;
-	char		pid[12];
 	char		id[12];
 
 	ft_itoa_buf(i++, id);
-	ft_itoa_buf(getpid(), pid);
-	return (ft_strjoins((const char *[3]){HEREDOC_PATH, pid, id}, 3, "_"));
+	return (ft_strjoins((const char *[3]){HEREDOC_PATH, __TIME__, id}, 3, "_"));
 }
 
 static int	heredoc_process(int fd, const char *eof, bool expand, t_hmap *env)
@@ -29,11 +27,10 @@ static int	heredoc_process(int fd, const char *eof, bool expand, t_hmap *env)
 	char		*line;
 	pid_t		pid;
 
-	pid = safe_fork();
+	pid = fork();
 	if (pid)
 		return (query_child(pid));
-	g_sigint = fd;
-	sig_set(sig_exit_heredoc);
+	sig_set(sig_callb_exit);
 	if (!isatty(STDIN_FILENO))
 		prompt = "";
 	line = readline(prompt);
@@ -47,7 +44,7 @@ static int	heredoc_process(int fd, const char *eof, bool expand, t_hmap *env)
 		line = readline(prompt);
 	}
 	free(line);
-	safe_close(fd);
+	cached_close(fd);
 	exit(EXIT_SUCCESS);
 }
 
@@ -63,14 +60,14 @@ static int	heredoc_handle(t_token *token, t_token *arg,
 	if (!arg || arg->type != T_ARG)
 		return (EXIT_SUCCESS);
 	path = generate_filename();
-	fd = safe_open(path, O_CREAT | O_WRONLY | O_TRUNC);
+	fd = try_open(path, O_CREAT | O_WRONLY | O_TRUNC);
 	if (fd < 0)
 		return (EXIT_FAILURE);
 	collection_append(files, &(char *){ft_strdup(path)});
 	expand = !ft_strchr(arg->val, '\'') && !ft_strchr(arg->val, '\"');
 	arg->val = ft_strremove_f(arg->val, "\"\'");
 	status = heredoc_process(fd, arg->val, expand, env);
-	safe_close(fd);
+	cached_close(fd);
 	alloc_f((void *)arg->val);
 	arg->val = path;
 	return (status);

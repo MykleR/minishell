@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 13:04:05 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:31:52 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,6 @@ int		builtin_unset(const char **args, int argc, t_hmap *env);
 int		builtin_export(const char **args, int argc, t_hmap *env);
 
 int		query_child(pid_t pid);
+int		redirection(int ofd, int nfd, t_ast *todo, t_hmap *env);
 
 #endif
