@@ -6,7 +6,7 @@
 #    By: mrouves <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/29 16:59:36 by mrouves           #+#    #+#              #
-#    Updated: 2025/03/26 12:50:03 by mykle            ###   ########.fr        #
+#    Updated: 2025/03/26 13:41:36 by mykle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SOURCES		:=	main.c\
@@ -20,7 +20,6 @@ SOURCES		:=	main.c\
 				lexer/lexer.c\
 				lexer/lexing_match.c\
 				lexer/lexing_check.c\
-				parser/ast_print.c\
 				parser/ast_utils.c\
 				parser/ast_prods.c\
 				parser/lalr_parse.c\

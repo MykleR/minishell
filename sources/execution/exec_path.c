@@ -6,7 +6,7 @@
 /*   By: mykle <mykle@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 03:38:50 by mykle             #+#    #+#             */
-/*   Updated: 2025/03/19 14:21:18 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/03/26 13:40:23 by mykle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,30 +36,21 @@ static void	try_execute(const char *path, const char **args,
 }
 
 /**
- * Construct full path and try to execute the command
- */
-static void	try_path_dir(const char *dir, const char **args, char **envp)
-{
-	char	full_path[PATH_MAX];
-
-	ft_strlcpy(full_path, dir, PATH_MAX);
-	if (ft_strlen(dir) > 0 && dir[ft_strlen(dir) - 1] != '/')
-		ft_strlcat(full_path, "/", PATH_MAX);
-	ft_strlcat(full_path, args[0], PATH_MAX);
-	try_execute(full_path, args, envp, false);
-}
-
-/**
  * Try each directory in PATH environment variable
  */
 static void	try_path_dirs(const char **args, char *path, char **envp)
 {
 	char	*dir;
+	char	full_path[PATH_MAX];
 
 	dir = ft_strtok(path, ":");
 	while (dir)
 	{
-		try_path_dir(dir, args, envp);
+		ft_strlcpy(full_path, dir, PATH_MAX);
+		if (ft_strlen(dir) > 0 && dir[ft_strlen(dir) - 1] != '/')
+			ft_strlcat(full_path, "/", PATH_MAX);
+		ft_strlcat(full_path, args[0], PATH_MAX);
+		try_execute(full_path, args, envp, false);
 		dir = ft_strtok(NULL, ":");
 	}
 }
