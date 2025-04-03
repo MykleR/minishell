@@ -4,47 +4,35 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![C Language](https://img.shields.io/badge/language-C-lightgrey)
-![42 School Project](https://img.shields.io/badge/42-School%20Project-brightgreen)
-
-![Parser Showcase](https://via.placeholder.com/800x400?text=Shell+Parser+Visualization)
+![42 Project](https://img.shields.io/badge/42-%20Project-brightgreen)
 
 ## 📖 Overview
 
-`minishell` is a lightweight command-line interpreter that replicates essential features of bash. What sets this implementation apart is its robust parsing system built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid foundation for understanding how modern shells interpret and execute commands.
+The aim of the `minishell` project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands.
 
 ## ✨ Key Features
 
-### 🔄 Processing Pipeline
-
-```mermaid
-graph LR
-    Input[Input] --> Lexer[Tokenizer]
-    Lexer --> Heredoc[Heredoc Processing]
-    Lexer --> Parser[Parser & AST]
-    Parser --> Exec[AST Traversal]
-    Exec --> Logic[AND / OR node]
-    Exec --> Pipe[PIPE node]
-    Exec --> Subshell[Subshell node]
-    Logic --> Redir[Redirection in/out/app]
-    Pipe --> Redir
-    Subshell --> Redir
-    Redir --> Cmd[Command]
-    Redir --> Expand[Expansion]
-    Cmd --> Builtins[Builtins]
-```
+The core strength of our MiniShell lies in its robust parsing system that utilizes compiler construction principles, so Parsing is completely decoupled from execution
 
 ### 🧩 Parsing Architecture
 
 - **Tokenizer**: Flexible and scalable lexical analyzer that converts raw input into meaningful tokens
 - **LALR(1) Grammar Parser**: Predictive parsing using Look-Ahead LR techniques
-- **AST Generation**: Efficient Abstract Syntax Tree construction representing command relationships
+- **AST Generation**: Efficient Abstract Syntax Tree construction thanks to grammar production rules
 
-### 🔍 Technical Implementation
+### ⚙️ Execution Architecture
 
-#### LALR(1) Grammar
+- **Efficient Builtins**: Implementation of essential shell builtins (cd, echo, exit, etc.)
+- **Resource Management**: Sophisticated caching of file descriptors and memory allocations with automatic cleanup mechanisms on program exit
+- **Signal Handling**: Proper handling of terminal signals (CTRL+C, CTRL+D, etc.)
+- **Hashmap-powered Environment**: Fast O(1) environment variables access
 
-The heart of the shell's parsing capabilities lies in its LALR(1) grammar implementation:
+## 🔍 Technical Overview
 
+### LALR(1) Grammar
+
+The heart of the our shell's parsing capabilities lies in its LALR(1) grammar implementation
+This grammar formally describes the language's syntax, enabling the parser to correctly process complex command structures including pipes, logical operators, and redirections.
 ```
 program -> list  
 list -> list AND list  
@@ -61,12 +49,12 @@ command -> command arg
 command -> command redirection  
 arg -> ARG
 ```
+- On the left side of each rule, you find productions, as the name suggests, these are used to create AST nodes.
+- On the right side you find the requirements for the production, these may be tokens, but also other productions.
 
-This grammar formally describes the language's syntax, enabling the parser to correctly process complex command structures including pipes, logical operators, and redirections.
+### LR Parsing Tables
 
-#### LR Parsing Tables
-
-The parser utilizes LR (Look-ahead Right-to-left derivation) tables for deterministic command interpretation:
+The parser utilizes LALR (Look-ahead Left-to-right) derivation tables for deterministic command interpretation:
 
 ```
 ┌───────────────────────────────────────────────────────┐
@@ -90,56 +78,26 @@ The parser utilizes LR (Look-ahead Right-to-left derivation) tables for determin
 └───────┴───────┴───────┴───────┴───────┘
 ```
 
-The tables are generated using the [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html) and integrated directly into the parsing engine. This approach enables deterministic, efficient parsing with predictable error handling.
+The tables are generated using the [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html) and integrated directly into the parsing engine. This approach enables deterministic, efficient parsing with predictable error handling. (In this code-base tables are predefined in headers/parsing.h)
 
-#### AST Node Structure
+## 🔄 Processing Pipeline
 
-The Abstract Syntax Tree uses a memory-efficient union-based node structure:
-
-```c
-typedef struct s_binary_expr
-{
-	t_ast	*left;
-	t_ast	*right;
-}	t_binary_expr;
-
-typedef struct s_redir_expr
-{
-	t_ast			    *next;
-	char			    *file;
-	int				    fd;
-	t_redir_type	type;
-}	t_redir_expr;
-
-typedef struct s_cmd_expr
-{
-	char  **argv;
-  int    arc;
-}	t_cmd_expr;
-
-typedef union u_ast_expr
-{
-	t_binary_expr	binary;
-	t_cmd_expr		cmd;
-	t_redir_expr	redir;
-	t_token			  *token; // For temporary token nodes
-}	t_ast_expr;
-
-struct s_ast
-{
-	t_ast_type	type;
-	t_ast_expr	expr;
-};
+The execution process follows a carefully designed pipeline:
+1. **Input Capture**: Utilizes GNU Readline for command input with history support
+2. **Tokenization**: Breaks input into meaningful tokens
+3. **Heredoc Processing**: Handles heredocs and converts them to redirections
+4. **AST Construction**: Builds an abstract syntax tree using the LALR(1) parser
+5. **Tree Traversal**: Executes commands through post-order traversal of the binary tree
+```mermaid
+flowchart TD
+    A[String Input] -->|Lexer|B(TOKENS)
+    B -->|handler |G(HEREDOC)
+    G -->|Parser |C{AST}
+    C --> D[AND / OR]
+    C --> E[PIPE]
+    C -->|Expand| F[REDIRECTION]
+    C -->|Expand| H[COMMAND]
 ```
-
-This design ensures a low memory footprint while maintaining the flexibility needed to represent diverse command structures.
-
-### ⚙️ Additional Features
-
-- **Efficient Builtins**: Implementation of essential shell builtins (cd, echo, exit, etc.) with hashmap-based environment variable management
-- **Resource Management**: Sophisticated caching of file descriptors and memory allocations with automatic cleanup mechanisms
-- **Signal Handling**: Proper handling of terminal signals (CTRL+C, CTRL+D, etc.)
-- **Environment Variable Expansion**: Support for variable substitution and expansion
 
 ## 🛠️ Implementation Deep Dive
 
@@ -155,7 +113,7 @@ This design ensures a low memory footprint while maintaining the flexibility nee
    - Tokens are analyzed according to LALR(1) grammar rules
    - Action and GOTO tables drive the parser's state transitions
    - Action table has 4 states / Shift, Reduce, Accept, Error (empty cell)
-   - Syntax errors are detected and reported easily thanks to the Error state
+   -  Syntax errors can be precisely located and reported easily thanks to the Error state
 
 3. **AST Construction**
    - As grammar rules are recognized, corresponding AST nodes are created
@@ -166,12 +124,6 @@ This design ensures a low memory footprint while maintaining the flexibility nee
    - The AST is traversed in post-order to respect command dependencies
    - Nodes are processed according to their type (command, redirection, logical operator)
    - Execution results propagate up the tree to determine logical branch paths
-
-### LALR(1) Parser Animation
-
-![Parser Animation](https://via.placeholder.com/800x500?text=LALR(1)+Parser+Animation)
-
-*Visualization of the parser's state transitions as it processes a complex command*
 
 ## 🚀 Getting Started
 
@@ -187,21 +139,12 @@ This design ensures a low memory footprint while maintaining the flexibility nee
 # Clone the repository
 git clone https://github.com/MykleR/minishell.git
 
-# Enter the directory and Compile project
+# Enter the directory and compile project
 cd minishell; make
 
 # Run the shell
 ./minishell
 ```
-
-## 📊 Performance Considerations
-
-The AST-based approach offers several advantages:
-
-- **Separation of Concerns**: Parsing is completely decoupled from execution
-- **Optimization Opportunities**: The AST can be analyzed and optimized before execution
-- **Clear Error Locations**: Syntax errors can be precisely located and reported
-- **Memory Efficiency**: Union-based node structure minimizes memory usage
 
 ## 📚 Further Reading
 
