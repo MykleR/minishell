@@ -137,7 +137,7 @@ flowchart TD
 
 ```bash
 # Clone the repository
-git clone https://github.com/MykleR/minishell.git
+git clone --recurse-submodules https://github.com/MykleR/minishell.git
 
 # Enter the directory and compile project
 cd minishell; make
