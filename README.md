@@ -28,7 +28,7 @@ The aim of the `minishell` project is to create a lightweight command-line inter
 
 ### Prerequisites
 
-- GCC compiler
+- Clang compiler
 - GNU Make
 - readline library
 
