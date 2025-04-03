@@ -148,5 +148,8 @@ flowchart TD
 ## 📚 Further Reading
 
 - [Compilers: Principles, Techniques, and Tools](https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools)
+- [LALR Parser](https://en.wikipedia.org/wiki/LALR_parser)
 - [LALR Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html)
 - [Abstract Syntax Trees in Compiler Design](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
+- [Compilation](https://vpenelle.pages.emi.u-bordeaux.fr/compilation/poly.pdf)
+- [Grammaires et language](https://amuschol.pages.emi.u-bordeaux.fr/mpc/poly.pdf)
