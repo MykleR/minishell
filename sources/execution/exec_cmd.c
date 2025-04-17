@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 23:50:02 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/26 12:44:14 by mykle            ###   ########.fr       */
+/*   Updated: 2025/04/17 16:10:26 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	handle_builtins(const char **argv, int argc, t_hmap *env)
 	{"export", builtin_export}, {"unset", builtin_unset},
 	{"exit", builtin_exit}, {"echo", builtin_echo},
 	{"pwd", builtin_pwd}, {"env", builtin_env},
-	{"cd", builtin_cd}};
+	{"cd", builtin_cd}, {"rickroll", builtin_rickroll}};
 
 	i = -1;
 	while (++i < NB_BUILTINS)

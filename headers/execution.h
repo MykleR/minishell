@@ -6,7 +6,7 @@
 /*   By: mrouves <mrouves@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 20:19:27 by mrouves           #+#    #+#             */
-/*   Updated: 2025/03/26 12:31:52 by mykle            ###   ########.fr       */
+/*   Updated: 2025/04/17 16:10:57 by mrouves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <ast.h>
 
 # define PATH_MAX 4096
-# define NB_BUILTINS 7
+# define NB_BUILTINS 8
 
 typedef enum e_access
 {
@@ -49,6 +49,7 @@ int		builtin_exit(const char **args, int argc, t_hmap *env);
 int		builtin_echo(const char **args,	int argc, t_hmap *env);
 int		builtin_unset(const char **args, int argc, t_hmap *env);
 int		builtin_export(const char **args, int argc, t_hmap *env);
+int		builtin_rickroll(const char **args, int argc, t_hmap *env);
 
 int		query_child(pid_t pid);
 int		redirection(int ofd, int nfd, t_ast *todo, t_hmap *env);
