@@ -1,4 +1,4 @@
-# 🐚 minishell
+# 🐚 42 minishell
 
 > A UNIX command-line interpreter focusing on advanced parsing techniques with LALR(1) grammar
 
@@ -8,7 +8,7 @@
 
 ## 📖 Overview
 
-The aim of the `minishell` project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands.
+The aim of the `minishell` 42 project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands.
 
 ## ✨ Key benefits
 
@@ -49,7 +49,7 @@ cd minishell; make
 
 ### LALR(1) Grammar
 
-The heart of the our shell's parsing capabilities lies in its LALR(1) (Look-ahead Left-to-right) grammar implementation
+The heart of our shell's parsing capabilities lies in its LALR(1) (Look-ahead Left-to-right) grammar implementation
 This grammar formally describes the language's syntax, enabling the parser to correctly process complex command structures including pipes, logical operators, and redirections.
 ```
 program -> list  
