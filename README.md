@@ -1,14 +1,16 @@
-# 🐚 42 minishell
+<div align="center">
 
-> A UNIX command-line interpreter focusing on advanced parsing techniques with LALR(1) grammar
+<img src="https://github.com/MykleR/minishell/blob/main/minishell.png" width="300" />
 
-![License](https://img.shields.io/badge/license-MIT-blue)
-![C Language](https://img.shields.io/badge/language-C-lightgrey)
-![42 Project](https://img.shields.io/badge/42-%20Project-brightgreen)
+</div>
+
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=linux&labelColor=181818&logoColor=white&color=2b3549)
+![](https://img.shields.io/badge/C-informational?style=for-the-badge&logo=c&labelColor=181818&logoColor=white&color=2b3549)
+
 
 ## 📖 Overview
 
-The aim of the `minishell` 42 project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands.
+The aim of the `minishell` 42 project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands. A UNIX command-line interpreter focusing on advanced parsing techniques with LALR(1) grammar
 
 ## ✨ Key benefits
 
