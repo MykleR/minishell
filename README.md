@@ -70,10 +70,10 @@ arg -> ARG
 ### Action and Goto Tables
 > LR parsers rely on two main sets of instructions, called tables:
 > - **[Action Table](https://en.wikipedia.org/wiki/LR_parser#Action_table):** This table tells the parser what to do next, depending on the current situation. The possible actions are:
-> - ⋅⋅⋅⋅ **Shift:** Reads and places the next token from the input onto the stack, gathering more information before reducing to a grammar rule.
-> - ⋅⋅⋅⋅ **Reduce:** Replaces gathered symbols on the stack with a single symbol, according to a grammar rule. (e.g., a sequence of tokens words might be reduced to a single "command" symbol)
-> - ⋅⋅⋅⋅ **Accept:** Successfully finish parsing. The grammar was fully respected.
-> - ⋅⋅⋅⋅ **Error:** Indicate a problem in the input. The grammar was not respected.
+>    * **Shift:** Reads and places the next token from the input onto the stack, gathering more information before reducing to a grammar rule.
+>    * **Reduce:** Replaces gathered symbols on the stack with a single symbol, according to a grammar rule. (e.g., a sequence of tokens words might be reduced to a single "command" symbol)
+>    * **Accept:** Successfully finish parsing. The grammar was fully respected.
+>    * **Error:** Indicate a problem in the input. The grammar was not respected.
 > - **[Goto Table](https://en.wikipedia.org/wiki/LR_parser#Goto_table):** After a reduction, the goto table tells the parser which state to move next, based on the new symbol on top of the stack.
 
 > [!NOTE]\
@@ -83,53 +83,37 @@ arg -> ARG
 > In your minishell project, these action and goto tables are precomputed and built directly into the parsing engine. When the user enters a command, the parser uses these tables to decide what to do for each token—whether to shift, reduce, accept, or signal an error. This setup allows minishell to quickly and reliably understand complex shell command syntax, making it robust and efficient.
 
 > [!TIP]\
-> You can generate tables, test and try grammars with this online tool [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html).
+> You can generate tables, visualize [parse trees](https://en.wikipedia.org/wiki/Parse_tree) and try other grammars with this online tool [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html).
 
 ## 🔄 Processing Pipeline
 
-The execution process follows a carefully designed pipeline:
-1. **Input Capture**: Utilizes GNU Readline for command input with history support
-2. **Tokenization**: Breaks input into meaningful tokens
-3. **Heredoc Processing**: Handles heredocs and converts them to redirections '<'
-4. **AST Construction**: Builds an abstract syntax tree using the LALR(1) parser
-5. **Tree Traversal**: Executes commands through post-order traversal of the binary tree
 ```mermaid
 flowchart LR
-    A[Readline Input] -->|Lexer|B(TOKENS)
-    B -->|"Readline fork()" |G(HEREDOC)
-    G ~~~|"Replacing '<<' tokens to '<' redirections (to a temp file)"| B
+    A[Input] -->|Lexer|B(TOKENS)
+    B -->|"special tokens" |G(HEREDOC)
     G -->|Parser |C{AST}
     C -->|Execution |C
 ```
 
-## 🛠️ Implementation Deep Dive
-
-### Parsing Process
-
-1. **Lexical Analysis (Tokenizing)**
-   - Input string is broken down into tokens (arg, operators, redirection, etc.)
-   - Each token is classified based on its role in the shell language
-   - You will find an exhaustive list of all the tokens type in “headers/lexer.h”.
-   - Token enum type values are very important as they are used as index in the action table
-
-2. **Syntax Analysis (Parsing)**
-   - **State Machine**: The parser maintains a state stack and a symbol stack
-   - **Action/Goto Tables**: Action and GOTO tables drive the parser's state transitions, For each state, consult the action table to determine:
-   - Shift (s): Push the current token onto the stack and move to next token
-   - Reduce (r): Replace symbols on stack according to a production rule
-   - Accept (acc): Parsing successfully completed
-   - Error (empty): Syntax errors
-   - Syntax errors can be precisely located and reported easily thanks to the Error state
-
-4. **AST Construction**
-   - As grammar rules are recognized, corresponding AST nodes are created
-   - Nodes are connected to form a tree structure representing the command hierarchy
-   - The tree captures command relationships and execution order
-
-5. **AST Traversal and Execution**
-   - The AST is traversed in post-order to respect command dependencies
-   - Nodes are processed according to their type (command, redirection, logical operator)
-   - Execution results propagate up the tree to determine logical branch paths and exit code status
+> 1. **Input Capture**:
+>     * GNU Readline for input with history support
+> 2. **Tokenization**:
+>     * Input string to tokens like redirections '>>', pipes '|' or words
+>     * Each token is classified based on its role in the shell language
+>     * You will find an exhaustive list of all the tokens type in “headers/lexer.h”.
+>     * Token enum values are very important as they are used as index in the action table
+> 3. **Heredoc Processing**:
+>     * Handles heredocs and converts them to redirections '<' to a temp file
+>     * fork the program to allow readline input
+> 4. **AST Construction**:
+>     * Builds an abstract syntax tree using the LALR(1) parser
+>     * As grammar rules are recognized, corresponding AST nodes are created
+>     * Nodes are connected to form a tree structure representing the command hierarchy
+>     * The tree captures command relationships and execution order
+> 5. **Tree Traversal**:
+>     * Executes commands through post-order traversal of the binary tree. The AST is traversed in post-order to respect command dependencies.
+>     * Nodes are processed according to their type (command, redirection, logical operator)
+>     * Execution results propagate up the tree to determine logical branch paths and exit code status
 
 ## 📚 Further Reading
 
