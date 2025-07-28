@@ -4,35 +4,27 @@
 
 </div>
 
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=linux&labelColor=181818&logoColor=white&color=2b3549)
-![](https://img.shields.io/badge/C-informational?style=for-the-badge&logo=c&labelColor=181818&logoColor=white&color=2b3549)
 
+> [!NOTE]\
+> The aim of the `minishell` 42 project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a basis for understanding how some modern shells interpret and execute commands.
 
-## 📖 Overview
+## ✨ Features
 
-The aim of the `minishell` 42 project is to create a lightweight command-line interpreter that reproduces the essential features of bash. What sets this implementation apart is its robust parsing system, completely decoupled from execution, built on LALR(1) grammar principles, producing a clean and efficient Abstract Syntax Tree (AST) for command execution. This project demonstrates advanced parsing techniques and provides a solid basis for understanding how some modern shells interpret and execute commands. A UNIX command-line interpreter focusing on advanced parsing techniques with LALR(1) grammar
-
-## ✨ Key benefits
-
-### Parsing Architecture
-
-- **Tokenizer**: Flexible and scalable lexical analyzer that converts raw input into meaningful tokens
-- **LALR(1) Grammar Parser**: Predictive parsing using Look-Ahead LR(1) techniques
-- **AST Generation**: Efficient Abstract Syntax Tree construction thanks to grammar production rules
-
-### Execution Architecture
-
-- **Efficient Builtins**: Implementation of essential shell builtins (cd, echo, exit, etc.)
-- **Resource Management**: Sophisticated caching of file descriptors and memory allocations with automatic cleanup mechanisms on program exit
-- **Hashmap-powered Environment**: Fast O(1) environment variables access
+> - 🧩 **Tokenizer**: Flexible and scalable lexical analyzer that converts raw input into meaningful tokens
+> - 🔎 **Grammar Parser**: Predictive parsing using Look-Ahead LR(1) techniques
+> - 🔃 **AST Generation**: Efficient Abstract Syntax Tree construction thanks to grammar production rules
+> - 🔗 **Efficient Builtins**: Implementation of essential shell builtins (cd, echo, exit, etc.)
+> - 🧹 **Resource Caching**: Cached file descriptors and memory allocations with automatic cleanup on program exit
+> - ⚡ **Hashmap-powered Environment**: Fast O(1) environment variables access
+> - 📏 **42 School Compliant**: Follows 42 School norm and coding standards
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Clang compiler
-- GNU Make
-- readline library
+> - Clang compiler
+> - GNU Make
+> - readline library
 
 ### Installation
 
@@ -51,8 +43,10 @@ cd minishell; make
 
 ### LALR(1) Grammar
 
-The heart of our shell's parsing capabilities lies in its LALR(1) (Look-ahead Left-to-right) grammar implementation
-This grammar formally describes the language's syntax, enabling the parser to correctly process complex command structures including pipes, logical operators, and redirections.
+> The heart of our shell's parsing capabilities lies in its LALR(1) (Look-ahead Left-to-right) grammar implementation
+> This grammar formally describes the language's syntax.
+> - Left side: Productions, used to represent AST nodes.
+> - Right side: Requirements for the production (these may be tokens ore other productions).
 ```
 program -> list  
 list -> list AND list  
@@ -69,13 +63,11 @@ command -> command arg
 command -> command redirection  
 arg -> ARG
 ```
-- On the left side of each rule, you find productions, as the name suggests, these are used to create AST nodes.
-- On the right side you find the requirements for the production, these may be tokens, but also other productions.
 
 ### LR Parsing Tables
 
-The parser utilizes LALR derivation tables for deterministic command interpretation:
-The tables are generated based on the grammar mentioned above and using the [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html) and integrated directly into the parsing engine. This approach enables deterministic, efficient parsing with predictable error handling.
+> We now need to convert this grammar into something meaningful for the program.
+> For, this we use **Parsing Tables**; you can generate them using other tools like [LALR(1) Parser Generator](https://jsmachines.sourceforge.net/machines/lalr1.html). Those tables are integrated directly into the parsing engine. This approach enables deterministic, efficient parsing with predictable error handling.
 
 ```
 ┌───────────────────────────────────────────────────────┐
